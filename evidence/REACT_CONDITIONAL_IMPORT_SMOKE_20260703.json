@@ -1,0 +1,19 @@
+{
+  "test_type": "CONDITIONAL_REACT_MOUNT_STATIC_IMPORT_SMOKE",
+  "fixture": "TEMPORARY_SYNTHETIC_DIST_IN_ISOLATED_REPLICA_ONLY",
+  "fixture_cleaned": true,
+  "stdout": "{\"result\": \"PASS\", \"required_routes_present\": [\"/agent-console\", \"/agent-console/\", \"/agent-console/assets\"], \"route_count\": 88, \"service_start\": \"NOT_EXECUTED\", \"startup_event\": \"NOT_INVOKED\", \"model_execution\": \"NOT_EXECUTED\", \"database_or_sqlite_mutation\": \"NOT_EXECUTED\", \"network\": \"NOT_EXECUTED\"}",
+  "stderr": "",
+  "result": "PASS",
+  "required_routes_present": [
+    "/agent-console",
+    "/agent-console/",
+    "/agent-console/assets"
+  ],
+  "route_count": 88,
+  "service_start": "NOT_EXECUTED",
+  "startup_event": "NOT_INVOKED",
+  "model_execution": "NOT_EXECUTED",
+  "database_or_sqlite_mutation": "NOT_EXECUTED",
+  "network": "NOT_EXECUTED"
+}

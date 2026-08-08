@@ -1,0 +1,49 @@
+{
+  "contract": "LEGACY_WRITE_AUTHORIZATION_CLOSURE_AND_NEGATIVE_UAT_V1_APPLY_DELIVERY",
+  "baseline_predecessor": "LOCAL_AGENTS_COMPREHENSIVE_BASELINE_20260704_HAR_FILENAME_RECONCILIATION_ACCEPTED",
+  "baseline_status": "TARGETED_ACCEPTANCE_ONLY",
+  "applied_scope": [
+    "backend/src/palwakf_local_agents/app.py",
+    "backend/src/palwakf_local_agents/governed_capability_foundation/authz.py",
+    "backend/src/palwakf_local_agents/governed_capability_foundation/router.py",
+    "backend/src/palwakf_local_agents/governed_operations/router.py",
+    "backend/src/palwakf_local_agents/legacy_write_authorization.py",
+    "backend/src/palwakf_local_agents/local_agent_core/router.py",
+    "backend/tests/test_legacy_write_authorization_negative_uat.py",
+    "scripts/Rollback-LegacyWriteAuthorizationClosureV1.ps1",
+    "scripts/Run-LegacyWriteAuthorizationNegativeUatV1.ps1",
+    "scripts/Test-LegacyWriteAuthorizationClosureV1Static.ps1"
+  ],
+  "postimage_hashes": {
+    "backend/src/palwakf_local_agents/app.py": "FABEF31D964257D440FECB88659730915B17EBD202F294DEA93DE8D1609C3DF5",
+    "backend/src/palwakf_local_agents/governed_capability_foundation/authz.py": "5CE8BD0F99A37BE60376BD64F157496419BC9EEFB53CC49A05A241C22DD1166F",
+    "backend/src/palwakf_local_agents/governed_capability_foundation/router.py": "9B288EC09E2A7AEC1079F2D9DF7BCD707C840BD4E6EBBB3FECCC121A1B1EB2E2",
+    "backend/src/palwakf_local_agents/governed_operations/router.py": "4AECC4F88B6D2D09C681E0AB48AB3B577AF2F1EBD4983B346BCBD4B3E138544D",
+    "backend/src/palwakf_local_agents/legacy_write_authorization.py": "D074075954D422F03548140D87D9257131C9C418F92029D2B5FC2F85AAEFC2B3",
+    "backend/src/palwakf_local_agents/local_agent_core/router.py": "0B5101A3B4A5C3D8271AFDEDEF1B115072F9CC6E447177E808B0412B674AD1AF",
+    "backend/tests/test_legacy_write_authorization_negative_uat.py": "5AA33C9A16CFAE12F9C5899EF5FD34FA1836AAE5BEEA1898D3DB01C79D066208",
+    "scripts/Rollback-LegacyWriteAuthorizationClosureV1.ps1": "BF86DDAD518893478C28A44E2292691C01843B90EEC4A856DA843E9CFC0DAC3E",
+    "scripts/Run-LegacyWriteAuthorizationNegativeUatV1.ps1": "03E75F66FDAE9543F2212359AFD147F364F205D30C7DCB6134F4CEEAEEC6D762",
+    "scripts/Test-LegacyWriteAuthorizationClosureV1Static.ps1": "6FFE8D8BEA7A4FB91D0064E586175000BAB379834940161F167C15FECF4DF5D0"
+  },
+  "validation": {
+    "python_static_compile": "PASS",
+    "postimage_hashes": "PASS",
+    "post_route_inventory": "15/15",
+    "targeted_negative_uat": "25 passed",
+    "full_backend_suite": "48 passed / 16 failed"
+  },
+  "safety": {
+    "react_write": "NOT_ENABLED",
+    "model_execution": "NONE",
+    "pilot": "NOT_EXECUTED",
+    "platform_mutation": "NOT_EXECUTED",
+    "production": "NOT_APPROVED"
+  },
+  "carrier_repairs": [
+    "pyc excluded from payload",
+    "preimage hash verification required",
+    "negative UAT snapshot begins after startup",
+    "all 15 write routes covered"
+  ]
+}

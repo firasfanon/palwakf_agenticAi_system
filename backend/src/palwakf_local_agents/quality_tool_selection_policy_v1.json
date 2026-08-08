@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "policy_id": "QUALITY_ACCEPTED_TOOLS_GOAL_PLANNER_SELECTION_BINDING_V1",
+  "mode": "deterministic_quality_gated_selection_no_execution",
+  "capabilities": [
+    {"capability_id":"codebase_understanding","label_ar":"فهم وفهرسة المشروع","keywords":["codebase","index","symbol","route","component","كود","فهرسة","رموز","مسارات","مكونات"],"candidate_tools":["native_code_index_contract","tree_sitter"]},
+    {"capability_id":"local_observability","label_ar":"التتبع والمراقبة المحلية","keywords":["telemetry","trace","metrics","observability","تتبع","مراقبة","مقاييس","أحداث"],"candidate_tools":["local_telemetry_contract","opentelemetry"]},
+    {"capability_id":"static_analysis","label_ar":"التحليل الساكن","keywords":["semgrep","static analysis","lint","تحليل ساكن","قواعد جودة","فحص كود"],"candidate_tools":["semgrep"]},
+    {"capability_id":"secret_detection","label_ar":"كشف الأسرار","keywords":["secret","token","password","credential","سر","أسرار","رمز","كلمة مرور","اعتماد"],"candidate_tools":["gitleaks"]},
+    {"capability_id":"vulnerability_assessment","label_ar":"فحص الثغرات والاعتماديات","keywords":["vulnerability","dependency","sbom","trivy","ثغرات","اعتماديات","حزم"],"candidate_tools":["trivy"]},
+    {"capability_id":"workflow_orchestration","label_ar":"تنسيق سير العمل طويل الأمد","keywords":["workflow","orchestration","temporal","prefect","سير عمل","تنسيق","مهام طويلة"],"candidate_tools":["temporal","prefect"]}
+  ],
+  "tool_labels": {
+    "native_code_index_contract":"عقد فهرسة الكود المحلية",
+    "tree_sitter":"Tree-sitter",
+    "local_telemetry_contract":"عقد Telemetry المحلية",
+    "opentelemetry":"OpenTelemetry",
+    "semgrep":"Semgrep",
+    "gitleaks":"Gitleaks",
+    "trivy":"Trivy",
+    "temporal":"Temporal",
+    "prefect":"Prefect"
+  },
+  "selection_rules": {
+    "SELECTABLE":"قابل للاختيار بعد Baseline جودة ومراجعة بشرية.",
+    "SELECTABLE_WITH_WARNING":"قابل للاختيار مع عرض القيود المقبولة.",
+    "PENDING_HUMAN_BASELINE":"Benchmark موجود لكن Baseline البشري لم يعتمد.",
+    "UNASSESSED":"غير مختبر ولا يوصى به.",
+    "UNAVAILABLE":"غير موجود أو غير مقبول تشغيليًا.",
+    "BLOCKED":"محجوب بسبب الجودة أو حدود التشغيل.",
+    "FORBIDDEN":"محجور ولا يجوز اختياره."
+  },
+  "boundaries": {
+    "model_inference":"none",
+    "tool_execution":"none",
+    "automatic_selection_commit":"blocked",
+    "goal_persistence":"none",
+    "source_write":"blocked",
+    "shell":"blocked",
+    "git":"blocked",
+    "live_project_scan":"blocked"
+  }
+}

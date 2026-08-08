@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "required": ["task_id", "title", "system_scope", "risk", "autonomy", "status", "requested_agent", "requested_skills", "evidence_required", "allowed_reference_paths", "human_approval_required"],
+  "allowed_risk": ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+  "allowed_autonomy": ["L0_READ_ONLY", "L1_PLAN_ONLY", "L2_PATCH_ALLOWED", "L3_BATCH_ALLOWED", "L4_REVIEW_REQUIRED", "L5_STAGING_DEPLOY", "L6_PRODUCTION_RESTRICTED"],
+  "v1_runner_constraints": {
+    "accepted_risk": ["LOW"],
+    "accepted_autonomy": ["L0_READ_ONLY"],
+    "allowed_agents": ["coordinator", "sovereignty_reviewer"],
+    "allowed_reference_roots": ["reference_sources/approved", "governance", "task_contracts", "memory/approved"],
+    "forbidden_requests": ["sql", "database", "git write", "git push", "deploy", "publish", "secret", "token", "password", "delete"]
+  }
+}

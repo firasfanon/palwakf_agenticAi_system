@@ -1,0 +1,47 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_EXTERNAL_ENGINEERING_SKILLS_REFERENCE_INTAKE_V1_READ_ONLY",
+  "source": "https://github.com/addyosmani/agent-skills",
+  "reference_mode": "READ_ONLY_REFERENCE_SNAPSHOT",
+  "install_allowed": false,
+  "execution_allowed": false,
+  "routes_added": [
+    "/agent-console/engineering-skills"
+  ],
+  "boundaries": {
+    "git_clone": "NO",
+    "npx_install": "NO",
+    "plugin_install": "NO",
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "shell": "NO",
+    "git": "NO",
+    "code_execution": "NO",
+    "self_apply": "NO",
+    "autonomous_build": "NO",
+    "database_persistence": "NONE",
+    "backend_source_mutation": "NONE",
+    "web_search_runtime": "NO",
+    "platform_mutation": "NONE"
+  },
+  "skills_mapped": [
+    "using-agent-skills",
+    "interview-me",
+    "idea-refine",
+    "spec-driven-development",
+    "planning-and-task-breakdown",
+    "incremental-implementation",
+    "test-driven-development",
+    "context-engineering",
+    "source-driven-development",
+    "frontend-ui-engineering",
+    "api-and-interface-design",
+    "browser-testing-with-devtools",
+    "debugging-and-error-recovery",
+    "code-review-and-quality",
+    "security-and-hardening",
+    "performance-optimization",
+    "documentation-and-adrs",
+    "observability-and-instrumentation",
+    "shipping-and-launch"
+  ]
+}

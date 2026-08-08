@@ -1,0 +1,89 @@
+{
+  "authorization": "AUTHORIZE_LOCAL_AGENTS_PRODUCT_START_SCREEN_AND_OPERATIONAL_CONSOLE_READ_ONLY_APPLY_V1_ISOLATED_WORKTREE_ONLY",
+  "candidate_id": "MEGA_BATCH_LOCAL_AGENTS_PRODUCT_START_SCREEN_AND_OPERATIONAL_CONSOLE_UX_UI_DISCOVERY_DESIGN_AND_GOVERNED_READ_ONLY_CANDIDATE_V1",
+  "execution_target": "EVIDENCE_DERIVED_ISOLATED_WORKTREE_ONLY",
+  "original_windows_source_mutation": "NONE",
+  "preimage_validation": "PASS",
+  "payload_manifest_binding": "PASS",
+  "approved_file_count": 7,
+  "postimage_validation": "PASS",
+  "runtime_uat": "NOT_EXECUTED",
+  "sqlite_migration": "NOT_EXECUTED",
+  "model_execution": "NOT_EXECUTED",
+  "pilot_execution": "NOT_EXECUTED",
+  "commercial_apply": "DEFERRED",
+  "preimage_details": {
+    "frontend/src/App.tsx": {
+      "expected": "E653175BD9C6A4B4F88C948A9AA023F3D7889DB54C8FFF896106821855AFE3C0",
+      "actual": "E653175BD9C6A4B4F88C948A9AA023F3D7889DB54C8FFF896106821855AFE3C0",
+      "pass": true
+    },
+    "frontend/src/api/client.ts": {
+      "expected": "BF9ACF975E3DA8A62E9544EF1027987B357B11A3AAD5511AA397422DD5F3FB43",
+      "actual": "BF9ACF975E3DA8A62E9544EF1027987B357B11A3AAD5511AA397422DD5F3FB43",
+      "pass": true
+    },
+    "frontend/src/api/presentation.ts": {
+      "expected": "__ABSENT__",
+      "actual": "__ABSENT__",
+      "pass": true
+    },
+    "frontend/src/components/Icon.tsx": {
+      "expected": "__ABSENT__",
+      "actual": "__ABSENT__",
+      "pass": true
+    },
+    "frontend/src/components/Layout.tsx": {
+      "expected": "65E07645FB0831D27D43C458ED1BC48F6515E6C76F7E2AB460DDF4AD69CB6B88",
+      "actual": "65E07645FB0831D27D43C458ED1BC48F6515E6C76F7E2AB460DDF4AD69CB6B88",
+      "pass": true
+    },
+    "frontend/src/components/OperationalPanels.tsx": {
+      "expected": "__ABSENT__",
+      "actual": "__ABSENT__",
+      "pass": true
+    },
+    "frontend/src/styles.css": {
+      "expected": "D218CFE13C2348F093EF470F0C1C56A14652F0902D2BD5719121BC4FD56C03C9",
+      "actual": "D218CFE13C2348F093EF470F0C1C56A14652F0902D2BD5719121BC4FD56C03C9",
+      "pass": true
+    }
+  },
+  "postimage_details": {
+    "frontend/src/App.tsx": {
+      "expected": "311CBFF9E827F4937B13FEAFAB1989AB897B675322A87862A9C4BB8E908A8E78",
+      "actual": "311CBFF9E827F4937B13FEAFAB1989AB897B675322A87862A9C4BB8E908A8E78",
+      "pass": true
+    },
+    "frontend/src/api/client.ts": {
+      "expected": "A0FC0ED20DA8ED98F1758B2D0660F8041238B47774F00B83E40C69723B4D191F",
+      "actual": "A0FC0ED20DA8ED98F1758B2D0660F8041238B47774F00B83E40C69723B4D191F",
+      "pass": true
+    },
+    "frontend/src/api/presentation.ts": {
+      "expected": "7A7A99E0F083882A09D2B1294DB11E979FB610746F81CB78AA113E1F4D8AD02B",
+      "actual": "7A7A99E0F083882A09D2B1294DB11E979FB610746F81CB78AA113E1F4D8AD02B",
+      "pass": true
+    },
+    "frontend/src/components/Icon.tsx": {
+      "expected": "2C34517B17CE6135D4008299FE2452BDEC70974667204E3F091176BD267FF06C",
+      "actual": "2C34517B17CE6135D4008299FE2452BDEC70974667204E3F091176BD267FF06C",
+      "pass": true
+    },
+    "frontend/src/components/Layout.tsx": {
+      "expected": "436C5A13D19A412C701898A9443ECA938956E2FD2D748A7A38540249F0420D1A",
+      "actual": "436C5A13D19A412C701898A9443ECA938956E2FD2D748A7A38540249F0420D1A",
+      "pass": true
+    },
+    "frontend/src/components/OperationalPanels.tsx": {
+      "expected": "847F506238DABB92012510E401409E84F7E48B4AACCBFD67E3A161543D4A0D75",
+      "actual": "847F506238DABB92012510E401409E84F7E48B4AACCBFD67E3A161543D4A0D75",
+      "pass": true
+    },
+    "frontend/src/styles.css": {
+      "expected": "89AF9E52B01A65941E95C1AD323361C6D4FC80DAD5D33D53F28EAE3D398ED4DB",
+      "actual": "89AF9E52B01A65941E95C1AD323361C6D4FC80DAD5D33D53F28EAE3D398ED4DB",
+      "pass": true
+    }
+  }
+}

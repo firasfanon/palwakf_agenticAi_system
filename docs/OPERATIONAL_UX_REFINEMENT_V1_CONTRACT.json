@@ -1,0 +1,35 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_OPERATIONAL_UX_REFINEMENT_V1_USER_FIRST_GOVERNANCE_SUBPAGES",
+  "kind": "frontend_operational_ux_refinement",
+  "decision": "USER_FIRST_PAGES_GOVERNANCE_IN_SUBPAGES",
+  "primary_pages": [
+    "/agent-console/",
+    "/agent-console/goal-planner",
+    "/agent-console/tasks",
+    "/agent-console/tools",
+    "/agent-console/projects",
+    "/agent-console/reviews",
+    "/agent-console/workspaces"
+  ],
+  "governance_subpages": [
+    "/agent-console/charter",
+    "/agent-console/state-manager",
+    "/agent-console/diagnostics",
+    "/agent-console/pilot-control",
+    "/agent-console/evidence"
+  ],
+  "boundaries": {
+    "frontend_source_mutation": "YES_SCOPED",
+    "backend_source_mutation": "NONE",
+    "database_write": "NONE",
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "shell": "NO",
+    "git": "NO",
+    "code_execution": "NO",
+    "self_apply": "NO",
+    "autonomous_build": "NO",
+    "web_search": "NO",
+    "platform_mutation": "NONE"
+  }
+}

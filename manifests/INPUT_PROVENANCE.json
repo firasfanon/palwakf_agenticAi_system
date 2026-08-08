@@ -1,0 +1,9 @@
+{
+  "input_source_archive": "/mnt/data/palwakf_local_agents.zip",
+  "input_handoff_archive": "/mnt/data/PALWAKF_LOCAL_AGENTS_COMPREHENSIVE_HANDOFF_AND_BASELINE_20260702.zip",
+  "source_archive_sha256": "4EDEAD1F4720D9EB37FDE05CCF589EADDD98ADFE7AA34BE251AB0DF7E624877B",
+  "handoff_archive_sha256": "44EE6B06922213DD688EE8C197B123573B86F978CF29D25627CCB63F17DB85AC",
+  "governing_guide_present_in_inputs": false,
+  "baseline_parent": "LOCAL_AGENTS_COMPREHENSIVE_BASELINE_20260702",
+  "handoff_parent": "LOCAL_AGENTS_COMPREHENSIVE_HANDOFF_20260702"
+}

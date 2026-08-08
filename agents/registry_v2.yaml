@@ -1,0 +1,295 @@
+contract_version: '2.0'
+project: palwakf_local_agents
+defaults:
+  agent_execution: disabled
+  platform_mutation: forbidden
+  database_access: forbidden
+  network_write: forbidden
+  git_write: forbidden
+  secrets_access: forbidden
+  memory_auto_promotion: forbidden
+  human_approval_required_for_promotion: true
+roles:
+- role_id: coordinator
+  title_ar: المنسق المركزي
+  status: admission_required_v2
+  autonomy_ceiling: L1_PLAN_ONLY
+  allowed_skills:
+  - baseline_read
+  - task_triage
+  - risk_assessment
+  - fact_assumption_decision_register
+  - workspace_lock_planning
+  - evidence_assessment
+  allowed_tools:
+  - none_until_runner_admission
+  prohibited_actions:
+  - platform_mutation
+  - database_access
+  - network_write
+  - git_write
+  - deployment
+  - secrets_access
+  - self_promotion
+  output_mode: controlled_contract_and_human_review
+- role_id: sovereignty_reviewer
+  title_ar: مراجع الحوكمة والسيادة
+  status: admission_required_v2
+  autonomy_ceiling: L1_PLAN_ONLY
+  allowed_skills:
+  - governance_review
+  - evidence_assessment
+  - prompt_injection_screening
+  - data_classification_review
+  - baseline_read
+  allowed_tools:
+  - none_until_runner_admission
+  prohibited_actions:
+  - platform_mutation
+  - database_access
+  - network_write
+  - git_write
+  - deployment
+  - secrets_access
+  - self_promotion
+  output_mode: controlled_contract_and_human_review
+- role_id: knowledge_researcher
+  title_ar: باحث المعرفة والمصادر
+  status: admission_required_v2
+  autonomy_ceiling: L1_PLAN_ONLY
+  allowed_skills:
+  - knowledge_source_review
+  - evidence_assessment
+  - fact_assumption_decision_register
+  - prompt_injection_screening
+  allowed_tools:
+  - none_until_runner_admission
+  prohibited_actions:
+  - platform_mutation
+  - database_access
+  - network_write
+  - git_write
+  - deployment
+  - secrets_access
+  - self_promotion
+  output_mode: controlled_contract_and_human_review
+- role_id: ui_ux_designer
+  title_ar: مصمم UX/UI
+  status: admission_required_v2
+  autonomy_ceiling: L1_PLAN_ONLY
+  allowed_skills:
+  - ui_ux_contract_review
+  - requirements_mvp_analysis
+  - documentation_handoff
+  allowed_tools:
+  - none_until_runner_admission
+  prohibited_actions:
+  - platform_mutation
+  - database_access
+  - network_write
+  - git_write
+  - deployment
+  - secrets_access
+  - self_promotion
+  output_mode: controlled_contract_and_human_review
+- role_id: documentation_handoff
+  title_ar: مساعد التوثيق والتسليم
+  status: admission_required_v2
+  autonomy_ceiling: L1_PLAN_ONLY
+  allowed_skills:
+  - documentation_handoff
+  - baseline_read
+  - fact_assumption_decision_register
+  - memory_learning_candidate
+  allowed_tools:
+  - none_until_runner_admission
+  prohibited_actions:
+  - platform_mutation
+  - database_access
+  - network_write
+  - git_write
+  - deployment
+  - secrets_access
+  - self_promotion
+  output_mode: controlled_contract_and_human_review
+- role_id: product_analyst
+  title_ar: محلل المنتج
+  status: disabled_pending_admission
+  autonomy_ceiling: L1_PLAN_ONLY
+  allowed_skills:
+  - requirements_mvp_analysis
+  - task_triage
+  - fact_assumption_decision_register
+  - risk_assessment
+  allowed_tools:
+  - none_until_runner_admission
+  prohibited_actions:
+  - platform_mutation
+  - database_access
+  - network_write
+  - git_write
+  - deployment
+  - secrets_access
+  - self_promotion
+  output_mode: controlled_contract_and_human_review
+- role_id: solution_architect
+  title_ar: مهندس الحلول والمعمارية
+  status: disabled_pending_admission
+  autonomy_ceiling: L1_PLAN_ONLY
+  allowed_skills:
+  - architecture_analysis
+  - data_api_design_plan
+  - risk_assessment
+  - baseline_read
+  - system_contract_review
+  allowed_tools:
+  - none_until_runner_admission
+  prohibited_actions:
+  - platform_mutation
+  - database_access
+  - network_write
+  - git_write
+  - deployment
+  - secrets_access
+  - self_promotion
+  output_mode: controlled_contract_and_human_review
+- role_id: qa_security_reviewer
+  title_ar: مراجع الجودة والأمن
+  status: disabled_pending_admission
+  autonomy_ceiling: L1_PLAN_ONLY
+  allowed_skills:
+  - qa_security_review
+  - evidence_assessment
+  - prompt_injection_screening
+  - data_classification_review
+  - test_plan_generation
+  allowed_tools:
+  - none_until_runner_admission
+  prohibited_actions:
+  - platform_mutation
+  - database_access
+  - network_write
+  - git_write
+  - deployment
+  - secrets_access
+  - self_promotion
+  output_mode: controlled_contract_and_human_review
+- role_id: tester
+  title_ar: مخطط الاختبارات
+  status: disabled_pending_admission
+  autonomy_ceiling: L1_PLAN_ONLY
+  allowed_skills:
+  - test_plan_generation
+  - qa_security_review
+  - evidence_assessment
+  allowed_tools:
+  - none_until_runner_admission
+  prohibited_actions:
+  - platform_mutation
+  - database_access
+  - network_write
+  - git_write
+  - deployment
+  - secrets_access
+  - self_promotion
+  output_mode: controlled_contract_and_human_review
+- role_id: coding_builder
+  title_ar: مخطط التغيير البرمجي
+  status: disabled_pending_admission
+  autonomy_ceiling: L1_PLAN_ONLY
+  allowed_skills:
+  - repository_static_trace
+  - architecture_analysis
+  - patch_plan_generation
+  - evidence_assessment
+  allowed_tools:
+  - none_until_runner_admission
+  prohibited_actions:
+  - platform_mutation
+  - database_access
+  - network_write
+  - git_write
+  - deployment
+  - secrets_access
+  - self_promotion
+  output_mode: controlled_contract_and_human_review
+- role_id: frontend_engineer
+  title_ar: مهندس الواجهة الأمامية
+  status: disabled_pending_admission
+  autonomy_ceiling: L1_PLAN_ONLY
+  allowed_skills:
+  - repository_static_trace
+  - ui_ux_contract_review
+  - patch_plan_generation
+  - test_plan_generation
+  allowed_tools:
+  - none_until_runner_admission
+  prohibited_actions:
+  - platform_mutation
+  - database_access
+  - network_write
+  - git_write
+  - deployment
+  - secrets_access
+  - self_promotion
+  output_mode: controlled_contract_and_human_review
+- role_id: backend_engineer
+  title_ar: مهندس الخلفية
+  status: disabled_pending_admission
+  autonomy_ceiling: L1_PLAN_ONLY
+  allowed_skills:
+  - architecture_analysis
+  - data_api_design_plan
+  - repository_static_trace
+  - patch_plan_generation
+  allowed_tools:
+  - none_until_runner_admission
+  prohibited_actions:
+  - platform_mutation
+  - database_access
+  - network_write
+  - git_write
+  - deployment
+  - secrets_access
+  - self_promotion
+  output_mode: controlled_contract_and_human_review
+- role_id: database_engineer
+  title_ar: مهندس قاعدة البيانات
+  status: disabled_pending_admission
+  autonomy_ceiling: L1_PLAN_ONLY
+  allowed_skills:
+  - data_api_design_plan
+  - system_contract_review
+  - risk_assessment
+  - migration_plan_review
+  allowed_tools:
+  - none_until_runner_admission
+  prohibited_actions:
+  - platform_mutation
+  - database_access
+  - network_write
+  - git_write
+  - deployment
+  - secrets_access
+  - self_promotion
+  output_mode: controlled_contract_and_human_review
+- role_id: release_engineer
+  title_ar: مهندس الإصدار والتشغيل
+  status: disabled_pending_admission
+  autonomy_ceiling: L1_PLAN_ONLY
+  allowed_skills:
+  - release_readiness_review
+  - incident_analysis
+  - baseline_read
+  - risk_assessment
+  allowed_tools:
+  - none_until_runner_admission
+  prohibited_actions:
+  - platform_mutation
+  - database_access
+  - network_write
+  - git_write
+  - deployment
+  - secrets_access
+  - self_promotion
+  output_mode: controlled_contract_and_human_review

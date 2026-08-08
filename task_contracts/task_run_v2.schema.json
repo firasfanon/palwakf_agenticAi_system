@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Task Run V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "task_id",
+    "agent_id",
+    "requested_autonomy",
+    "risk",
+    "state",
+    "skills",
+    "references",
+    "facts",
+    "assumptions",
+    "evidence",
+    "review_status"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "pattern": "^RUN-[A-Z0-9-]+$"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "agent_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "requested_autonomy": {
+      "enum": [
+        "L0_READ_ONLY",
+        "L1_PLAN_ONLY",
+        "L2_PATCH_ALLOWED",
+        "L3_BATCH_ALLOWED",
+        "L4_REVIEW_REQUIRED",
+        "L5_STAGING_DEPLOY",
+        "L6_PRODUCTION_RESTRICTED"
+      ]
+    },
+    "risk": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ]
+    },
+    "state": {
+      "enum": [
+        "Draft",
+        "Ready",
+        "Planned",
+        "AwaitingApproval",
+        "InProgress",
+        "Blocked",
+        "ReviewRequired",
+        "Accepted",
+        "Released",
+        "Reverted",
+        "Archived"
+      ]
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "review_status": {
+      "enum": [
+        "NOT_REQUIRED",
+        "PENDING",
+        "ACCEPTED",
+        "REJECTED"
+      ]
+    }
+  }
+}

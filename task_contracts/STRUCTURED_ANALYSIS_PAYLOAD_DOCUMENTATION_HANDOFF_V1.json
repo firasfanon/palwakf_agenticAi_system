@@ -1,0 +1,71 @@
+{
+  "contract_id": "STRUCTURED_ANALYSIS_PAYLOAD_DOCUMENTATION_HANDOFF_V1",
+  "version": "1.0.0",
+  "role": "documentation_handoff",
+  "raw_output_format": "SINGLE_JSON_OBJECT",
+  "max_raw_utf8_bytes": 12288,
+  "required_top_level_keys": [
+    "schema_version",
+    "role",
+    "analysis_status",
+    "facts",
+    "assumptions",
+    "evidence_gaps",
+    "risks_and_constraints",
+    "handoff_sections",
+    "recommended_next_step"
+  ],
+  "static_values": {
+    "schema_version": "1.0.0",
+    "analysis_status": "PENDING_HUMAN_REVIEW",
+    "recommended_next_step": "HUMAN_REVIEW_REQUIRED"
+  },
+  "limits": {
+    "facts_min": 1,
+    "facts_max": 4,
+    "text_max_chars": 480,
+    "list_max": 5,
+    "list_item_max_chars": 360,
+    "handoff_sections_min": 2,
+    "handoff_sections_max": 4
+  },
+  "fact_item_keys": [
+    "statement",
+    "evidence_reference_ids"
+  ],
+  "handoff_section_item_keys": [
+    "section",
+    "text",
+    "evidence_reference_ids"
+  ],
+  "allowed_handoff_sections": [
+    "CURRENT_STATE",
+    "EVIDENCE",
+    "OPEN_ITEMS",
+    "RESUMPTION_POINT"
+  ],
+  "required_handoff_sections": [
+    "CURRENT_STATE",
+    "RESUMPTION_POINT"
+  ],
+  "host_owned_fields": [
+    "envelope_id",
+    "run_id",
+    "task_id",
+    "agent_id",
+    "evidence_manifest_id",
+    "validated_at_utc",
+    "validation_result"
+  ],
+  "forbidden_model_fields": [
+    "task_id",
+    "run_id",
+    "envelope_id",
+    "validation_result",
+    "OUTPUT_CONTRACT_START",
+    "OUTPUT_CONTRACT_END",
+    "STRUCTURED_ANALYSIS_PAYLOAD_START",
+    "STRUCTURED_ANALYSIS_PAYLOAD_END"
+  ],
+  "additional_keys_allowed": false
+}

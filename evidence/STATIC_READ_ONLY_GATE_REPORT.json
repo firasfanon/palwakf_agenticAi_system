@@ -1,0 +1,12 @@
+{
+  "execution_target": "EVIDENCE_DERIVED_ISOLATED_WORKTREE_ONLY",
+  "source_project_mutation": "NONE",
+  "react_write_ui": "ABSENT",
+  "authorization_token": "ABSENT",
+  "read_only_lexical_gate": "PASS",
+  "get_method_declared": "PASS",
+  "credentials_omit_declared": "PASS",
+  "forbidden_findings": [],
+  "result": "STATIC_GATE_PASS",
+  "runtime_uat": "NOT_EXECUTED"
+}

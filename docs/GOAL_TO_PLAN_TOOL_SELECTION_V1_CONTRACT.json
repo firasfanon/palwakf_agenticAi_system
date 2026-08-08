@@ -1,0 +1,34 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_GOAL_TO_PLAN_TOOL_SELECTION_V1_DESIGN_ONLY",
+  "status": "design_only",
+  "routes": [
+    "/agent-console/goal-planner",
+    "/agent-console/",
+    "/agent-console/tasks",
+    "/agent-console/tools",
+    "/agent-console/projects",
+    "/agent-console/diagnostics"
+  ],
+  "layers": [
+    "goal_intake",
+    "goal_analyzer",
+    "project_plan_draft",
+    "tool_selection_matrix",
+    "human_review_gate",
+    "autonomous_execution_blocked"
+  ],
+  "boundaries": {
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "langgraph_runtime": "NO",
+    "shell": "NO",
+    "git": "NO",
+    "code_execution": "NO",
+    "self_apply": "NO",
+    "autonomous_build": "NO",
+    "database_persistence": "NONE",
+    "backend_source_mutation": "NONE",
+    "web_search": "NO",
+    "platform_mutation": "NONE"
+  }
+}

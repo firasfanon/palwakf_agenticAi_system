@@ -1,0 +1,18 @@
+{
+  "batch_id": "MEGA_BATCH_LOCAL_AGENTS_PRODUCTION_READINESS_AND_AGENT_PERFORMANCE_EVALUATION_V1_NARROW_READ_ONLY_RUNTIME_HARDENING_APPLY",
+  "result": "PASS_IN_ISOLATED_REPLICA",
+  "scope": "TWO_APPROVED_CODE_FILES_ONLY",
+  "authoritative_full_hash_record": "/mnt/data/PALWAKF_LOCAL_AGENTS_READ_ONLY_RUNTIME_HARDENING_APPLY_DELIVERY_20260703.json",
+  "included_source_artifact": {
+    "filename": "PALWAKF_LOCAL_AGENTS_READ_ONLY_RUNTIME_HARDENING_APPLIED_SOURCE_20260703.zip",
+    "sha256": "857521E69BA4184910A144071E2CDB95A3CA7B47C7EE8514AB3D0696052A37F8",
+    "bytes": 11197415
+  },
+  "updates_only_zip_hash": "INTENTIONALLY_NOT_EMBEDDED_TO_AVOID_SELF_REFERENCE",
+  "aggregate_zip_hash": "INTENTIONALLY_NOT_EMBEDDED_TO_AVOID_SELF_REFERENCE",
+  "api_authorization_inventory_summary": {
+    "write_route_count": 15,
+    "write_authorization_closure_required_count": 11,
+    "write_requires_negative_uat_count": 4
+  }
+}

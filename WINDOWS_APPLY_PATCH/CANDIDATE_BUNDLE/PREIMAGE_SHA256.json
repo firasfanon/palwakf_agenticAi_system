@@ -1,0 +1,16 @@
+{
+  "contract": "LEGACY_TEST_CONTRACT_MIGRATION_AND_CONTROLLED_POSITIVE_AUTHORIZATION_UAT_V1",
+  "candidate_status": "NOT_APPLIED",
+  "existing_files": {
+    "backend/tests/test_governed_local_agent_core.py": "9F5F1C07B93811F5D3EFCA32DA222B066A2C539B399F92608800DD99D2D4EA39",
+    "backend/tests/test_governed_operations.py": "764B4F80A9E82E67B385FC4D1BFBA915BFA097224630C6452DBAF6B618A55EC6",
+    "backend/tests/test_governed_operations_workspace_scoping.py": "1937A284B4E30DDF00D8619448A4E55D824E5410BD06E3AA342919A348C2BAC8",
+    "backend/tests/test_workspace_core.py": "35670B3F0247534105D2AFD8BCCF5129AA64D7CDC6063FE48BAE540B301943AA"
+  },
+  "must_be_absent": [
+    "backend/tests/conftest.py",
+    "backend/tests/test_legacy_write_authorization_positive_uat.py",
+    "scripts/Run-LegacyTestContractMigrationAndPositiveAuthorizationUatV1.ps1",
+    "scripts/Test-LegacyTestContractMigrationAndPositiveAuthorizationUatV1Static.ps1"
+  ]
+}

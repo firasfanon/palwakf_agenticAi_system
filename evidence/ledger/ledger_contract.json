@@ -1,0 +1,1 @@
+{"actor_authentication":"REQUIRED","client_isolation":"REQUIRED_FOR_COMMERCIAL","contract":"DURABLE_EVIDENCE_LEDGER_V1","cross_workspace_read":"DENY_BY_DEFAULT","model_execution":"NONE","pilot_execution":"NOT_EXECUTED","storage":"PROJECT_PERSISTENT"}

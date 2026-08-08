@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>مساحات العمل — PalWakf Local Agents</title>
+  <link rel="stylesheet" href="/workspaces/assets/styles.css">
+</head>
+<body data-ui-contract="LOCAL_AGENTS_MULTI_WORKSPACE_OPERATIONS_FRONTEND_V1">
+  <main class="shell">
+    <header class="top">
+      <div><span class="eyebrow">MULTI-WORKSPACE CONSOLE</span><h1>مساحات العمل والسياسات</h1><p>كل مساحة تملك سياقًا وسياسةً وحدودًا وسجلًا مستقلًا. الانتقال بين المساحات لا يمنح صلاحيات أو مشاركة تلقائية.</p></div>
+      <nav class="top-links" aria-label="تنقل رئيسي"><a href="/command-center">مركز القيادة</a><a href="/operations">العمليات</a><a href="/local-agents">الوكلاء</a></nav>
+    </header>
+    <section class="health-wrap"><div id="health" class="health" role="status" aria-live="polite">جارٍ التحقق من Workspace Core…</div><div class="policy-banner"><span>🛡</span><div><b>Default Deny ظاهر</b><p>لا يوجد Token في المتصفح، ولا توجد بيانات بين المساحات أو العملاء دون عقد Full Stack صريح.</p></div></div></section>
+    <section class="section-heading" aria-labelledby="workspace-list-title"><div><span class="eyebrow">WORKSPACE REGISTRY</span><h2 id="workspace-list-title">اختر سياق العمل</h2><p>يعرض السجل القانوني والسياسة وحدود الأدوات؛ لا ينفذ إجراءات تشغيلية.</p></div></section>
+    <section id="workspace-list" class="workspace-grid" aria-live="polite"><div class="loading">جارٍ تحميل مساحات العمل…</div></section>
+    <section id="detail" class="detail" aria-live="polite" aria-label="تفاصيل مساحة العمل"><div class="detail-empty">اختر مساحة لمراجعة السياسة والجاهزية وروابط السطوح المقروءة.</div></section>
+  </main>
+  <script src="/workspaces/assets/app.js" defer></script>
+</body>
+</html>

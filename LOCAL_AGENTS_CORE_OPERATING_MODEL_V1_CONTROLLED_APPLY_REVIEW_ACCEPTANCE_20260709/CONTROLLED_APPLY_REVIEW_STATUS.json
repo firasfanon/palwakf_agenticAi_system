@@ -1,0 +1,28 @@
+{
+  "review_status": "PASS",
+  "decision": "CONTROLLED_APPLY_SOURCE_LEVEL_ACCEPTED_PENDING_RUNTIME_UAT_AND_BASELINE_PROMOTION",
+  "reviewed_input_zip": "LOCAL_AGENTS_CORE_OPERATING_MODEL_V1_CONTROLLED_APPLY_20260709_142348.zip",
+  "reviewed_input_zip_sha256": "F2A15903B63C9163BF8AF733EB6BAFC625D877230672CC2F608C27291E79B2D8",
+  "apply_result": "PASS",
+  "apply_decision": "CONTROLLED_APPLY_PASS",
+  "source_mutation": "TARGET_FILES_UPDATED",
+  "database_write": "NONE",
+  "model_execution": "NONE",
+  "pilot_execution": "NOT_EXECUTED",
+  "target_files_count": 6,
+  "unit_tests_log_result": "CORE_AGENT_OPERATING_MODEL_V1_TESTS=PASS",
+  "preimage_postimage_changed_targets": [
+    "backend/src/palwakf_local_agents/local_agent_core/contracts.py",
+    "backend/src/palwakf_local_agents/local_agent_core/engine.py",
+    "backend/src/palwakf_local_agents/local_agent_core/registry.py",
+    "backend/src/palwakf_local_agents/local_agent_core/store.py",
+    "backend/tests/test_core_agent_operating_model_v1.py",
+    "docs/ARCHITECTURE_LOCAL_AGENTS_CORE_OPERATING_MODEL_V1_AR.md"
+  ],
+  "rollback_backup_available": true,
+  "rollback_backup_dir_reported": "D:\\PALWAKF_ASSISTANT_BASELINES\\LOCAL_AGENTS_CORE_OPERATING_MODEL_V1_CONTROLLED_APPLY_20260709_142348\\BACKUP_PRE_APPLY_20260709_142348",
+  "baseline_promotion": "NOT_PERFORMED",
+  "runtime_uat": "NOT_PERFORMED",
+  "browser_uat": "NOT_PERFORMED",
+  "next_recommended_authorization": "AUTHORIZE_LOCAL_AGENTS_CORE_OPERATING_MODEL_V1_POST_APPLY_RUNTIME_AND_BASELINE_PROMOTION_PREPARATION"
+}

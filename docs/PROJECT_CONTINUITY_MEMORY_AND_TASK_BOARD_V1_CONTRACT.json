@@ -1,0 +1,38 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_PROJECT_CONTINUITY_MEMORY_AND_TASK_BOARD_V1_DESIGN_ONLY",
+  "route": "/agent-console/project-board",
+  "posture": "design_only_read_browser_state",
+  "reads": [
+    "localStorage:palwakf.localAgents.taskDrafts.v1",
+    "localStorage:palwakf.localAgents.goalPlanner.v1",
+    "localStorage:palwakf.localAgents.firstOperationalDryRun.v1"
+  ],
+  "writes": [],
+  "adds": [
+    "project_state_snapshot_ui",
+    "todo_board_ui",
+    "context_drift_guard_ui",
+    "standing_rules_design",
+    "innovation_review_design"
+  ],
+  "future_gates": [
+    "LOCAL_TASK_STORE",
+    "PROJECT_BOARD_PERSISTENCE",
+    "CHROMADB_MEMORY",
+    "CHECKPOINTS",
+    "STANDING_RULES_REGISTRY",
+    "INNOVATION_AGENT"
+  ],
+  "blocked": {
+    "chromadb": true,
+    "database_persistence": true,
+    "model_execution": true,
+    "pilot_execution": true,
+    "shell": true,
+    "git": true,
+    "code_execution": true,
+    "self_apply": true,
+    "web_search_runtime": true,
+    "platform_mutation": true
+  }
+}

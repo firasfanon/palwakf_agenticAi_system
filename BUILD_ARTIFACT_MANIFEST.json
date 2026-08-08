@@ -1,0 +1,22 @@
+{
+  "execution_target": "EVIDENCE_DERIVED_ISOLATED_WORKTREE_ONLY",
+  "generated_artifacts_are_worktree_local_only": true,
+  "artifact_count": 3,
+  "artifacts": [
+    {
+      "path": "frontend/dist/assets/index-DDqtSjjt.js",
+      "bytes": 168267,
+      "sha256": "E857BC8FFC50B804A91315EEFDD50E9EFAB5DC0F8C57F04382028D95E8353B74"
+    },
+    {
+      "path": "frontend/dist/assets/index-RFAXJeEZ.css",
+      "bytes": 14300,
+      "sha256": "B7B0D731D90D7659D6F9FB10C0EE5B4EF4F107F513E72193155414F30F059D7D"
+    },
+    {
+      "path": "frontend/dist/index.html",
+      "bytes": 515,
+      "sha256": "5819C5728E617F74E22F93EAC316489C5278E43DCB7D6A3472AF401011410447"
+    }
+  ]
+}

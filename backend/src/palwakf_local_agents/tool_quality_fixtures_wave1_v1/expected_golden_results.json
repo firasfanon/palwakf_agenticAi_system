@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "native_code_index_contract_v1": {
+    "python_functions": [
+      "intentionally_risky_expression",
+      "list_projects",
+      "normalize_project_name",
+      "review_project",
+      "summarize"
+    ],
+    "python_classes": ["ProjectService"],
+    "fastapi_routes": [
+      {"method": "GET", "path": "/api/projects", "handler": "list_projects"},
+      {"method": "POST", "path": "/api/projects/{project_id}/review", "handler": "review_project"}
+    ],
+    "react_components": ["App", "ProjectDashboard", "ReviewPanel"],
+    "react_routes": ["/projects", "/projects/:projectId/review"],
+    "flutter_widgets": ["ProjectHomePage", "ReviewWorkspace"]
+  }
+}

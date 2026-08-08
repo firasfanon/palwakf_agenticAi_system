@@ -1,0 +1,75 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_CODEBASE_UNDERSTANDING_READ_MODEL_V1_DESIGN_ONLY",
+  "mode": "DESIGN_ONLY_READ_MODEL",
+  "accepted_prerequisites": [
+    "PROJECT_READER_TOOL_V1_VISUALLY_ACCEPTED",
+    "FRONTEND_MEGA_OPERATIONAL_WORKSPACE_V1_VISUALLY_ACCEPTED",
+    "BACKEND_FRONTEND_ALIGNMENT_V1_ACCEPTED",
+    "FRONTEND_BACKEND_TASK_DRAFT_BINDING_V1_ACCEPTED",
+    "TASK_DRAFT_REVIEW_FLOW_V1_VISUALLY_ACCEPTED"
+  ],
+  "read_model_layers": [
+    {
+      "id": "repository_surface",
+      "status": "current",
+      "source": "Project Reader V1",
+      "output": "allowed roots/key files/route matrix"
+    },
+    {
+      "id": "frontend_components",
+      "status": "design_only",
+      "source": "frontend/src",
+      "output": "component/page/route index later"
+    },
+    {
+      "id": "backend_routes",
+      "status": "design_only",
+      "source": "backend/src",
+      "output": "FastAPI route/endpoint index later"
+    },
+    {
+      "id": "tool_contracts",
+      "status": "design_only",
+      "source": "tool registry/backend contracts",
+      "output": "assistant-tool authority map"
+    },
+    {
+      "id": "agent_registry",
+      "status": "design_only",
+      "source": "agents/registry*.yaml",
+      "output": "assistant identity/capability map"
+    },
+    {
+      "id": "governance_docs",
+      "status": "design_only",
+      "source": "docs/*.md",
+      "output": "governance baseline context"
+    },
+    {
+      "id": "vector_codebase_rag",
+      "status": "future",
+      "source": "ChromaDB/LanceDB/Qdrant",
+      "output": "deferred semantic retrieval"
+    },
+    {
+      "id": "agent_coding_self_apply",
+      "status": "blocked",
+      "source": "Shell/Git/Code execution",
+      "output": "blocked"
+    }
+  ],
+  "hard_boundaries": {
+    "backend_source_mutation": "NONE",
+    "database_write": "NONE",
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "shell": "NO",
+    "git": "NO",
+    "code_execution": "NO",
+    "vector_db": "NO",
+    "embeddings": "NO",
+    "langgraph": "NO",
+    "web_search": "NO",
+    "platform_mutation": "NONE"
+  }
+}

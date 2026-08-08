@@ -1,0 +1,11 @@
+{
+  "source_state": "WINDOWS_POSTIMAGE_RECONCILED_BY_USER_EVIDENCE",
+  "defective_static_gate_preimage_sha256": "58197383AA0FF931A6DE141A6540B3CF528A4F58DBD0C859FCCD83491839CBEE",
+  "reconciled_static_gate_postimage_sha256": "9602E3FFF2A1FDD7F4CBEC441B3F7A33C07CE1C1512FDCEED92A5EEC3A989BF9",
+  "validated_contracts": {
+    "scoped_governed_routes": "BASE constant plus f-string route construction",
+    "governed_authorization_header": "conftest fixture plus governed test injection",
+    "local_authorization_header": "conftest fixture plus local-agent test injection"
+  },
+  "source_project_mutation": "NONE"
+}

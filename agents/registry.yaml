@@ -1,0 +1,46 @@
+registry_version: "1.0"
+project_scope: "PalWakf project-wide local agents"
+runtime_mode: "local_only_read_only"
+global_guards:
+  platform_mutation: false
+  database_access: false
+  git_write: false
+  deployment: false
+  public_network_tools: false
+  human_approval_required: true
+roles:
+  - id: coordinator
+    name_ar: "منسق العمل"
+    lifecycle: "pilot_ready"
+    authority: "read_only_analysis"
+    allowed_outputs: ["task_brief", "routing_plan", "evidence_request"]
+  - id: sovereignty_reviewer
+    name_ar: "مراجع السيادة"
+    lifecycle: "pilot_ready"
+    authority: "read_only_governance_review"
+    allowed_outputs: ["sovereignty_review", "risk_register", "evidence_escalation"]
+  - id: knowledge_researcher
+    name_ar: "باحث المعرفة"
+    lifecycle: "admission_pending"
+    authority: "read_only_research"
+    allowed_outputs: ["source_map", "research_summary", "citation_gap_report"]
+  - id: ui_ux_designer
+    name_ar: "مصمم تجربة المستخدم"
+    lifecycle: "admission_pending"
+    authority: "design_only"
+    allowed_outputs: ["screen_contract", "state_matrix", "ux_review"]
+  - id: documentation_handoff
+    name_ar: "موثق التسليم"
+    lifecycle: "admission_pending"
+    authority: "documentation_draft_only"
+    allowed_outputs: ["handoff_draft", "baseline_draft", "change_summary"]
+  - id: tester
+    name_ar: "مختبر"
+    lifecycle: "blocked"
+    authority: "none"
+    allowed_outputs: []
+  - id: coding_builder
+    name_ar: "باني برمجي"
+    lifecycle: "blocked"
+    authority: "none"
+    allowed_outputs: []

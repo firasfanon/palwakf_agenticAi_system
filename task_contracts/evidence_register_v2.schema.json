@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Evidence Register V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidence_id",
+    "task_id",
+    "claim",
+    "evidence_type",
+    "environment",
+    "reference",
+    "verification_status"
+  ],
+  "properties": {
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^EVD-[A-Z0-9-]+$"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "claim": {
+      "type": "string",
+      "minLength": 5
+    },
+    "evidence_type": {
+      "enum": [
+        "Test",
+        "Log",
+        "Screenshot",
+        "Diff",
+        "Build",
+        "Lint",
+        "UAT",
+        "StaticTrace",
+        "Other"
+      ]
+    },
+    "environment": {
+      "enum": [
+        "Local",
+        "Sandbox",
+        "Staging",
+        "Production",
+        "Unknown"
+      ]
+    },
+    "reference": {
+      "type": "string",
+      "minLength": 3
+    },
+    "verification_status": {
+      "enum": [
+        "Pending",
+        "Accepted",
+        "Rejected"
+      ]
+    },
+    "redaction_required": {
+      "type": "boolean"
+    }
+  }
+}

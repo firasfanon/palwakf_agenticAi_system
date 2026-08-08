@@ -1,0 +1,38 @@
+{
+  "contract": "LEGACY_TEST_CONTRACT_MIGRATION_AND_CONTROLLED_POSITIVE_AUTHORIZATION_UAT_V1",
+  "execution_mode": "ISOLATED_REPLICA",
+  "preimage_verification": "PASS",
+  "postimage_verification": "PASS",
+  "targeted_negative_and_positive_uat": "PASS",
+  "targeted_count": "26 passed",
+  "full_backend_suite": "PASS",
+  "full_backend_count": "65 passed",
+  "python_used": "3.13.5",
+  "declared_python_range": ">=3.11,<3.13",
+  "environment_qualification": "WINDOWS_PYTHON_3_12_10_POST_APPLY_RUN_PENDING",
+  "production_source_tree_hash_equality": true,
+  "production_source_files_changed": [],
+  "scope_diff": {
+    "added": [
+      "backend/tests/conftest.py",
+      "backend/tests/test_legacy_write_authorization_positive_uat.py",
+      "scripts/Run-LegacyTestContractMigrationAndPositiveAuthorizationUatV1.ps1",
+      "scripts/Test-LegacyTestContractMigrationAndPositiveAuthorizationUatV1Static.ps1"
+    ],
+    "removed": [],
+    "changed": [
+      "backend/tests/test_governed_local_agent_core.py",
+      "backend/tests/test_governed_operations.py",
+      "backend/tests/test_governed_operations_workspace_scoping.py",
+      "backend/tests/test_workspace_core.py"
+    ]
+  },
+  "patch_file_count": 8,
+  "excluded": [
+    "REACT_WRITE",
+    "MODEL_EXECUTION",
+    "PILOT_EXECUTION",
+    "COMMERCIAL_POSITIVE_UAT",
+    "PRODUCTION_PROMOTION"
+  ]
+}

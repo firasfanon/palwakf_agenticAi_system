@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>سجل الوكلاء — PalWakf Local Agents</title>
+  <link rel="stylesheet" href="/local-agents/assets/styles.css">
+</head>
+<body data-ui-contract="LOCAL_AGENTS_FRONTEND_V1_AGENT_REGISTRY_READ_ONLY">
+  <main class="shell">
+    <header class="hero">
+      <div><span class="eyebrow">LOCAL AGENT CORE</span><h1>سجل الوكلاء المحليين المحكومين</h1><p>عرض مؤسسي للوكلاء والحدود والسياسات حسب مساحة العمل. لا تظهر هذه الواجهة مفاتيح وصول ولا تشغل نموذجًا أو أدوات.</p></div>
+      <div id="status" class="status">جارٍ قراءة حالة النظام…</div>
+    </header>
+    <section class="context-bar"><label>سياق مساحة العمل <select id="workspace" aria-label="اختيار مساحة العمل"></select></label><div class="context-actions"><a href="/workspaces" class="button secondary">المساحات</a><a id="operations-link" href="/operations" class="button secondary">العمليات</a><button id="reload" type="button" class="button">تحديث القراءة</button></div></section>
+    <section id="summary" class="summary" aria-live="polite"></section>
+    <section class="section-title"><span class="eyebrow">AGENT REGISTRY</span><h2>الوكلاء المتاحون في السياق الحالي</h2><p>المعروض يشرح الاستعداد والحدود، ولا يمثل تفويضًا للتنفيذ.</p></section>
+    <section id="agents" class="grid"></section>
+    <section class="section-title"><span class="eyebrow">MEMORY & AUDIT</span><h2>حدود الذاكرة والتدقيق</h2></section>
+    <section id="boundaries" class="grid"></section>
+    <section class="notice"><span>🛡</span><div><b>عقد الواجهة المقروءة</b><p>Model Execution = NONE · Pilot = NOT EXECUTED · Shell/Git/Database/Deployment/Network = NONE · Cross-workspace = DENY</p></div></section>
+  </main>
+  <script src="/local-agents/assets/app.js" defer></script>
+</body>
+</html>

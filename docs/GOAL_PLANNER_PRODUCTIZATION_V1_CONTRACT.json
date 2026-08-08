@@ -1,0 +1,29 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_GOAL_PLANNER_PRODUCTIZATION_V1_PREPARE_ONLY",
+  "status": "prepare_only",
+  "pages": [
+    "/agent-console/goal-planner",
+    "/agent-console/tasks",
+    "/agent-console/reviews"
+  ],
+  "features": [
+    "goal_templates",
+    "editable_goal_intake",
+    "deterministic_plan_preview",
+    "prepare_plan_steps_as_task_drafts",
+    "backend_prepare_or_browser_fallback"
+  ],
+  "boundaries": {
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "shell": "NO",
+    "git": "NO",
+    "code_execution": "NO",
+    "self_apply": "NO",
+    "autonomous_build": "NO",
+    "database_persistence": "NONE",
+    "backend_source_mutation": "NONE",
+    "web_search": "NO",
+    "platform_mutation": "NONE"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "agent_id": "knowledge_researcher",
+  "pack_id": "LOCAL_AGENT_STRUCTURED_ANALYSIS_PAYLOAD_FOUNDATION",
+  "role_focus": "approved_reference_source_readiness_assessment",
+  "allowed_skills": [
+    "task_triage",
+    "evidence_assessment",
+    "knowledge_source_review"
+  ],
+  "risk": "LOW",
+  "autonomy": "L0_READ_ONLY",
+  "runtime_mode": "read_only_report_only",
+  "requires_human_review": true,
+  "model_output_contract": "STRUCTURED_ANALYSIS_PAYLOAD_KNOWLEDGE_RESEARCHER_V1",
+  "raw_output_format": "SINGLE_JSON_OBJECT",
+  "canonical_envelope_owner": "host"
+}

@@ -1,0 +1,9 @@
+{
+  "package": "LOCAL_AGENT_READ_ONLY_PILOT_LIFECYCLE_CLOSURE_V1_2_REVC",
+  "json_contract_parse": "PASS",
+  "installer_backup_manifest_logic": "PRESENT",
+  "review_manifest_root_guard": "PRESENT",
+  "archive_hash_revalidation": "PRESENT",
+  "powershell_runtime_execution": "NOT_RUN_IN_LINUX",
+  "status": "CANDIDATE_PREPARED_NOT_APPLIED"
+}

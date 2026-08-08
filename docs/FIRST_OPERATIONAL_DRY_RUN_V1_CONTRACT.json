@@ -1,0 +1,33 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_FIRST_OPERATIONAL_DRY_RUN_V1_NO_EXECUTION",
+  "route": "/agent-console/first-dry-run",
+  "posture": "frontend_dry_run_only",
+  "adds": [
+    "dry_run_page",
+    "browser_local_drafts",
+    "no_execution_proof",
+    "skill_aware_checklist"
+  ],
+  "storage": {
+    "browser_local_storage": true,
+    "database_persistence": false
+  },
+  "blocked": {
+    "model_execution": true,
+    "pilot_execution": true,
+    "shell": true,
+    "git": true,
+    "code_execution": true,
+    "self_apply": true,
+    "autonomous_build": true,
+    "database_persistence": true,
+    "backend_source_mutation": true,
+    "web_search_runtime": true,
+    "platform_mutation": true
+  },
+  "future_candidates_from_uploaded_note": [
+    "PROJECT_CONTINUITY_MEMORY_AND_TASK_BOARD_V1_DESIGN_ONLY",
+    "STANDING_RULES_REGISTRY_V1_DESIGN_ONLY",
+    "INNOVATION_AGENT_AND_CREATIVE_REVIEW_V1_DESIGN_ONLY"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "contract": "REACT_READ_ONLY_NO_TOKEN_NO_COOKIE_CREDENTIALS",
+  "scope": "frontend/src",
+  "prohibited_pattern_hits": {
+    "browser_storage": false,
+    "authorization_header_or_bearer": false,
+    "write_request": false
+  },
+  "credentials_omit_present": true,
+  "app_file_response_import_present": true,
+  "app_staticfiles_import_present": true,
+  "app_assets_guard_present": true,
+  "result": "PASS"
+}

@@ -1,0 +1,21 @@
+export const qualityGatedExternalScannersWave2V1 = Object.freeze({
+  mainRoute: "/agent-console/security-scans",
+  governanceRoutes: [
+    "/agent-console/security-scans/governance",
+    "/agent-console/security-scans/manifests",
+    "/agent-console/security-scans/evidence",
+  ],
+  apiPrefix: "/api/v1/operational-core/external-scanners-wave2",
+  scanners: ["semgrep", "gitleaks"],
+  trivy: "readiness_hold",
+  userExperience: "operational_ux_first",
+  governancePlacement: "subpages",
+  modelInference: "none",
+  shell: false,
+  git: false,
+  networkRuntime: false,
+  sourceWrite: false,
+  automaticRetry: false,
+  humanApprovalRequired: true,
+  humanResultReviewRequired: true,
+});

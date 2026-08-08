@@ -1,0 +1,35 @@
+{
+  "manifest_schema": "MULTI_WORKSPACE_AGENT_CAPABILITY_BOOTSTRAP_MANIFEST_V1",
+  "contract_id": "MEGA_BATCH_MULTI_WORKSPACE_AGENT_CAPABILITY_EXPANSION_V1",
+  "bootstrap_mode": "IDENTITY_AND_POLICY_DECLARATION_ONLY",
+  "workspace_id": "commercial_projects",
+  "profile_id": "client_isolated_v1",
+  "classification": "commercial",
+  "lifecycle_state": "BOOTSTRAPPED_PREPARE_ONLY",
+  "workspace_storage_initialized": false,
+  "state_database": "NOT_CREATED",
+  "audit_database": "NOT_CREATED",
+  "local_agent_core_database": "NOT_CREATED",
+  "model_execution": "NONE",
+  "pilot_execution": "NOT_EXECUTED",
+  "shell_execution": "NONE",
+  "git_write": "NONE",
+  "project_file_write": "NONE",
+  "deployment": "NONE",
+  "external_network": "NONE",
+  "cross_workspace_access": "DENY",
+  "human_review": "MANDATORY",
+  "auto_approval": "DENY",
+  "auto_execution": "DENY",
+  "source_project_binding": "NOT_CONFIGURED",
+  "memory_boundary": "WORKSPACE_SCOPED_NOT_INITIALIZED",
+  "next_authorized_step": "WORKSPACE_CAPABILITY_BINDING_REQUIRES_SEPARATE_CANDIDATE_APPLY_AND_UAT",
+  "required_context": [
+    "client_id",
+    "project_id"
+  ],
+  "client_isolation": {
+    "cross_client_access": "DENY",
+    "cross_project_access": "DENY"
+  }
+}

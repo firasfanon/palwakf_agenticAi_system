@@ -1,0 +1,26 @@
+{
+  "task_id": "TASK-DEMO-001",
+  "skill_id": "data_classification_review",
+  "status": "COMPLETE_WITHIN_L0_L1",
+  "facts": [
+    {
+      "statement": "Example fact linked to an approved reference.",
+      "source": "reference/example.md"
+    }
+  ],
+  "assumptions": [
+    "Example assumption remains unverified."
+  ],
+  "not_proven": [
+    "No live environment state was inspected."
+  ],
+  "evidence": [
+    {
+      "claim": "The review is based on static project documentation.",
+      "reference": "reference/example.md",
+      "type": "StaticTrace"
+    }
+  ],
+  "next_action": "Human review of the proposed output.",
+  "escalation_required": false
+}

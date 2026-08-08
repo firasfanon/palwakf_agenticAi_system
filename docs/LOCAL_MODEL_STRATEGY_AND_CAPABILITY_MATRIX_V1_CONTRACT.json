@@ -1,0 +1,73 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_LOCAL_MODEL_STRATEGY_AND_CAPABILITY_MATRIX_V1_DESIGN_ONLY",
+  "mode": "DESIGN_ONLY",
+  "accepted_input_context": [
+    "DeepSeek/local model comparison conversation",
+    "Codebase Understanding Read Model accepted stage"
+  ],
+  "surfaces": [
+    "/agent-console/projects",
+    "/agent-console/diagnostics",
+    "/agent-console/pilot-control"
+  ],
+  "model_roles": [
+    {
+      "id": "fast_triage",
+      "status": "candidate",
+      "model_class": "small local instruct model",
+      "execution": "none"
+    },
+    {
+      "id": "coding_specialist",
+      "status": "design_only",
+      "model_class": "coder-class local model",
+      "execution": "none"
+    },
+    {
+      "id": "reasoning_reviewer",
+      "status": "design_only",
+      "model_class": "reasoning-oriented local model",
+      "execution": "none"
+    },
+    {
+      "id": "arabic_governance",
+      "status": "design_only",
+      "model_class": "Arabic-capable instruct model",
+      "execution": "none"
+    },
+    {
+      "id": "document_summarizer",
+      "status": "future_gate",
+      "model_class": "summarization/extraction model",
+      "execution": "none"
+    },
+    {
+      "id": "cloud_frontier",
+      "status": "blocked",
+      "model_class": "external cloud model",
+      "execution": "blocked"
+    }
+  ],
+  "readiness_gates": [
+    "local_model_inventory",
+    "role_to_model_mapping",
+    "prompt_output_contract",
+    "hardware_resource_gate",
+    "controlled_local_model_pilot"
+  ],
+  "boundaries": {
+    "backend_source_mutation": "NONE",
+    "database_write": "NONE",
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "ollama_invoke": "NO",
+    "deepseek_run": "NO",
+    "benchmark": "NO",
+    "shell": "NO",
+    "git": "NO",
+    "code_execution": "NO",
+    "web_search": "NO",
+    "external_cloud_model": "NO",
+    "platform_mutation": "NONE"
+  }
+}

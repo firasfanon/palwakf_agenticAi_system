@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PalWakf Local Agent Task Intake",
+  "type": "object",
+  "required": [
+    "title",
+    "system_scope",
+    "request",
+    "risk_level",
+    "allowed_paths",
+    "forbidden_actions"
+  ],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 8
+    },
+    "system_scope": {
+      "type": "string",
+      "minLength": 2
+    },
+    "request": {
+      "type": "string",
+      "minLength": 15
+    },
+    "risk_level": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "allowed_paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "forbidden_actions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requested_roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_required": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

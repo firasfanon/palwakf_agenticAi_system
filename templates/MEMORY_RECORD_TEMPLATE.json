@@ -1,0 +1,12 @@
+{
+  "record_id": "MEM-YYYYMMDD-001",
+  "record_type": "FACT",
+  "summary": "",
+  "source_refs": [],
+  "confidence": "LOW",
+  "classification": "INTERNAL",
+  "status": "PENDING_HUMAN_REVIEW",
+  "created_at_utc": "",
+  "human_approval_required": true,
+  "notes": ""
+}

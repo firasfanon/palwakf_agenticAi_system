@@ -1,0 +1,156 @@
+{
+  "package_identity": "PALWAKF_LOCAL_AGENTS_COMPREHENSIVE_HANDOFF_AND_UPDATED_BASELINE_STATE_R2_20260719",
+  "state_date": "2026-07-19",
+  "project": {
+    "name": "PalWakf Local Agents",
+    "identity": "Governed Local Engineering Agentic Platform",
+    "source_root": "C:\\Users\\DELL\\StudioProjects\\palwakf_local_agents",
+    "baseline_root": "D:\\PALWAKF_ASSISTANT_BASELINES",
+    "runtime_origin": "http://127.0.0.1:8010"
+  },
+  "formal_accepted_baseline": "GOVERNED_CODING_MODEL_PROVIDER_AND_CANDIDATE_GENERATION_V1_ACCEPTED_20260719",
+  "latest_promotion_candidate": {
+    "name": "GOVERNED_CODING_MODEL_PROVIDER_AND_CANDIDATE_GENERATION_V1",
+    "technical_status": "PASS",
+    "visual_uat": "PASS",
+    "accessibility_ui": "PASS",
+    "explicit_final_acceptance": "RECORDED",
+    "accepted_baseline": "GOVERNED_CODING_MODEL_PROVIDER_AND_CANDIDATE_GENERATION_V1_ACCEPTED_20260719"
+  },
+  "current_candidate": {
+    "candidate_id": "cand-a1836fd428779f8a",
+    "state": "HUMAN_REVIEW_REQUIRED",
+    "tests": "PASS",
+    "real_source_mutation": false,
+    "source_apply": "BLOCKED_REQUIRES_SEPARATE_CANDIDATE_AUTHORIZATION",
+    "contract": "READ_ONLY_DEVELOPMENT_DIAGNOSTIC_ENDPOINT_V1"
+  },
+  "coding_model_provider": {
+    "current_mode": "disabled",
+    "available_modes": [
+      "disabled",
+      "ollama",
+      "openai_compatible"
+    ],
+    "base_url_visible": "http://127.0.0.1:11434",
+    "model_name_visible": "qwen3-coder:latest",
+    "live_model_call_performed": false,
+    "network_scope": "LOOPBACK_ONLY",
+    "redirects": "BLOCKED",
+    "proxy": "DISABLED",
+    "api_key_value_stored": false,
+    "api_key_value_returned": false,
+    "api_key_env_name": "PALWAKF_LOCAL_AGENTS_MODEL_API_KEY",
+    "execution_authorization": "REQUIRES_SEPARATE_EXPLICIT_HUMAN_AUTHORIZATION"
+  },
+  "boundaries": {
+    "production_execution": "NOT_AUTHORIZED",
+    "model_execution": "EXPLICIT_HUMAN_AUTHORIZATION_ONLY",
+    "automatic_model_execution_during_apply": "NONE",
+    "real_source_write_by_model_candidate": "NONE",
+    "candidate_workspace_write": "LOCAL_ONLY",
+    "autonomous_source_write": "BLOCKED",
+    "autonomous_apply": "BLOCKED",
+    "source_apply_endpoint": "ABSENT",
+    "shell": "BLOCKED",
+    "git": "BLOCKED",
+    "database_write": "NONE",
+    "self_apply": "BLOCKED",
+    "human_authority": "RETAINED"
+  },
+  "accepted_states": [
+    "LOCAL_AGENTS_PROJECT_UI_UX_REFERENCE_SCREENS_V1_ACCEPTED_20260712",
+    "OPEN_SOURCE_CAPABILITY_CENSUS_AND_SAFE_ADAPTER_CONTRACTS_V1_READ_ONLY_ACCEPTED",
+    "QUALITY_ACCEPTED_TOOLS_GOAL_PLANNER_SELECTION_BINDING_V1_ACCEPTED_20260713",
+    "TOOL_QUALITY_STATE_RECONCILIATION_AND_FIRST_SELECTABLE_TOOL_ACTIVATION_V1_ACCEPTED_20260713",
+    "FIRST_HUMAN_AUTHORIZED_READ_ONLY_OPERATION_V1_ACCEPTED_20260713",
+    "CONTROLLED_SOFTWARE_DEVELOPMENT_PIPELINE_V1_0_1_ACCEPTED_20260719",
+    "GOVERNED_CODING_MODEL_PROVIDER_AND_CANDIDATE_GENERATION_V1_ACCEPTED_20260719"
+  ],
+  "packages": [
+    {
+      "name": "LOCAL_AGENTS_FIRST_HUMAN_AUTHORIZED_READ_ONLY_OPERATION_V1_BUILT_APPLY_PACKAGE_20260713.zip",
+      "sha256": "C4ED9546DDC850ABE52EE8A4E9CFC190BAB5A9B9893BDA6514558FC82037988D",
+      "status": "ACCEPTED"
+    },
+    {
+      "name": "LOCAL_AGENTS_READ_ONLY_OPERATION_EXPANSION_AND_EVIDENCE_WORKBENCH_V1_BUILT_APPLY_PACKAGE_20260713.zip",
+      "sha256": "0E5A052FB4201B5CAB097C6587807D77A3549318C362716B0A11CB09A36E2481",
+      "status": "BUILT_INTERNAL_PASS_WINDOWS_APPLY_UNKNOWN"
+    },
+    {
+      "name": "LOCAL_AGENTS_CONTROLLED_SOFTWARE_DEVELOPMENT_PIPELINE_AND_FIRST_CANDIDATE_PATCH_V1_0_1_BUILT_APPLY_PACKAGE_20260716.zip",
+      "sha256": "A304784BC973875498BE5493004C101B116B8AED2D19B17CC926C6C76E62707A",
+      "status": "ACCEPTED"
+    },
+    {
+      "name": "LOCAL_AGENTS_GOVERNED_CODING_MODEL_PROVIDER_AND_CANDIDATE_GENERATION_V1_BUILT_APPLY_PACKAGE_20260719.zip",
+      "sha256": "B6ED2DC66BDD751148969B2886D54048E8754C607B59801C29C2F75572ABA76F",
+      "status": "ACCEPTED_RUNTIME_AND_VISUAL_PASS_MODEL_CALL_NOT_EXECUTED"
+    },
+    {
+      "name": "LOCAL_AGENTS_GOVERNED_CODING_MODEL_PROVIDER_VISUAL_CONTRAST_AND_ACCESSIBILITY_REPAIR_V1_BUILT_APPLY_PACKAGE_20260719.zip",
+      "sha256": "6C35DE09E779479A415AD4E2E2FE80DDB04BB0834215DABD02D0A88A97B191FB",
+      "status": "APPLIED_TECHNICAL_AND_VISUAL_PASS"
+    }
+  ],
+  "evidence_roots": [
+    "D:\\PALWAKF_ASSISTANT_BASELINES\\LOCAL_AGENTS_FIRST_HUMAN_AUTHORIZED_READ_ONLY_OPERATION_V1_20260713_025738",
+    "D:\\PALWAKF_ASSISTANT_BASELINES\\LOCAL_AGENTS_CONTROLLED_SOFTWARE_DEVELOPMENT_PIPELINE_AND_FIRST_CANDIDATE_PATCH_V1_0_1_20260719_120130",
+    "D:\\PALWAKF_ASSISTANT_BASELINES\\LOCAL_AGENTS_GOVERNED_CODING_MODEL_PROVIDER_VISUAL_CONTRAST_AND_ACCESSIBILITY_REPAIR_V1_20260719_132304"
+  ],
+  "next_phases": [
+    {
+      "order": 0,
+      "name": "FORMAL_ACCEPTANCE_OF_GOVERNED_CODING_MODEL_PROVIDER_V1",
+      "status": "COMPLETED_ACCEPTED_20260719"
+    },
+    {
+      "order": 1,
+      "name": "MEGA_BATCH_LOCAL_AGENTS_FIRST_GOVERNED_CODING_MODEL_PROBE_AND_MODEL_GENERATED_CANDIDATE_UAT_V1",
+      "status": "NEXT_REQUIRES_SEPARATE_BUILD_AND_LIVE_MODEL_AUTHORIZATION"
+    },
+    {
+      "order": 2,
+      "name": "PROJECT_KNOWLEDGE_RETRIEVAL_AND_LAYERED_MEMORY_V1",
+      "status": "PLANNED"
+    },
+    {
+      "order": 3,
+      "name": "SKILL_REGISTRY_AND_MULTI_AGENT_ENGINEERING_TEAM_V1",
+      "status": "PLANNED"
+    },
+    {
+      "order": 4,
+      "name": "GOVERNED_LOCAL_MCP_ADAPTER_LAYER_V1",
+      "status": "PLANNED"
+    },
+    {
+      "order": 5,
+      "name": "CANDIDATE_SPECIFIC_CONTROLLED_APPLY_BACKUP_VERIFY_AND_ROLLBACK_BROKER_V1",
+      "status": "PLANNED"
+    },
+    {
+      "order": 6,
+      "name": "GOVERNED_DATABASE_ACCESS_AND_SQL_CLASS_POLICY_V1",
+      "status": "PLANNED"
+    },
+    {
+      "order": 7,
+      "name": "EVALUATION_OBSERVABILITY_AND_OPERATIONAL_RELIABILITY_V1",
+      "status": "PLANNED"
+    }
+  ],
+  "previous_formal_accepted_baseline": "CONTROLLED_SOFTWARE_DEVELOPMENT_PIPELINE_V1_0_1_ACCEPTED_20260719",
+  "acceptance_event": {
+    "phase": "GOVERNED_CODING_MODEL_PROVIDER_AND_CANDIDATE_GENERATION_V1",
+    "token": "GOVERNED_CODING_MODEL_PROVIDER_AND_CANDIDATE_GENERATION_V1_ACCEPTED_20260719",
+    "recorded_on": "2026-07-19",
+    "status": "ACCEPTED"
+  },
+  "next_required_authorizations": {
+    "source_batch_apply": "SEPARATE_EXPLICIT_AUTHORIZATION_REQUIRED",
+    "live_model_probe": "SEPARATE_EXPLICIT_HUMAN_AUTHORIZATION_REQUIRED",
+    "candidate_source_apply": "SEPARATE_CANDIDATE_SPECIFIC_AUTHORIZATION_REQUIRED"
+  }
+}

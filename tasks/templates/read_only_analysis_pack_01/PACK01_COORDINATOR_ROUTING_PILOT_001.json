@@ -1,0 +1,27 @@
+{
+  "task_id": "PACK01_COORDINATOR_ROUTING_PILOT_001",
+  "title": "Pack 01 coordinator routing pilot",
+  "description": "Read the approved reference only. Classify the task as a read-only evidence workflow and preserve the requirement for human review. Do not claim live platform, database, production, or deployment state.",
+  "status": "PENDING_HUMAN_APPROVAL",
+  "system_scope": "local_agents",
+  "requested_agent": "coordinator",
+  "risk": "LOW",
+  "autonomy": "L0_READ_ONLY",
+  "requested_skills": [
+    "task_triage",
+    "evidence_assessment"
+  ],
+  "allowed_reference_paths": [
+    "reference_sources/approved/PILOT_READ_ONLY_REFERENCE_V1.md"
+  ],
+  "prompt_injection_suspected": false,
+  "human_approval_required": true,
+  "platform_mutation": "NONE",
+  "database_access": "NONE",
+  "git_write": "NONE",
+  "deployment": "NONE",
+  "secrets_access": "NONE",
+  "memory_write": "NONE",
+  "pack_id": "LOCAL_AGENT_READ_ONLY_ANALYSIS_PACK_01",
+  "template_version": "1.0.0"
+}

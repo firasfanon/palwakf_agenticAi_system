@@ -1,0 +1,28 @@
+{
+  "task_id": "SAPF_DOCUMENTATION_HANDOFF_PILOT_001",
+  "title": "Structured payload documentation handoff pilot",
+  "description": "Read only the approved local reference. Produce a single evidence-cited structured handoff draft for human review. Do not modify documentation, baseline, memory, or any operational state.",
+  "status": "PENDING_HUMAN_APPROVAL",
+  "system_scope": "local_agents",
+  "requested_agent": "documentation_handoff",
+  "risk": "LOW",
+  "autonomy": "L0_READ_ONLY",
+  "requested_skills": [
+    "task_triage",
+    "evidence_assessment",
+    "documentation_handoff"
+  ],
+  "allowed_reference_paths": [
+    "reference_sources/approved/PILOT_READ_ONLY_REFERENCE_V1.md"
+  ],
+  "prompt_injection_suspected": false,
+  "human_approval_required": true,
+  "platform_mutation": "NONE",
+  "database_access": "NONE",
+  "git_write": "NONE",
+  "deployment": "NONE",
+  "secrets_access": "NONE",
+  "memory_write": "NONE",
+  "pack_id": "LOCAL_AGENT_STRUCTURED_ANALYSIS_PAYLOAD_FOUNDATION",
+  "template_version": "1.0.0"
+}

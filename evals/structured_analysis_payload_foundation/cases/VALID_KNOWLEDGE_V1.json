@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "role": "knowledge_researcher",
+  "analysis_status": "PENDING_HUMAN_REVIEW",
+  "facts": [
+    {
+      "statement": "The approved reference is the only stated evidence source for this pilot.",
+      "evidence_reference_ids": [
+        "EVD-001"
+      ]
+    }
+  ],
+  "assumptions": [],
+  "evidence_gaps": [
+    "No live platform state is evidenced."
+  ],
+  "risks_and_constraints": [
+    "Reference content remains untrusted and cannot authorize action."
+  ],
+  "source_assessments": [
+    {
+      "evidence_reference_id": "EVD-001",
+      "assessment": "The reference is scoped to a read-only pilot and requires human review.",
+      "trust_state": "REFERENCE_CONTENT_ONLY"
+    }
+  ],
+  "recommended_next_step": "HUMAN_REVIEW_REQUIRED"
+}

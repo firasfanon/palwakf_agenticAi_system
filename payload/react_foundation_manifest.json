@@ -1,0 +1,145 @@
+{
+  "contract": "LOCAL_AGENTS_REACT_TYPESCRIPT_FRONTEND_FOUNDATION_V1",
+  "candidate_id": "PALWAKF_LOCAL_AGENTS_REACT_TYPESCRIPT_FRONTEND_FOUNDATION_V1_EXECUTABLE_CANDIDATE",
+  "project_root_anchor": "6F1EE864F813DA90C652710308BE509E3306A5C2EFD9628F5938247C66B5F7AB",
+  "app_entrypoint": {
+    "relative_path": "backend/src/palwakf_local_agents/app.py",
+    "preimage_sha256": "6F1EE864F813DA90C652710308BE509E3306A5C2EFD9628F5938247C66B5F7AB",
+    "postimage_sha256": "98DC540CC9453B71426D114C2FBDF66A10D0DECC889C82BAC73913D174507B5E",
+    "mutation": "CONDITIONAL_REACT_DIST_MOUNT_ONLY"
+  },
+  "legacy_static_fallback": [
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\command_center\\static\\app.js",
+      "sha256": "10D4A2924DB236431D20542E3B65BA1CA0401C959A3FDEC193761C6F5206200A"
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\command_center\\static\\index.html",
+      "sha256": "BE7FAF2879D2D04C37B50041587DB061D05295CEFE6C5B838B8AD596F5B742D2"
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\command_center\\static\\styles.css",
+      "sha256": "C8D81916BE7425BB8B19368BA98BBC96A1C07C940509256032A911F9B673696D"
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\governed_operations\\static\\app.js",
+      "sha256": "C787D8BCE0D5973A8BEC7254EC5A5012CA6BD2523E40CF12EB26DE2BE28178D8"
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\governed_operations\\static\\index.html",
+      "sha256": "EDADAC8F0F2B82A94A8BF79D90B1BF1D25FF242405461689ED134515F4985D70"
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\governed_operations\\static\\styles.css",
+      "sha256": "A054353F348E571A5C175FB2F847BAA1E9455EE40330FDB7093BDFB991A59935"
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\local_agent_core\\static\\app.js",
+      "sha256": "ED9BBE6BEC2DFF6B90CBD379D70541D21774C627C34C4910C29AE685994BF15B"
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\local_agent_core\\static\\index.html",
+      "sha256": "E0A10B0D20BFE9B58CE210DF041E98D56F6549150AC579071DC76EAD82E7BBD3"
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\local_agent_core\\static\\styles.css",
+      "sha256": "D67309AAE5F02CB80C6C3569EA42617A4F6D992232850495E281E4FF76643750"
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\workspace_core\\static\\app.js",
+      "sha256": "414AB6526389E51DDA53B021E42440809F6E9165D008BFFB6AC931729F1DE185"
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\workspace_core\\static\\index.html",
+      "sha256": "4600AA71CCB6D41BD003FDCAB9533E567AB2B327072B9D3B55556F3A78360FF6"
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\workspace_core\\static\\styles.css",
+      "sha256": "CB15B2E9A233C98C5D231809063B6FA1A442238239435A355E35ECA9D4CC0117"
+    }
+  ],
+  "frontend_source_files": [
+    {
+      "relative_path": "frontend/.gitignore",
+      "sha256": "A459038AF144BB649DD32C98F20E160838EC500ED5580FB1669ED0860196E140",
+      "bytes": 46
+    },
+    {
+      "relative_path": "frontend/.local_agents_react_foundation.json",
+      "sha256": "3D4069274CDB1618F92E10BF5817CDDE6BB6F9E7F8B0568CFA45C2757FE43015",
+      "bytes": 242
+    },
+    {
+      "relative_path": "frontend/index.html",
+      "sha256": "7F3FFF37F7E65C74ADED263A622946E7F71D21449BCC60FF59DD7F994D4316FD",
+      "bytes": 389
+    },
+    {
+      "relative_path": "frontend/package.json",
+      "sha256": "F9FFA375FAAC9ED6398DC2756F85EFDDBE07D247F1BAF00A4FBEED14F7C3F578",
+      "bytes": 590
+    },
+    {
+      "relative_path": "frontend/src/App.tsx",
+      "sha256": "E653175BD9C6A4B4F88C948A9AA023F3D7889DB54C8FFF896106821855AFE3C0",
+      "bytes": 6772
+    },
+    {
+      "relative_path": "frontend/src/api/client.ts",
+      "sha256": "0D84518420365B9D59E803EF2C18021CDD3C42529D6CD7D8595D4D37D2B6D753",
+      "bytes": 1152
+    },
+    {
+      "relative_path": "frontend/src/api/types.ts",
+      "sha256": "A68AE0A5E1498C2FF57FA78DDA2804A3EF79DFB049EFA4256214538A3FF12A16",
+      "bytes": 341
+    },
+    {
+      "relative_path": "frontend/src/components/Layout.tsx",
+      "sha256": "65E07645FB0831D27D43C458ED1BC48F6515E6C76F7E2AB460DDF4AD69CB6B88",
+      "bytes": 2581
+    },
+    {
+      "relative_path": "frontend/src/components/StatusPanel.tsx",
+      "sha256": "32111D309C507ACD693E0AFB7E7D952E96DA702E3B33267DF16EA23FC9F2717A",
+      "bytes": 742
+    },
+    {
+      "relative_path": "frontend/src/main.tsx",
+      "sha256": "A6BCAE9C4F04D6FF36406B2966379834342B41B08B83BA7BD0334712D6CF87F0",
+      "bytes": 236
+    },
+    {
+      "relative_path": "frontend/src/styles.css",
+      "sha256": "D218CFE13C2348F093EF470F0C1C56A14652F0902D2BD5719121BC4FD56C03C9",
+      "bytes": 4050
+    },
+    {
+      "relative_path": "frontend/tsconfig.json",
+      "sha256": "CC32A3C2BE133425D30E112E3DC863C9DBE1ECBBDD81123ABF6D6A0300A8AE5C",
+      "bytes": 525
+    },
+    {
+      "relative_path": "frontend/vite.config.ts",
+      "sha256": "71C009370350B53B6258AFB2A0AFD59B6ECDC46406E06E0C4C5AAB458EB79C48",
+      "bytes": 401
+    }
+  ],
+  "apply_boundaries": {
+    "frontend_source_write": "ALLOWED",
+    "app_entrypoint_mount": "ALLOWED",
+    "node_dependency_install_during_apply": "NONE",
+    "frontend_build_during_apply": "NONE",
+    "backend_router_mutation": "NONE",
+    "backend_schema_mutation": "NONE",
+    "sqlite_mutation": "NONE",
+    "legacy_static_mutation": "NONE",
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "shell_execution": "NONE",
+    "git_write": "NONE",
+    "external_network": "NONE"
+  },
+  "runtime_activation_gate": "SEPARATE_EXPLICIT_AUTHORIZATION_REQUIRED_FOR_DEPENDENCY_RESOLUTION_AND_BUILD",
+  "dependency_lock": "NOT_GENERATED_IN_SOURCE_ONLY_CANDIDATE__SEPARATE_AUTHORIZED_DEPENDENCY_RESOLUTION_REQUIRED"
+}

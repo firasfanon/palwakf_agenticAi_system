@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Workspace Lock V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "lock_id",
+    "resource",
+    "task_id",
+    "agent_id",
+    "state"
+  ],
+  "properties": {
+    "lock_id": {
+      "type": "string",
+      "pattern": "^LOCK-[A-Z0-9-]+$"
+    },
+    "resource": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "agent_id": {
+      "type": "string"
+    },
+    "state": {
+      "enum": [
+        "Planned",
+        "Active",
+        "Released",
+        "Expired"
+      ]
+    },
+    "reason": {
+      "type": "string"
+    },
+    "expires_at": {
+      "type": "string"
+    }
+  }
+}

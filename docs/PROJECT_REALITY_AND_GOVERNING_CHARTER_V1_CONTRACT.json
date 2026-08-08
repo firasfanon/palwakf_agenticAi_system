@@ -1,0 +1,28 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_PROJECT_REALITY_AND_GOVERNING_CHARTER_V1_DESIGN_ONLY",
+  "official_identity": "Governed Local Engineering Agentic Platform",
+  "route": "/agent-console/charter",
+  "charter_principles": [
+    "Human Authority",
+    "Goal-to-Plan First",
+    "Tool Contracts",
+    "Local Sovereignty and Privacy",
+    "Auditability Before Autonomy",
+    "No Self-Apply",
+    "No Hidden Execution",
+    "Execution Is Future-Gated"
+  ],
+  "boundaries": {
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "shell": "NO",
+    "git": "NO",
+    "code_execution": "NO",
+    "self_apply": "NO",
+    "autonomous_build": "NO",
+    "database_persistence": "NONE",
+    "backend_source_mutation": "NONE",
+    "web_search": "NO",
+    "platform_mutation": "NONE"
+  }
+}

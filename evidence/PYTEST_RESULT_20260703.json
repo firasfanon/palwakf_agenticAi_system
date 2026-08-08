@@ -1,0 +1,10 @@
+{
+  "command": "PYTHONPATH=backend/src ALLOW_AGENT_EXECUTION=false ALLOW_PLATFORM_MUTATION=false ALLOW_DATABASE_ACCESS=false python3 -m pytest -q",
+  "result": "33 passed, 6 failed",
+  "failures": [
+    "5 governed_operations tests expect legacy non-workspace routes while runtime routes are workspace-scoped",
+    "1 workspace_core static UI test expects an older marker absent from current index.html"
+  ],
+  "classification": "OPEN_CONTRACT_RECONCILIATION_NOT_PATCHED_IN_THIS_BATCH",
+  "runtime_note": "Executed on Python 3.13.5; target project contract is <3.13 and target local UAT is Python 3.12."
+}

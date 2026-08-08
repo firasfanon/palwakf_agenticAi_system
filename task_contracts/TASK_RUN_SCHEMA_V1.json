@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "required": ["run_id", "task_id", "agent_id", "mode", "status", "started_at_utc", "output_path", "human_review_required", "platform_mutation", "database_access"],
+  "constants": {
+    "mode": "READ_ONLY_REPORT_ONLY",
+    "human_review_required": true,
+    "platform_mutation": "NONE",
+    "database_access": "NONE"
+  }
+}

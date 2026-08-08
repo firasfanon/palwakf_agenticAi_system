@@ -1,0 +1,16 @@
+{
+  "status": "BLOCKED_BY_EXECUTION_ENVIRONMENT_POLICY",
+  "attempted_engine": "system Chromium 144.0.7559.96 via Playwright",
+  "attempted_url": "http://127.0.0.1:8876/agent-console",
+  "observed_error": "net::ERR_BLOCKED_BY_ADMINISTRATOR",
+  "verified_cause": "system Chromium managed URLBlocklist = [\"*\"]",
+  "project_cause": false,
+  "remediation_attempt": "Playwright-managed Chromium download attempted",
+  "remediation_result": "blocked by DNS EAI_AGAIN for official Playwright CDNs",
+  "scope_preserved": [
+    "no policy change",
+    "no project source change",
+    "no browser-policy bypass"
+  ],
+  "conclusion": "browser-rendered UAT cannot be truthfully marked PASS in this environment; HTTP/UAT and real-dist verification are complete separately"
+}

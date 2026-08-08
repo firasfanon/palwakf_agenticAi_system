@@ -1,0 +1,29 @@
+{
+  "base_url": "http://127.0.0.1:8876",
+  "rows": [
+    {
+      "path": "/agent-console",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 515
+    },
+    {
+      "path": "/agent-console/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 515
+    },
+    {
+      "path": "/agent-console/assets/index-BPZmFY1Y.js",
+      "status": 200,
+      "content_type": "text/javascript; charset=utf-8",
+      "bytes": 151096
+    },
+    {
+      "path": "/agent-console/assets/index-BLhDdh2Z.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "bytes": 3368
+    }
+  ]
+}

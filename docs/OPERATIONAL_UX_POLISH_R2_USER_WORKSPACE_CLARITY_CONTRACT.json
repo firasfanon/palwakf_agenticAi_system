@@ -1,0 +1,25 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_OPERATIONAL_UX_POLISH_R2_USER_WORKSPACE_CLARITY",
+  "mode": "FRONTEND_VISUAL_POLISH_ONLY",
+  "purpose": "User-first operational clarity; governance moved to subpage role",
+  "primary_routes": [
+    "/agent-console/",
+    "/agent-console/initial-operation",
+    "/agent-console/goal-planner",
+    "/agent-console/tasks",
+    "/agent-console/projects"
+  ],
+  "boundaries": {
+    "frontend_source_mutation": "YES_SCOPED_CSS_AND_DIST",
+    "backend_source_mutation": "NONE",
+    "database_persistence": "NONE",
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "shell": "NO",
+    "git": "NO",
+    "code_execution": "NO",
+    "self_apply": "NO",
+    "web_search": "NO",
+    "platform_mutation": "NONE"
+  }
+}

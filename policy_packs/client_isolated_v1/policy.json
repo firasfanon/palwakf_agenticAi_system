@@ -1,0 +1,44 @@
+{
+  "audit": {
+    "audit_required": "YES",
+    "hash_chain": "REQUIRED",
+    "retention": "CLIENT_POLICY_BOUND"
+  },
+  "classification": "commercial",
+  "execution": {
+    "execution_gateway": "DISABLED_BY_DEFAULT",
+    "execution_mode": "PREPARE_ONLY_UNTIL_CLIENT_POLICY_BINDING",
+    "model_execution": "NONE_BY_DEFAULT",
+    "pilot_execution": "NOT_EXECUTED_BY_DEFAULT"
+  },
+  "integration": {
+    "deployment": "CLIENT_APPROVAL_REQUIRED",
+    "external_database_access": "CLIENT_SCOPE_ONLY_IF_ENABLED",
+    "secrets_access": "VAULT_ONLY_IF_ENABLED"
+  },
+  "memory": {
+    "cross_workspace_read": "DENY",
+    "cross_workspace_write": "DENY",
+    "external_memory_sync": "DENY_BY_DEFAULT",
+    "memory_scope": "WORKSPACE_AND_CLIENT_BOUNDARY"
+  },
+  "non_transferable_constraints": [
+    "NO_CLIENT_DATA_LEAKAGE",
+    "NO_CROSS_CLIENT_TOOL_ACCESS",
+    "NO_SHARED_CREDENTIAL_SCOPE"
+  ],
+  "policy_pack_id": "client_isolated_v1",
+  "review": {
+    "approval_is_execution": "FALSE",
+    "human_review": "REQUIRED_FOR_CLIENT_AFFECTING_ACTIONS",
+    "policy_change": "OWNER_AND_CLIENT_SCOPE_APPROVAL_REQUIRED"
+  },
+  "tools": {
+    "external_network": "ALLOWLIST_ONLY",
+    "file_write": "CLIENT_SCOPE_APPROVAL_REQUIRED",
+    "git_write": "CLIENT_SCOPE_APPROVAL_REQUIRED",
+    "platform_bridge": "NOT_CONFIGURED",
+    "tool_profile": "client_isolated"
+  },
+  "version": "1.0.0"
+}

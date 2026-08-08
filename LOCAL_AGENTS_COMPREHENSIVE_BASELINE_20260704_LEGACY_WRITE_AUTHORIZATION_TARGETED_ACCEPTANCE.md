@@ -1,0 +1,39 @@
+# Local Agents Comprehensive Baseline — 2026-07-04
+
+## Baseline identity
+
+`LOCAL_AGENTS_COMPREHENSIVE_BASELINE_20260704_LEGACY_WRITE_AUTHORIZATION_TARGETED_ACCEPTANCE`
+
+## Predecessor
+
+`LOCAL_AGENTS_COMPREHENSIVE_BASELINE_20260704_HAR_FILENAME_RECONCILIATION_ACCEPTED`
+
+## Accepted within this baseline
+
+```text
+LEGACY_SERVER_WRITE_BOUNDARY = APPLIED_IN_ISOLATED_REPLICA
+POST_ROUTE_INVENTORY = 15/15
+POSTIMAGE_HASHES = PASS
+TARGETED_NEGATIVE_UAT = 25/25 PASS
+READ_ONLY_REACT_RUNTIME_UAT = REMAINS_ACCEPTED_FROM_PREVIOUS_BASELINE
+HAR_FILENAME_RECONCILIATION = REMAINS_ACCEPTED_FROM_PREVIOUS_BASELINE
+```
+
+## Explicit non-acceptance
+
+```text
+FULL_BACKEND_REGRESSION = NOT_ACCEPTED (48 passed / 16 failed)
+REACT_WRITE = BLOCKED
+POSITIVE_WRITE_UAT = NOT_EXECUTED
+MODEL_EXECUTION = NONE
+PILOT_EXECUTION = NOT_EXECUTED
+DATABASE_ACCESS = TEST_TEMPORARY_ONLY
+PLATFORM_MUTATION = NOT_EXECUTED
+PRODUCTION = NOT_APPROVED
+```
+
+## Behavioural safety contract
+
+- Unscoped legacy task creation is disabled, not silently authorized.
+- Rejected write attempts must not change state after application startup.
+- Commercial legacy writes remain denied until `client_id` persistence is implemented for those modules.

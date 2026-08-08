@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "change_count": 5,
+  "code_files_modified": 0,
+  "approved_non_code_artifacts": [
+    "backups/react_dependency_lock_deterministic_build_and_local_browser_uat_v1_20260703/preimage/package.json",
+    "frontend/dist/assets/index-BLhDdh2Z.css",
+    "frontend/dist/assets/index-BPZmFY1Y.js",
+    "frontend/dist/index.html",
+    "frontend/package-lock.json"
+  ],
+  "changes": [
+    {
+      "path": "backups/react_dependency_lock_deterministic_build_and_local_browser_uat_v1_20260703/preimage/package.json",
+      "kind": "added",
+      "source_sha256": null,
+      "postimage_sha256": "f9ffa375faac9ed6398dc2756f85efddbe07d247f1baf00a4fbeed14f7c3f578"
+    },
+    {
+      "path": "frontend/dist/assets/index-BLhDdh2Z.css",
+      "kind": "added",
+      "source_sha256": null,
+      "postimage_sha256": "7dba88b30ecd84a49e7a65157adfce4ded6a1b0dc9288d872b39d6a5a7b41670"
+    },
+    {
+      "path": "frontend/dist/assets/index-BPZmFY1Y.js",
+      "kind": "added",
+      "source_sha256": null,
+      "postimage_sha256": "777f353cf1c280b3c45caefb1736b3f6b9ad18e618c9fec7cd3a4456769e3b68"
+    },
+    {
+      "path": "frontend/dist/index.html",
+      "kind": "added",
+      "source_sha256": null,
+      "postimage_sha256": "dafea7a7aa12de2be786d89eab0f3f259810fbd8f0f236730d6a7d093ee35e8f"
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "kind": "added",
+      "source_sha256": null,
+      "postimage_sha256": "ee83e48ac31aa8a0ca5d04d4958a9629aa0549c09a84a7a2d170a7de830f78f6"
+    }
+  ]
+}

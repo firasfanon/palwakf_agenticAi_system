@@ -1,0 +1,44 @@
+{
+  "audit": {
+    "audit_required": "YES_FOR_HIGH_RISK",
+    "hash_chain": "REQUIRED",
+    "retention": "OWNER_CONTROLLED"
+  },
+  "classification": "personal",
+  "execution": {
+    "execution_gateway": "DISABLED_BY_DEFAULT",
+    "execution_mode": "PREPARE_AND_CONTROLLED_LOCAL_ACTIONS",
+    "model_execution": "NONE_BY_DEFAULT",
+    "pilot_execution": "NOT_EXECUTED_BY_DEFAULT"
+  },
+  "integration": {
+    "deployment": "MANUAL_APPROVAL_REQUIRED",
+    "external_database_access": "PROJECT_SCOPE_ONLY_IF_ENABLED",
+    "secrets_access": "VAULT_ONLY_IF_ENABLED"
+  },
+  "memory": {
+    "cross_workspace_read": "DENY",
+    "cross_workspace_write": "DENY",
+    "external_memory_sync": "OWNER_APPROVAL_REQUIRED",
+    "memory_scope": "WORKSPACE_ONLY"
+  },
+  "non_transferable_constraints": [
+    "NO_SILENT_FILE_DELETION",
+    "NO_UNTRACKED_HIGH_RISK_WRITE",
+    "NO_UNSCOPED_TOOL_RUN"
+  ],
+  "policy_pack_id": "developer_controlled_v1",
+  "review": {
+    "approval_is_execution": "FALSE",
+    "human_review": "REQUIRED_FOR_HIGH_RISK_WRITES",
+    "policy_change": "OWNER_APPROVAL_REQUIRED"
+  },
+  "tools": {
+    "external_network": "ALLOWLIST_ONLY",
+    "file_write": "OWNER_APPROVAL_REQUIRED",
+    "git_write": "OWNER_APPROVAL_REQUIRED",
+    "platform_bridge": "NOT_CONFIGURED",
+    "tool_profile": "developer_controlled"
+  },
+  "version": "1.0.0"
+}

@@ -1,0 +1,103 @@
+{
+  "contract": "LOCAL_AGENTS_CORE_OPERATING_MODEL_AND_WORKSPACE_TASK_LIFECYCLE_CLOSURE_V1",
+  "mode": "ANALYSIS_DESIGN_ONLY",
+  "decision": "DESIGN_READY_FOR_HUMAN_REVIEW",
+  "baseline": "LOCAL_AGENTS_SAFE_READ_MODEL_AND_OPERATIONAL_CONSOLE_R1_ACCEPTED_20260708",
+  "source_archive_sha256": "A86EB992B318F1DE65C73156F08B6881D686F52164428BE98373C4B153B82772",
+  "non_mutation_guards": {
+    "source_mutation": "NONE",
+    "database_write": "NONE",
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "platform_mutation": "NONE",
+    "network": "NONE",
+    "apply_available": false
+  },
+  "canonical_terms": {
+    "workspace": "حد سيادي/تشغيلي أعلى يحدد السياسة والعزل ومسار التخزين.",
+    "agent_role": "تعريف اختصاصي/حوكمي للمساعد من registry_v2، يصف المهارات والحدود وليس محرك تنفيذ.",
+    "agent_runtime_profile": "ملف تحضير deterministic داخل local_agent_core، لا ينفذ ولا يشغل نموذجًا.",
+    "task": "موضوع عمل منظّم داخل Workspace، يمر عبر دورة governed_operations.",
+    "agent_assignment": "ربط مقترح أو معتمد بين task وagent_role وworkspace.",
+    "agent_preparation": "مخرج تحضير قابل للمراجعة، لا يمنح صلاحية تنفيذ.",
+    "review_packet": "حزمة مراجعة بشرية توضح القرار والقيود والأثر.",
+    "action_proposal": "اقتراح إجراء غير تنفيذي، يحتاج تفويضًا لاحقًا مستقلًا إن تحول إلى Apply."
+  },
+  "required_unifications_for_next_candidate": [
+    "Unify registry_v2 roles with local_agent_core runtime profiles through a read-only projection.",
+    "Add or validate a formal task_id binding for agent preparations.",
+    "Define task-to-agent assignment states without introducing execution states.",
+    "Keep React console GET-only until server-side authorization and UAT are separately accepted.",
+    "Keep Evidence Ledger parked as secondary supporting output."
+  ],
+  "proposed_task_state_machine": {
+    "existing_governed_task_states": [
+      "draft",
+      "inbox",
+      "under_review",
+      "approved",
+      "rejected",
+      "returned",
+      "archived"
+    ],
+    "existing_transitions": {
+      "draft": [
+        "inbox",
+        "archived"
+      ],
+      "inbox": [
+        "under_review",
+        "archived"
+      ],
+      "under_review": [
+        "approved",
+        "rejected",
+        "returned"
+      ],
+      "returned": [
+        "inbox",
+        "archived"
+      ],
+      "approved": [
+        "archived"
+      ],
+      "rejected": [
+        "archived"
+      ],
+      "archived": []
+    },
+    "agent_output_overlay_states": [
+      "agent_not_requested",
+      "agent_suggested",
+      "agent_preparation_requested",
+      "prepared_for_human_review",
+      "human_review_accepted",
+      "human_review_returned",
+      "human_review_rejected",
+      "archived"
+    ],
+    "execution_invariant": "ALL_STATES_EXECUTION_STATE_NOT_EXECUTED"
+  },
+  "agent_admission_levels": {
+    "L0_READ_ONLY": "عرض بيانات وRegistry فقط.",
+    "L1_PLAN_ONLY": "إنتاج خطة/تحليل/اقتراح دون تنفيذ.",
+    "L2_DETERMINISTIC_PREPARE_ONLY": "تحضير حتمي محلي محدود ومدخلاته بشرية.",
+    "L3_MODEL_DRAFT_PILOT_GATED": "محجوب حاليًا؛ لا يستخدم إلا بتفويض Pilot مستقل.",
+    "L4_ACTION_PROPOSAL_ONLY": "اقتراح إجراء قابل للمراجعة، لا Apply.",
+    "L5_EXECUTION": "محظور خارج النطاق الحالي."
+  },
+  "hard_prohibitions": [
+    "NO_AGENT_EXECUTION",
+    "NO_MODEL_EXECUTION_BY_DEFAULT",
+    "NO_PILOT_EXECUTION",
+    "NO_DB_WRITE",
+    "NO_PLATFORM_MUTATION",
+    "NO_GIT_WRITE",
+    "NO_SHELL_EXECUTION_THROUGH_PRODUCT",
+    "NO_EXTERNAL_NETWORK",
+    "NO_CROSS_WORKSPACE_ACCESS",
+    "NO_REACT_WRITE_CONTROL",
+    "NO_EVIDENCE_LEDGER_EXPANSION_IN_THIS_BATCH"
+  ],
+  "next_authorization_if_accepted": "AUTHORIZE_MEGA_BATCH_LOCAL_AGENTS_CORE_AGENT_OPERATING_MODEL_AND_WORKSPACE_TASK_LIFECYCLE_CLOSURE_V1_SOURCE_NATIVE_CANDIDATE_ONLY"
+}

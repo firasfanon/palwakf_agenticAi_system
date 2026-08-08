@@ -1,0 +1,32 @@
+{
+  "schema": "palwakf.local_agents.innovation_resilience_identity.contract.v1",
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_INNOVATION_RESILIENCE_AND_PROJECT_IDENTITY_LAYER_V1_PREPARE_ONLY",
+  "frontend_route": "/agent-console/innovation-resilience",
+  "api_prefix": "/api/v1/operational-core",
+  "capabilities": [
+    "three_alternative_innovation_review",
+    "decision_summary_without_private_chain_of_thought",
+    "context_drift_guard",
+    "attempt_limiter_and_duplicate_failure_detection",
+    "metadata_only_checkpoint",
+    "project_design_identity",
+    "deterministic_anti_similarity",
+    "operational_cockpit"
+  ],
+  "runtime_state_files": [
+    "innovation_reviews.json",
+    "resilience_state.json",
+    "project_identities.json"
+  ],
+  "boundaries": {
+    "model_inference": "none",
+    "pilot": "not_executed",
+    "shell": "blocked",
+    "git": "blocked",
+    "code_execution": "blocked",
+    "self_apply": "blocked",
+    "vector_db": "none",
+    "automatic_retry": false,
+    "runtime_write_scope": "runtime_state/operational_core_v1_only"
+  }
+}

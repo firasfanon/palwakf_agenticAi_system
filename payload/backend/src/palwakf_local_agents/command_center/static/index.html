@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>مركز القيادة — PalWakf Local Agents</title>
+  <link rel="stylesheet" href="/command-center/assets/styles.css">
+</head>
+<body data-ui-contract="LOCAL_AGENTS_MULTI_WORKSPACE_OPERATIONS_FRONTEND_V1">
+  <div class="app-frame">
+    <button id="menu" class="menu-button" type="button" aria-label="فتح التنقل" aria-expanded="false">☰</button>
+    <div id="sidebar-scrim" class="sidebar-scrim" aria-hidden="true"></div>
+    <aside id="command-center-sidebar" class="sidebar" aria-label="مركز القيادة">
+      <a class="brand" href="/command-center"><span class="brand-mark">◈</span><span>PalWakf<small>LOCAL AGENTS</small></span></a>
+      <div class="sidebar-state"><span class="eyebrow">SYSTEM POSTURE</span><b id="live-state">جارٍ قراءة الحالة…</b></div>
+      <nav class="nav-list" aria-label="أقسام مركز القيادة">
+        <a href="/command-center" data-route="/command-center"><span>◉</span>لوحة القيادة</a>
+        <a href="/command-center/tasks" data-route="/command-center/tasks"><span>□</span>المهام</a>
+        <a href="/command-center/reviews" data-route="/command-center/reviews"><span>◇</span>المراجعات</a>
+        <a href="/command-center/evidence" data-route="/command-center/evidence"><span>⌁</span>الأدلة</a>
+        <a href="/command-center/agents" data-route="/command-center/agents"><span>◌</span>الوكلاء</a>
+        <a href="/command-center/governance" data-route="/command-center/governance"><span>◈</span>الحوكمة</a>
+        <a href="/command-center/system-health" data-route="/command-center/system-health"><span>▣</span>الصحة</a>
+      </nav>
+      <div class="sidebar-links">
+        <a href="/workspaces">مساحات العمل</a>
+        <a href="/operations">عمليات محكومة</a>
+        <a href="/local-agents">سجل الوكلاء</a>
+      </div>
+      <footer class="sidebar-footer">
+        <div><span>القراءة</span><b>GET ONLY</b></div>
+        <div><span>النموذج</span><b id="side-model">NONE</b></div>
+        <div><span>Pilot</span><b id="side-pilot">NOT EXECUTED</b></div>
+        <div><span>المعتمد</span><b id="nav-count">—</b></div>
+      </footer>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <span class="eyebrow">MULTI-WORKSPACE COMMAND CENTER</span>
+          <h1 id="page-name">لوحة القيادة</h1>
+          <p>إشراف مقروء على السجلات والسياسات والأدلة، دون تشغيل أو كتابة أو تجاوز للحدود.</p>
+        </div>
+        <div class="topbar-actions">
+          <a class="button ghost" href="/workspaces">المساحات</a>
+          <button id="refresh" class="button" type="button">تحديث البيانات</button>
+        </div>
+      </header>
+      <section class="guardrail" aria-label="حدود التشغيل"><span>🛡</span><div><b>العقد التشغيلي الحالي</b><p>لا تنفيذ نموذج، لا Pilot، لا Shell، لا Git، ولا كتابة بيانات من هذه الواجهة.</p></div></section>
+      <section id="view" class="view" aria-live="polite"></section>
+    </main>
+  </div>
+  <script src="/command-center/assets/app.js" defer></script>
+</body>
+</html>

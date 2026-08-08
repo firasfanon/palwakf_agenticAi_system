@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Local Agent Skill Input V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task_id",
+    "skill_id",
+    "scope",
+    "references",
+    "requested_autonomy"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "skill_id": {
+      "const": "prompt_injection_screening"
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 5
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "requested_autonomy": {
+      "type": "string",
+      "enum": [
+        "L0_READ_ONLY",
+        "L1_PLAN_ONLY"
+      ]
+    },
+    "data_classification": {
+      "type": "string",
+      "enum": [
+        "PUBLIC",
+        "INTERNAL"
+      ]
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

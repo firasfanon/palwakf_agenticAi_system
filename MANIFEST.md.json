@@ -1,0 +1,24 @@
+{
+  "package_id": "LOCAL_AGENT_READ_ONLY_PILOT_LIFECYCLE_CLOSURE_V1_2_REVC",
+  "status": "CANDIDATE_PREPARED_NOT_APPLIED",
+  "supersedes": "LOCAL_AGENT_READ_ONLY_PILOT_LIFECYCLE_CLOSURE_V1_CANDIDATE",
+  "scope": [
+    "human_review_record",
+    "archive_transition",
+    "active_state_check"
+  ],
+  "forbidden": [
+    "model_execution",
+    "pilot_task_generation",
+    "platform_mutation",
+    "database_access",
+    "git_write",
+    "deployment",
+    "secrets_access",
+    "memory_write"
+  ],
+  "installer_backup_strategy": "PREIMAGE_COPY_OF_EXISTING_TARGETS",
+  "review_manifest_root": "output/evidence_manifests",
+  "review_record_root": "audit/human_reviews",
+  "archive_integrity": "SHA256_REVALIDATION_OF_BOUND_ARTIFACTS"
+}

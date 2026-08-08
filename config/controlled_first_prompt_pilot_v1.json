@@ -1,0 +1,23 @@
+{
+  "contract": "CONTROLLED_FIRST_PROMPT_PILOT_V1",
+  "pilot_workspace_id": "research_learning",
+  "pilot_prompt": "اكتب ملخصًا من ثلاث نقاط يشرح الفرق بين سجل الأدلة وسجل المهام، دون استخدام أي ملفات أو أدوات أو بيانات خارجية.",
+  "human_reviewer": "Firas_Fanon",
+  "provider": {
+    "kind": "ollama_local_only",
+    "endpoint": "http://127.0.0.1:11434",
+    "model": "qwen2.5:3b"
+  },
+  "execution": {
+    "model_execution": "NONE_UNTIL_SEPARATE_EXPLICIT_RUNTIME_AUTHORIZATION",
+    "pilot_execution": "NOT_EXECUTED",
+    "allowed_workspace": "research_learning",
+    "allowed_tools": "NONE",
+    "allowed_file_access": "NONE",
+    "allowed_external_network": "NONE",
+    "allowed_shell": "NONE",
+    "allowed_git_write": "NONE",
+    "allowed_project_write": "NONE",
+    "human_review_required": "Firas_Fanon"
+  }
+}

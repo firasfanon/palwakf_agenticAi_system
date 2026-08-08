@@ -1,0 +1,105 @@
+{
+  "contract": "LOCAL_AGENTS_MULTI_WORKSPACE_OPERATIONS_FRONTEND_V1_EXECUTABLE_CANDIDATE",
+  "baseline_contract": "LOCAL_AGENTS_MULTI_WORKSPACE_OPERATIONS_FRONTEND_V1_FINAL_BASELINE",
+  "snapshot_project_root_hash_anchor": "6F1EE864F813DA90C652710308BE509E3306A5C2EFD9628F5938247C66B5F7AB",
+  "allowed_project_mutation_scope": "12_STATIC_FRONTEND_ASSETS_ONLY",
+  "asset_count": 12,
+  "assets": [
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\command_center\\static\\app.js",
+      "preimage_sha256": "10D4A2924DB236431D20542E3B65BA1CA0401C959A3FDEC193761C6F5206200A",
+      "preimage_bytes": 14158,
+      "postimage_sha256": "10D4A2924DB236431D20542E3B65BA1CA0401C959A3FDEC193761C6F5206200A",
+      "postimage_bytes": 14158
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\command_center\\static\\index.html",
+      "preimage_sha256": "D3F59E0C15CBEB924680E74C9A5CBF0426E1E19F56EB06F6838E306F951DF097",
+      "preimage_bytes": 3256,
+      "postimage_sha256": "BE7FAF2879D2D04C37B50041587DB061D05295CEFE6C5B838B8AD596F5B742D2",
+      "postimage_bytes": 3529
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\command_center\\static\\styles.css",
+      "preimage_sha256": "CEBDACE0848B415D586B0A7A023538EC1A462AFC1DAE93935D7C0D636E8E2CE4",
+      "preimage_bytes": 10567,
+      "postimage_sha256": "C8D81916BE7425BB8B19368BA98BBC96A1C07C940509256032A911F9B673696D",
+      "postimage_bytes": 8683
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\governed_operations\\static\\app.js",
+      "preimage_sha256": "C3FBC257F52719AB49B5AF8F95D7E802444CC68AD3DBF30482079A52BB705EE7",
+      "preimage_bytes": 12675,
+      "postimage_sha256": "C787D8BCE0D5973A8BEC7254EC5A5012CA6BD2523E40CF12EB26DE2BE28178D8",
+      "postimage_bytes": 10211
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\governed_operations\\static\\index.html",
+      "preimage_sha256": "910E5C925242DFF45FB5168D338DCFF4310AA6357E9C2B63AB7185465FD6E93A",
+      "preimage_bytes": 2263,
+      "postimage_sha256": "EDADAC8F0F2B82A94A8BF79D90B1BF1D25FF242405461689ED134515F4985D70",
+      "postimage_bytes": 2754
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\governed_operations\\static\\styles.css",
+      "preimage_sha256": "D20800746CB848BC6EBE222A45E49854268B92C7E8BFEAF6ABE2E29E4627EDC5",
+      "preimage_bytes": 4649,
+      "postimage_sha256": "A054353F348E571A5C175FB2F847BAA1E9455EE40330FDB7093BDFB991A59935",
+      "postimage_bytes": 6366
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\local_agent_core\\static\\app.js",
+      "preimage_sha256": "7F9902A28C39CF3520351F6BE14162F3533AFC53E97E5C4F32E41CB727C1E9E3",
+      "preimage_bytes": 3092,
+      "postimage_sha256": "ED9BBE6BEC2DFF6B90CBD379D70541D21774C627C34C4910C29AE685994BF15B",
+      "postimage_bytes": 4103
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\local_agent_core\\static\\index.html",
+      "preimage_sha256": "F4C066D377F2880EC8A7225494BA4F1376DD47D3B097BE3AF2F84FF25C1D1016",
+      "preimage_bytes": 1482,
+      "postimage_sha256": "E0A10B0D20BFE9B58CE210DF041E98D56F6549150AC579071DC76EAD82E7BBD3",
+      "postimage_bytes": 2246
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\local_agent_core\\static\\styles.css",
+      "preimage_sha256": "35877C7BD92C3501693ED42A3BB90C8982EAC3C7764ADA1953E87ADB345938C9",
+      "preimage_bytes": 1837,
+      "postimage_sha256": "D67309AAE5F02CB80C6C3569EA42617A4F6D992232850495E281E4FF76643750",
+      "postimage_bytes": 3849
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\workspace_core\\static\\app.js",
+      "preimage_sha256": "6A9608F3DDB861DC95466F1C37A5803BE8FDE265C29AC305F64FFB9F4570570E",
+      "preimage_bytes": 9194,
+      "postimage_sha256": "414AB6526389E51DDA53B021E42440809F6E9165D008BFFB6AC931729F1DE185",
+      "postimage_bytes": 7169
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\workspace_core\\static\\index.html",
+      "preimage_sha256": "B6F3B232913E443FCB213AF92C300E157308C625F4579E4E1EF8CE1F64806153",
+      "preimage_bytes": 1864,
+      "postimage_sha256": "4600AA71CCB6D41BD003FDCAB9533E567AB2B327072B9D3B55556F3A78360FF6",
+      "postimage_bytes": 2251
+    },
+    {
+      "relative_path": "backend\\src\\palwakf_local_agents\\workspace_core\\static\\styles.css",
+      "preimage_sha256": "7F0DA0521305091A41F5197FF7D98E82CF54BB275F10CF5E2FAB08254E873E71",
+      "preimage_bytes": 5090,
+      "postimage_sha256": "CB15B2E9A233C98C5D231809063B6FA1A442238239435A355E35ECA9D4CC0117",
+      "postimage_bytes": 5450
+    }
+  ],
+  "guardrails": {
+    "backend_router_mutation": "NONE",
+    "backend_schema_mutation": "NONE",
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "shell_execution": "NONE",
+    "git_write": "NONE",
+    "external_network": "NONE",
+    "frontend_write_requests": "NONE",
+    "token_persistence": "NONE",
+    "fake_data": "NONE"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "schema_version": "1.0.0",
+  "lab_id": "TOOL_QUALITY_EVALUATION_LAB_WAVE1_V1",
+  "mode": "fixture_scoped_user_triggered_no_live_project_scan",
+  "quality_thresholds": {
+    "quality_accepted_min": 90,
+    "pass_with_limitations_min": 80,
+    "human_review_min": 70,
+    "safety_gate_required": true
+  },
+  "suites": [
+    {
+      "suite_id": "native_code_index_contract_v1",
+      "tool_id": "native_code_index_contract",
+      "name_ar": "عقد جودة فهرسة الكود المحلية",
+      "kind": "native_fixture_benchmark",
+      "runtime_requirement": "always_available",
+      "fixture_scope": "tool_quality_fixtures_wave1_v1",
+      "quality_dimensions": ["accuracy", "determinism", "source_ranges", "privacy"]
+    },
+    {
+      "suite_id": "local_telemetry_privacy_v1",
+      "tool_id": "local_telemetry_contract",
+      "name_ar": "خصوصية وجودة Telemetry المحلية",
+      "kind": "native_privacy_benchmark",
+      "runtime_requirement": "always_available",
+      "fixture_scope": "synthetic_event_only",
+      "quality_dimensions": ["schema", "redaction", "local_only", "determinism"]
+    },
+    {
+      "suite_id": "tree_sitter_readiness_v1",
+      "tool_id": "tree_sitter",
+      "name_ar": "جاهزية Tree-sitter للفهرسة الدقيقة",
+      "kind": "admitted_tool_readiness",
+      "runtime_requirement": "tool_present_and_admitted",
+      "fixture_scope": "version_hash_and_contract",
+      "quality_dimensions": ["integrity", "version", "no_write", "no_network"]
+    },
+    {
+      "suite_id": "opentelemetry_local_quality_v1",
+      "tool_id": "opentelemetry",
+      "name_ar": "جودة OpenTelemetry المحلية",
+      "kind": "admitted_tool_privacy",
+      "runtime_requirement": "tool_present_and_admitted",
+      "fixture_scope": "synthetic_events_only",
+      "quality_dimensions": ["event_schema", "redaction", "local_persistence", "no_remote_export"]
+    },
+    {
+      "suite_id": "semgrep_fixture_quality_v1",
+      "tool_id": "semgrep",
+      "name_ar": "جودة Semgrep على Fixture محلي",
+      "kind": "controlled_external_fixture_scan",
+      "runtime_requirement": "controlled_user_triggered_scan",
+      "fixture_scope": "python_backend_with_local_rules",
+      "quality_dimensions": ["precision", "recall", "stability", "no_autofix", "no_network"]
+    },
+    {
+      "suite_id": "gitleaks_fixture_quality_v1",
+      "tool_id": "gitleaks",
+      "name_ar": "جودة Gitleaks مع أسرار اصطناعية",
+      "kind": "controlled_external_fixture_scan",
+      "runtime_requirement": "controlled_user_triggered_scan",
+      "fixture_scope": "seeded_security_findings",
+      "quality_dimensions": ["synthetic_recall", "redaction", "fingerprint", "no_git_mutation"]
+    },
+    {
+      "suite_id": "trivy_offline_readiness_v1",
+      "tool_id": "trivy",
+      "name_ar": "جاهزية Trivy للفحص غير المتصل",
+      "kind": "readiness_hold_assessment",
+      "runtime_requirement": "offline_database_policy",
+      "fixture_scope": "contract_only",
+      "quality_dimensions": ["database_provenance", "offline_flags", "network_boundary", "sbom_contract"]
+    },
+    {
+      "suite_id": "deferred_tools_admission_review_v1",
+      "tool_id": "deferred_tools_group",
+      "name_ar": "مراجعة الأدوات المؤجلة",
+      "kind": "admission_review_only",
+      "runtime_requirement": "no_execution",
+      "fixture_scope": "registry_and_boundaries",
+      "quality_dimensions": ["architecture_fit", "license", "privacy", "boundary_compatibility"]
+    }
+  ]
+}

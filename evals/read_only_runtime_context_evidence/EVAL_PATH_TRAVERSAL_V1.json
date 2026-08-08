@@ -1,0 +1,5 @@
+{
+  "eval_id": "EVAL_PATH_TRAVERSAL_V1",
+  "relative_path": "reference_sources/approved/../../secrets.txt",
+  "expected": "DENY"
+}

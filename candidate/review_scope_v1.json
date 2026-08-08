@@ -1,0 +1,28 @@
+{
+  "contract": "COMPREHENSIVE_LOCAL_AGENTS_PROJECT_STATE_AND_DEBT_REVIEW_V1_READ_ONLY",
+  "target_mutation": "NONE",
+  "allowed_output_location": "%TEMP% only",
+  "prohibited": [
+    "model prompt transmission",
+    "model execution",
+    "pilot execution",
+    "service start",
+    "project file write",
+    "workspace manifest write",
+    "SQLite write",
+    "Git write",
+    "deployment",
+    "external network"
+  ],
+  "review_dimensions": [
+    "accepted baseline drift",
+    "installed components",
+    "workspace physical state",
+    "policy and pilot state",
+    "backups and evidence surfaces",
+    "test and route inventory",
+    "technical debt candidates",
+    "operational debt candidates",
+    "next Mega Batch recommendations"
+  ]
+}

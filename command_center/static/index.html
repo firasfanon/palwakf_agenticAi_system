@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>مركز قيادة المساعدين المحليين | PalWakf</title>
+  <link rel="stylesheet" href="/command-center/assets/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="التنقل الرئيسي">
+      <div class="brand">
+        <div class="brand-mark">PW</div>
+        <div><strong>PalWakf</strong><span>المساعدون المحليون</span></div>
+      </div>
+      <nav id="side-nav" class="side-nav"></nav>
+      <div class="side-footer">
+        <span class="dot"></span>
+        <span>وضع قراءة ومراجعة فقط</span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button id="menu-button" class="icon-button" aria-label="فتح القائمة">☰</button>
+        <div>
+          <p class="eyebrow">COMMAND CENTER V1</p>
+          <h1 id="page-title">لوحة التحكم</h1>
+        </div>
+        <div class="top-posture"><span class="status-dot"></span> التشغيل معطل افتراضيًا</div>
+      </header>
+
+      <section id="read-only-banner" class="read-only-banner"></section>
+      <section id="page-content" class="page-content" aria-live="polite"></section>
+    </main>
+  </div>
+  <script src="/command-center/assets/app.js" defer></script>
+</body>
+</html>

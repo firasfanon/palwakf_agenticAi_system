@@ -1,0 +1,32 @@
+{
+  "schema": "palwakf.local_agents.operational_core_6_in_1.v1",
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_OPERATIONAL_CORE_6_IN_1_FOUNDATION_V1",
+  "capabilities": [
+    "OPERATIONAL_CORE_VERTICAL_SLICE_V1_NO_EXECUTION",
+    "LOCAL_STATE_STORE_V1_JSONL_PROJECT_STATE",
+    "CODEBASE_SYMBOL_ROUTE_COMPONENT_INDEX_V1_READ_ONLY",
+    "GOVERNED_READ_ONLY_TOOL_RUNTIME_V1",
+    "STANDING_RULES_REGISTRY_V1",
+    "LOCAL_MODEL_RUNTIME_READINESS_GATE_V1"
+  ],
+  "routes": [
+    "/agent-console/operational-core",
+    "/api/v1/operational-core/health",
+    "/api/v1/operational-core/state",
+    "/api/v1/operational-core/goal/prepare",
+    "/api/v1/operational-core/project-board",
+    "/api/v1/operational-core/codebase-index",
+    "/api/v1/operational-core/tools",
+    "/api/v1/operational-core/standing-rules",
+    "/api/v1/operational-core/model-readiness"
+  ],
+  "boundaries": {
+    "runtime_state_write": "allowed_scoped",
+    "database_write": "none",
+    "model_inference": "none",
+    "shell": "blocked",
+    "git": "blocked",
+    "code_execution": "blocked",
+    "self_apply": "blocked"
+  }
+}

@@ -1,0 +1,85 @@
+# Session Handoff — PalWakf Local Agents Core V1
+
+## Current session result
+
+Completed **analysis/design-only** closure for:
+
+```text
+MEGA_BATCH_LOCAL_AGENTS_CORE_AGENT_OPERATING_MODEL_AND_WORKSPACE_TASK_LIFECYCLE_CLOSURE_V1
+```
+
+## Decision
+
+```text
+RESULT = PASS
+DECISION = DESIGN_READY_FOR_HUMAN_REVIEW_NO_APPLY
+```
+
+## Baseline
+
+```text
+SOURCE_BASELINE =
+LOCAL_AGENTS_SAFE_READ_MODEL_AND_OPERATIONAL_CONSOLE_R1_ACCEPTED_20260708
+
+SOURCE_BASELINE_CHANGED =
+NO
+```
+
+## Inputs used
+
+```text
+PALWAKF_LOCAL_AGENTS_COMPREHENSIVE_INHERITANCE_AND_UPDATED_BASELINE_R2_REFOCUSED_20260708.md
+PALWAKF_LOCAL_AGENTS_FULL_SOURCE_BASELINE_20260709_124733.zip
+ZIP_SHA256 = A86EB992B318F1DE65C73156F08B6881D686F52164428BE98373C4B153B82772
+```
+
+## Outputs created
+
+```text
+DESIGN_DECISION_STATUS.json
+SOURCE_STATIC_INSPECTION_SUMMARY.json
+CORE_AGENT_OPERATING_MODEL_CONTRACT_V1.json
+CORE_AGENT_OPERATING_MODEL_AND_WORKSPACE_TASK_LIFECYCLE_CLOSURE_V1_ANALYSIS_DESIGN.md
+CHANGELOG_ANALYSIS_DESIGN_ONLY.md
+SESSION_HANDOFF_LOCAL_AGENTS_CORE_V1.md
+```
+
+## Critical findings for the next session
+
+1. Evidence Ledger must remain parked unless explicitly authorized.
+2. The next work should center on Local Agents Core.
+3. There are three agent registry planes that need a unifying projection.
+4. AgentPreparation must be formally bound to `workspace_id + task_id` in a future Candidate.
+5. Approval must remain `APPROVED_AS_PLANNING_OUTPUT`, not execution permission.
+6. React write controls remain prohibited.
+7. Actor registry remains default-deny with zero actors.
+8. Pilot/model execution remains out of scope.
+
+## Next authorization text
+
+```text
+AUTHORIZE_MEGA_BATCH_LOCAL_AGENTS_CORE_AGENT_OPERATING_MODEL_AND_WORKSPACE_TASK_LIFECYCLE_CLOSURE_V1_SOURCE_NATIVE_CANDIDATE_ONLY
+```
+
+## Prohibitions to preserve
+
+```text
+NO_AGENT_EXECUTION
+NO_MODEL_EXECUTION_BY_DEFAULT
+NO_PILOT_EXECUTION
+NO_DB_WRITE
+NO_PLATFORM_MUTATION
+NO_GIT_WRITE
+NO_SHELL_EXECUTION_THROUGH_PRODUCT
+NO_EXTERNAL_NETWORK
+NO_CROSS_WORKSPACE_ACCESS
+NO_REACT_WRITE_CONTROL
+NO_EVIDENCE_LEDGER_EXPANSION_IN_THIS_BATCH
+```
+
+## Files to read first next session
+
+1. `CORE_AGENT_OPERATING_MODEL_AND_WORKSPACE_TASK_LIFECYCLE_CLOSURE_V1_ANALYSIS_DESIGN.md`
+2. `CORE_AGENT_OPERATING_MODEL_CONTRACT_V1.json`
+3. `SOURCE_STATIC_INSPECTION_SUMMARY.json`
+4. `DESIGN_DECISION_STATUS.json`

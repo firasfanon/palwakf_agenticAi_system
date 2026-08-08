@@ -1,0 +1,25 @@
+{
+  "package": "MEGA_BATCH_LOCAL_AGENTS_GOVERNED_MODEL_CANDIDATE_TIMEOUT_RETRY_QWEN2_5_3B_V1_0_4_20260719",
+  "harness_version": "1.0.4",
+  "build_status": "PASS",
+  "live_execution_authorization": "PENDING_NEW_EXPLICIT_HUMAN_AUTHORIZATION",
+  "required_authorization_token": "AUTHORIZE_LOCAL_AGENTS_GOVERNED_MODEL_CANDIDATE_TIMEOUT_RETRY_QWEN2_5_3B_LOOPBACK_ONLY_V1",
+  "model": "qwen2.5:3b",
+  "timeout_seconds": 180,
+  "max_output_tokens": 1200,
+  "temperature": 0.0,
+  "attempt_limit": 1,
+  "automatic_retry": false,
+  "source_patch": false,
+  "candidate_apply": false,
+  "tests": {
+    "python_compile": "PASS",
+    "harness_self_test": "PASS",
+    "wrong_authorization": "BLOCKED",
+    "wrong_timeout": "FAIL_CLOSED",
+    "mock_preflight": "PASS",
+    "mock_live_flow": "PASS",
+    "mock_restore": "PASS_VERIFIED",
+    "mock_source_mutation": false
+  }
+}

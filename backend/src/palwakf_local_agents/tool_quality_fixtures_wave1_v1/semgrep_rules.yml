@@ -1,0 +1,6 @@
+rules:
+  - id: palwakf-eval-risky-eval
+    message: Synthetic benchmark finding for eval usage.
+    severity: ERROR
+    languages: [python]
+    pattern: eval(...)

@@ -1,0 +1,27 @@
+{
+  "contract": "SCOPE_AWARE_UNSAFE_VARIABLE_COLON_SCANNER_REPAIR_V1",
+  "scope": "PACKAGE_VALIDATION_SCANNER_ONLY",
+  "allowed_powershell_scopes": [
+    "env",
+    "script",
+    "global",
+    "local",
+    "private",
+    "using"
+  ],
+  "must_accept": [
+    "$env:USERPROFILE",
+    "$script:checks",
+    "$global:state",
+    "$local:flag",
+    "$private:item",
+    "$using:value"
+  ],
+  "must_reject": [
+    "$workspaceId:$sqlite"
+  ],
+  "project_mutation": "NONE",
+  "model_execution": "NONE",
+  "pilot_execution": "NOT_EXECUTED",
+  "apply": "INTENTIONALLY_ABSENT"
+}

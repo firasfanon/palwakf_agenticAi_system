@@ -1,0 +1,8 @@
+{
+  "source_credentials_omit": true,
+  "source_same_origin_absent": true,
+  "source_write_method_literals_absent": true,
+  "source_token_storage_absent": true,
+  "built_credentials_omit_present": true,
+  "built_write_method_literals_absent": true
+}

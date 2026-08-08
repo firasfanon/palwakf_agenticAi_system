@@ -1,0 +1,18 @@
+{
+  "workspace_import": "from .workspace_core import mount_workspace_core",
+  "workspace_mount": "mount_workspace_core(app, project_root=PROJECT_ROOT)",
+  "local_agent_import": "from .local_agent_core import mount_local_agent_core",
+  "local_agent_mount": "mount_local_agent_core(app, project_root=PROJECT_ROOT)",
+  "required_counts_before_apply": {
+    "workspace_import": 1,
+    "workspace_mount": 1,
+    "local_agent_import": 0,
+    "local_agent_mount": 0
+  },
+  "required_counts_after_apply": {
+    "workspace_import": 1,
+    "workspace_mount": 1,
+    "local_agent_import": 1,
+    "local_agent_mount": 1
+  }
+}

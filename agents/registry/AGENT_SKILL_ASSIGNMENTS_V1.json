@@ -1,0 +1,115 @@
+﻿{
+    "registry_version":  "1.0",
+    "execution_default":  "disabled",
+    "agents":  [
+                   {
+                       "agent_id":  "coordinator",
+                       "allowed_autonomy":  [
+                                                "L0_READ_ONLY",
+                                                "L1_PLAN_ONLY"
+                                            ],
+                       "runtime_enabled":  true,
+                       "runtime_mode":  "read_only_report_only",
+                       "allowed_skills":  [
+                                              "task_intake",
+                                              "task_triage",
+                                              "evidence_assessment",
+                                              "project_state_review",
+                                              "baseline_comparison",
+                                              "risk_classification"
+                                          ],
+                       "forbidden_capabilities":  [
+                                                      "sql_execute",
+                                                      "git_write",
+                                                      "file_modify_outside_output",
+                                                      "deployment",
+                                                      "secret_read"
+                                                  ]
+                   },
+                   {
+                       "agent_id":  "sovereignty_reviewer",
+                       "allowed_autonomy":  [
+                                                "L0_READ_ONLY",
+                                                "L1_PLAN_ONLY"
+                                            ],
+                       "runtime_enabled":  true,
+                       "runtime_mode":  "read_only_report_only",
+                       "allowed_skills":  [
+                                              "governance_review",
+                                              "evidence_assessment",
+                                              "risk_classification",
+                                              "prompt_injection_review",
+                                              "data_classification_review",
+                                              "approval_gate_review",
+                                              "task_triage"
+                                          ],
+                       "forbidden_capabilities":  [
+                                                      "sql_execute",
+                                                      "git_write",
+                                                      "file_modify_outside_output",
+                                                      "deployment",
+                                                      "secret_read"
+                                                  ]
+                   },
+                   {
+                       "agent_id":  "knowledge_researcher",
+                       "allowed_autonomy":  [
+                                                "L0_READ_ONLY",
+                                                "L1_PLAN_ONLY"
+                                            ],
+                       "runtime_enabled":  true,
+                       "runtime_mode":  "read_only_report_only",
+                       "allowed_skills":  [
+                                              "knowledge_source_review",
+                                              "evidence_assessment",
+                                              "fact_assumption_separation",
+                                              "task_triage"
+                                          ],
+                       "forbidden_capabilities":  [
+                                                      "sql_execute",
+                                                      "git_write",
+                                                      "deployment",
+                                                      "secret_read"
+                                                  ]
+                   },
+                   {
+                       "agent_id":  "ui_ux_designer",
+                       "allowed_autonomy":  [
+                                                "L1_PLAN_ONLY"
+                                            ],
+                       "runtime_enabled":  false,
+                       "runtime_mode":  "admission_required",
+                       "allowed_skills":  [
+                                              "ui_ux_contract_review",
+                                              "rtl_accessibility_review",
+                                              "task_intake"
+                                          ],
+                       "forbidden_capabilities":  [
+                                                      "sql_execute",
+                                                      "git_write",
+                                                      "deployment",
+                                                      "secret_read"
+                                                  ]
+                   },
+                   {
+                       "agent_id":  "documentation_handoff",
+                       "allowed_autonomy":  [
+                                                "L0_READ_ONLY"
+                                            ],
+                       "runtime_enabled":  true,
+                       "runtime_mode":  "read_only_report_only",
+                       "allowed_skills":  [
+                                              "task_triage",
+                                              "evidence_assessment",
+                                              "documentation_handoff"
+                                          ],
+                       "forbidden_capabilities":  [
+                                                      "sql_execute",
+                                                      "git_write",
+                                                      "file_modify_outside_output",
+                                                      "deployment",
+                                                      "secret_read"
+                                                  ]
+                   }
+               ]
+}

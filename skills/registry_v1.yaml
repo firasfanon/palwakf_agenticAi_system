@@ -1,0 +1,236 @@
+registry_version: '1.0'
+execution_default: disabled
+rules:
+  registered_skill_required: true
+  agent_role_must_be_allowed: true
+  tool_execution_not_enabled_in_foundation_v2: true
+  output_validation_required: true
+  human_approval_for_skill_promotion: true
+skills:
+- skill_id: baseline_read
+  title_ar: قراءة الحالة والـBaseline
+  risk: LOW
+  autonomy_minimum: L0_READ_ONLY
+  eligible_roles:
+  - coordinator
+  - sovereignty_reviewer
+  - documentation_handoff
+  - solution_architect
+  - release_engineer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: task_triage
+  title_ar: فرز المهمة
+  risk: LOW
+  autonomy_minimum: L0_READ_ONLY
+  eligible_roles:
+  - coordinator
+  - product_analyst
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: risk_assessment
+  title_ar: تقييم المخاطر
+  risk: LOW
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - coordinator
+  - product_analyst
+  - solution_architect
+  - database_engineer
+  - release_engineer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: fact_assumption_decision_register
+  title_ar: سجل الحقائق والافتراضات والقرارات
+  risk: LOW
+  autonomy_minimum: L0_READ_ONLY
+  eligible_roles:
+  - coordinator
+  - knowledge_researcher
+  - documentation_handoff
+  - product_analyst
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: workspace_lock_planning
+  title_ar: تخطيط قفل مورد
+  risk: LOW
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - coordinator
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: evidence_assessment
+  title_ar: تقييم الأدلة
+  risk: LOW
+  autonomy_minimum: L0_READ_ONLY
+  eligible_roles:
+  - coordinator
+  - sovereignty_reviewer
+  - knowledge_researcher
+  - qa_security_reviewer
+  - tester
+  - coding_builder
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: governance_review
+  title_ar: مراجعة الحوكمة
+  risk: MEDIUM
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - sovereignty_reviewer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: prompt_injection_screening
+  title_ar: فحص حقن التعليمات
+  risk: MEDIUM
+  autonomy_minimum: L0_READ_ONLY
+  eligible_roles:
+  - sovereignty_reviewer
+  - knowledge_researcher
+  - qa_security_reviewer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: data_classification_review
+  title_ar: مراجعة تصنيف البيانات
+  risk: MEDIUM
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - sovereignty_reviewer
+  - qa_security_reviewer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: knowledge_source_review
+  title_ar: مراجعة مصادر المعرفة
+  risk: LOW
+  autonomy_minimum: L0_READ_ONLY
+  eligible_roles:
+  - knowledge_researcher
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: ui_ux_contract_review
+  title_ar: مراجعة عقد UX/UI
+  risk: MEDIUM
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - ui_ux_designer
+  - frontend_engineer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: documentation_handoff
+  title_ar: توثيق وتسليم
+  risk: LOW
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - documentation_handoff
+  - ui_ux_designer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: memory_learning_candidate
+  title_ar: مرشح تعلم محكوم
+  risk: MEDIUM
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - documentation_handoff
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: requirements_mvp_analysis
+  title_ar: تحليل المتطلبات وMVP
+  risk: MEDIUM
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - product_analyst
+  - ui_ux_designer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: architecture_analysis
+  title_ar: تحليل المعمارية
+  risk: MEDIUM
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - solution_architect
+  - coding_builder
+  - backend_engineer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: data_api_design_plan
+  title_ar: خطة نموذج البيانات وAPI
+  risk: HIGH
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - solution_architect
+  - backend_engineer
+  - database_engineer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: system_contract_review
+  title_ar: مراجعة عقود النظام
+  risk: MEDIUM
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - solution_architect
+  - database_engineer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: migration_plan_review
+  title_ar: مراجعة خطة Migration
+  risk: HIGH
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - database_engineer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: qa_security_review
+  title_ar: مراجعة QA والأمن
+  risk: MEDIUM
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - qa_security_reviewer
+  - tester
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: test_plan_generation
+  title_ar: إنشاء خطة اختبار
+  risk: LOW
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - qa_security_reviewer
+  - tester
+  - frontend_engineer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: repository_static_trace
+  title_ar: تتبع ثابت للمستودع
+  risk: MEDIUM
+  autonomy_minimum: L0_READ_ONLY
+  eligible_roles:
+  - coding_builder
+  - frontend_engineer
+  - backend_engineer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: patch_plan_generation
+  title_ar: خطة Patch
+  risk: MEDIUM
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - coding_builder
+  - frontend_engineer
+  - backend_engineer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: release_readiness_review
+  title_ar: مراجعة جاهزية الإصدار
+  risk: HIGH
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - release_engineer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission
+- skill_id: incident_analysis
+  title_ar: تحليل حادث
+  risk: HIGH
+  autonomy_minimum: L1_PLAN_ONLY
+  eligible_roles:
+  - release_engineer
+  status: contract_defined_not_runtime_enabled
+  tool_access: none_until_gateway_admission

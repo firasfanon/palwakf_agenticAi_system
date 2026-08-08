@@ -1,0 +1,14 @@
+{
+  "agent_id": "knowledge_researcher",
+  "pack_id": "LOCAL_AGENT_READ_ONLY_ANALYSIS_PACK_01",
+  "role_focus": "approved_reference_readiness_review",
+  "allowed_skills": [
+    "task_triage",
+    "evidence_assessment"
+  ],
+  "risk": "LOW",
+  "autonomy": "L0_READ_ONLY",
+  "runtime_mode": "read_only_report_only",
+  "requires_human_review": true,
+  "model_output_contract": "MODEL_OUTPUT_CONTRACT_V3_SYSTEM_OWNED_ENVELOPE"
+}

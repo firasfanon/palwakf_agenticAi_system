@@ -1,0 +1,15 @@
+export const fullStackOperationalWaves3To8V1 = Object.freeze({
+  route: "/agent-console/agent-workbench",
+  waves: [3, 4, 5, 6, 7, 8],
+  apiPrefix: "/api/v1/operational-core/full-stack-waves-3-8",
+  localModelTransport: "127.0.0.1:11434_only",
+  modelPurposes: ["planning", "change_proposal"],
+  automaticApply: false,
+  sourceWrite: "wave_5_human_approved_only",
+  shell: false,
+  git: false,
+  externalNetwork: false,
+  productionApproval: false,
+  operationalUxFirst: true,
+  governanceInSubpages: true,
+});

@@ -1,0 +1,24 @@
+{
+  "workspace_id": "palwakf_government",
+  "profile_id": "government_strict_v1",
+  "classification": "government",
+  "lifecycle_state": "active",
+  "manifest_contract": "WORKSPACE_MANIFEST_RECONCILIATION_V1",
+  "isolation": {
+    "cross_workspace_read": "DENY",
+    "cross_workspace_write": "DENY",
+    "cross_workspace_tool_access": "DENY"
+  },
+  "execution": {
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "shell_execution": "NONE",
+    "git_write": "NONE",
+    "deployment": "NONE",
+    "external_network": "NONE"
+  },
+  "storage": {
+    "local_agent_core_sqlite": "EXISTING_UNCHANGED",
+    "workspace_capability_foundation": "POLICY_CONTEXT_ONLY"
+  }
+}

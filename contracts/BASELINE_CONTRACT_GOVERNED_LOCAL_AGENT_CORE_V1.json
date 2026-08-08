@@ -1,0 +1,17 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_GOVERNED_LOCAL_AGENT_CORE_V1",
+  "runtime": "LOCAL_DETERMINISTIC_PREPARE_ONLY",
+  "workspace_scope": "REQUIRED",
+  "model_execution": "NONE",
+  "pilot_execution": "NOT_EXECUTED",
+  "human_review": "MANDATORY_BEFORE_ANY_FUTURE_EXECUTION",
+  "forbidden": [
+    "shell_execution",
+    "git_write",
+    "database_write",
+    "deployment",
+    "external_network",
+    "cross_workspace_access",
+    "shared_memory"
+  ]
+}

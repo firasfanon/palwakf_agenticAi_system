@@ -1,0 +1,61 @@
+{
+  "contract_id": "MODEL_OUTPUT_CONTRACT_V3_SYSTEM_OWNED_ENVELOPE",
+  "version": "1.0.0",
+  "model_output_format": "EXACT_11_ORDERED_KEY_VALUE_LINES",
+  "system_owned_envelope": {
+    "enabled": true,
+    "start": "OUTPUT_CONTRACT_START",
+    "end": "OUTPUT_CONTRACT_END"
+  },
+  "required_keys": [
+    "ROLE",
+    "TASK_STATUS",
+    "TASK_CLASS",
+    "TRUTH_SOURCE",
+    "LIVE_STATE_PROVEN",
+    "MUTATION_ALLOWED",
+    "EVIDENCE_STATUS",
+    "EVIDENCE_REFERENCE_IDS",
+    "UNCERTAINTY_STATUS",
+    "SECURITY_POSTURE",
+    "NEXT_STEP"
+  ],
+  "forbidden_keys": [
+    "TASK_ID",
+    "OUTPUT_CONTRACT_START",
+    "OUTPUT_CONTRACT_END"
+  ],
+  "additional_keys_allowed": false,
+  "expected_model_body_line_count": 11,
+  "require_no_blank_lines": true,
+  "require_no_leading_or_trailing_text": true,
+  "allowed_static_values": {
+    "TASK_STATUS": [
+      "ANALYSIS_COMPLETE"
+    ],
+    "TASK_CLASS": [
+      "READ_ONLY_EVIDENCE_ANALYSIS"
+    ],
+    "TRUTH_SOURCE": [
+      "APPROVED_REFERENCE_CONTENT_ONLY"
+    ],
+    "LIVE_STATE_PROVEN": [
+      "NO"
+    ],
+    "MUTATION_ALLOWED": [
+      "NO"
+    ],
+    "EVIDENCE_STATUS": [
+      "EVIDENCE_MANIFEST_USED"
+    ],
+    "UNCERTAINTY_STATUS": [
+      "LIMITED_TO_REFERENCE_EVIDENCE"
+    ],
+    "SECURITY_POSTURE": [
+      "UNTRUSTED_REFERENCE_CONTENT_NOT_EXECUTED"
+    ],
+    "NEXT_STEP": [
+      "HUMAN_REVIEW_REQUIRED"
+    ]
+  }
+}

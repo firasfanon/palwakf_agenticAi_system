@@ -1,0 +1,9 @@
+{
+  "frontend/src/App.tsx": "E653175BD9C6A4B4F88C948A9AA023F3D7889DB54C8FFF896106821855AFE3C0",
+  "frontend/src/api/client.ts": "BF9ACF975E3DA8A62E9544EF1027987B357B11A3AAD5511AA397422DD5F3FB43",
+  "frontend/src/api/presentation.ts": "__ABSENT__",
+  "frontend/src/components/Icon.tsx": "__ABSENT__",
+  "frontend/src/components/Layout.tsx": "65E07645FB0831D27D43C458ED1BC48F6515E6C76F7E2AB460DDF4AD69CB6B88",
+  "frontend/src/components/OperationalPanels.tsx": "__ABSENT__",
+  "frontend/src/styles.css": "D218CFE13C2348F093EF470F0C1C56A14652F0902D2BD5719121BC4FD56C03C9"
+}

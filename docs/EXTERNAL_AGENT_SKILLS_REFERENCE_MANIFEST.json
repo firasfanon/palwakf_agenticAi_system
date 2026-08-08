@@ -1,0 +1,22 @@
+{
+  "source": "addyosmani/agent-skills",
+  "url": "https://github.com/addyosmani/agent-skills",
+  "license": "MIT",
+  "reviewed_at": "2026-07-10",
+  "intake": "reference-only",
+  "runtime_import": "no",
+  "commands_blocked": [
+    "npx skills add",
+    "git clone",
+    "plugin install",
+    "/build auto"
+  ],
+  "lifecycle": [
+    "DEFINE",
+    "PLAN",
+    "BUILD",
+    "VERIFY",
+    "REVIEW",
+    "SHIP"
+  ]
+}

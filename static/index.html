@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>PalWakf Local Agents — مركز القيادة</title>
+  <link rel="stylesheet" href="/command-center/assets/styles.css">
+</head>
+<body data-ui-contract="READ_ONLY_OPERATIONAL_DASHBOARD">
+<div class="app-shell">
+  <aside class="sidebar" aria-label="التنقل الرئيسي">
+    <a href="/command-center" class="brand" data-route="/command-center"><span class="logo">◉</span><span><strong>PalWakf</strong><small>LOCAL AGENTS</small></span></a>
+    <div class="workspace"><i class="dot"></i><span><small>نطاق التشغيل</small><b>قراءة ومراجعة فقط</b></span></div>
+    <nav class="nav-list">
+      <a href="/command-center" data-route="/command-center">⌂ <span>لوحة القيادة</span></a>
+      <a href="/command-center/tasks" data-route="/command-center/tasks">☷ <span>المهام</span><em id="nav-count">—</em></a>
+      <a href="/command-center/reviews" data-route="/command-center/reviews">✓ <span>المراجعات البشرية</span></a>
+      <a href="/command-center/evidence" data-route="/command-center/evidence">◈ <span>الأدلة والتقييمات</span></a>
+      <a href="/command-center/agents" data-route="/command-center/agents">◌ <span>الوكلاء</span></a>
+      <a href="/command-center/governance" data-route="/command-center/governance">⌘ <span>الحوكمة والسيادة</span></a>
+      <a href="/command-center/system-health" data-route="/command-center/system-health">♥ <span>صحة النظام</span></a>
+    </nav>
+    <section class="side-status"><p>حالة الحماية</p><div><span>تنفيذ النموذج</span><b id="side-model">—</b></div><div><span>تنفيذ Pilot</span><b id="side-pilot">—</b></div><div><span>واجهة الكتابة</span><b>مقفلة</b></div></section>
+    <footer>Command Center · Read-Only V1</footer>
+  </aside>
+  <main>
+    <header class="topbar"><button class="menu" id="menu" type="button">☰</button><div class="head-title"><i class="dot"></i><span id="page-name">لوحة القيادة</span><small id="live-state">جارٍ قراءة الحالة التشغيلية…</small></div><div class="head-actions"><button id="refresh" type="button">↻ <span>تحديث العرض</span></button><div class="mode"><span>◉</span><b>READ-ONLY</b></div></div></header>
+    <section id="view" class="view"><div class="loading"><span></span><b>جارٍ تحميل مركز القيادة…</b><p>لا يتم تشغيل نموذج أو Pilot خلال العرض.</p></div></section>
+  </main>
+</div>
+<template id="empty"><div class="empty"><i>◌</i><h3>لا توجد عناصر قابلة للعرض</h3><p>قد لا تتوفر سجلات ضمن سطح القراءة الحالي.</p></div></template>
+<script src="/command-center/assets/app.js" defer></script>
+</body></html>

@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0",
+  "allowed_types": ["FACT", "ASSUMPTION", "DECISION", "ERROR", "LEARNING_CANDIDATE"],
+  "required": ["record_id", "record_type", "summary", "source_refs", "confidence", "classification", "status", "created_at_utc", "human_approval_required"],
+  "allowed_status": ["PENDING_HUMAN_REVIEW", "APPROVED", "REJECTED", "ARCHIVED"],
+  "approval_rule": "A record can enter memory/approved only through Set-HumanApprovalV1.ps1."
+}

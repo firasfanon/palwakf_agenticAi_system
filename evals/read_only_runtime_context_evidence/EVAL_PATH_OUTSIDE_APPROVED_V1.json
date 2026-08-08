@@ -1,0 +1,5 @@
+{
+  "eval_id": "EVAL_PATH_OUTSIDE_APPROVED_V1",
+  "relative_path": "../palwakf/.env",
+  "expected": "DENY"
+}

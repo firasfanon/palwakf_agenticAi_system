@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Learning Candidate V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "candidate_id",
+    "source_type",
+    "observation",
+    "proposed_learning",
+    "evidence_references",
+    "test_cases",
+    "status"
+  ],
+  "properties": {
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^LC-[A-Z0-9-]+$"
+    },
+    "source_type": {
+      "enum": [
+        "Error",
+        "Feedback",
+        "Review",
+        "Evaluation",
+        "Incident"
+      ]
+    },
+    "observation": {
+      "type": "string"
+    },
+    "proposed_learning": {
+      "type": "string"
+    },
+    "evidence_references": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "test_cases": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "risk_of_overgeneralization": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "Draft",
+        "PendingReview",
+        "Approved",
+        "Rejected"
+      ]
+    }
+  }
+}

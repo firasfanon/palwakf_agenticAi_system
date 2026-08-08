@@ -1,0 +1,61 @@
+[CmdletBinding()]
+param(
+  [Parameter(Mandatory = $true)]
+  [string]$PackageRoot
+)
+
+$ErrorActionPreference = 'Stop'
+$Root = [System.IO.Path]::GetFullPath($PackageRoot)
+
+if (-not (Test-Path -LiteralPath $Root)) {
+  throw "PACKAGE_ROOT_NOT_FOUND=$Root"
+}
+
+$files = @(
+  Get-ChildItem -LiteralPath $Root -Filter '*.ps1' -Recurse -File |
+    Sort-Object FullName
+)
+
+$parseFailures = @()
+$unsafeInterpolationFailures = @()
+
+foreach ($file in $files) {
+  $tokens = $null
+  $errors = $null
+
+  [void][System.Management.Automation.Language.Parser]::ParseFile(
+    $file.FullName,
+    [ref]$tokens,
+    [ref]$errors
+  )
+
+  foreach ($error in @($errors)) {
+    $parseFailures += "$($file.FullName):$($error.Extent.StartLineNumber):$($error.Message)"
+  }
+
+  $text = Get-Content -LiteralPath $file.FullName -Raw -Encoding UTF8
+
+  foreach ($match in [regex]::Matches($text, '\$[A-Za-z_][A-Za-z0-9_]*:')) {
+    $unsafeInterpolationFailures += "$($file.FullName):$($match.Index):$($match.Value)"
+  }
+}
+
+"PACKAGE_SCRIPT_COUNT=$($files.Count)"
+"POWERSHELL_PARSE_FAILURE_COUNT=$($parseFailures.Count)"
+"POWERSHELL_PARSE_FAILURES=$([string]::Join(';', $parseFailures))"
+"UNSAFE_VARIABLE_COLON_INTERPOLATION_COUNT=$($unsafeInterpolationFailures.Count)"
+"UNSAFE_VARIABLE_COLON_INTERPOLATIONS=$([string]::Join(';', $unsafeInterpolationFailures))"
+'MODEL_EXECUTION=NONE'
+'PLATFORM_MUTATION=NONE'
+'DATABASE_ACCESS=NONE'
+'GIT_WRITE=NONE'
+'DEPLOYMENT=NONE'
+'SECRETS_ACCESS=NONE'
+
+if (($parseFailures.Count -eq 0) -and ($unsafeInterpolationFailures.Count -eq 0)) {
+  'SYNTAX_GATE_RESULT=PASS'
+  exit 0
+}
+
+'SYNTAX_GATE_RESULT=FAIL'
+exit 1

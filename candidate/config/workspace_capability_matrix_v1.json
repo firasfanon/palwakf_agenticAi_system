@@ -1,0 +1,59 @@
+{
+  "contract_id": "MEGA_BATCH_MULTI_WORKSPACE_AGENT_CAPABILITY_EXPANSION_V1",
+  "status": "BOOTSTRAP_CANDIDATE_ONLY",
+  "global_defaults": {
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "shell_execution": "NONE",
+    "git_write": "NONE",
+    "project_file_write": "NONE",
+    "deployment": "NONE",
+    "external_network": "NONE",
+    "cross_workspace_access": "DENY",
+    "cross_workspace_memory": "FORBIDDEN",
+    "human_review": "MANDATORY",
+    "auto_approval": "DENY",
+    "auto_execution": "DENY"
+  },
+  "workspaces": [
+    {
+      "workspace_id": "palwakf_government",
+      "profile_id": "government_strict_v1",
+      "classification": "government",
+      "bootstrap_state": "PREEXISTING_ACTIVE_WORKSPACE_UNCHANGED",
+      "future_model_pilot": "single_use_governed_only"
+    },
+    {
+      "workspace_id": "personal_development",
+      "profile_id": "developer_controlled_v1",
+      "classification": "personal",
+      "bootstrap_state": "BOOTSTRAP_PREPARE_ONLY",
+      "future_model_pilot": "developer_controlled_prepare_only"
+    },
+    {
+      "workspace_id": "commercial_projects",
+      "profile_id": "client_isolated_v1",
+      "classification": "commercial",
+      "bootstrap_state": "BOOTSTRAP_PREPARE_ONLY",
+      "required_context": [
+        "client_id",
+        "project_id"
+      ],
+      "future_model_pilot": "client_isolated_prepare_only"
+    },
+    {
+      "workspace_id": "research_learning",
+      "profile_id": "research_read_prepare_v1",
+      "classification": "research",
+      "bootstrap_state": "BOOTSTRAP_PREPARE_ONLY",
+      "future_model_pilot": "read_prepare_only"
+    }
+  ],
+  "commercial_isolation": {
+    "cross_client_access": "DENY",
+    "cross_project_access": "DENY",
+    "client_context_required_before_prepare": true,
+    "client_context_required_before_any_future_model_call": true
+  },
+  "acceptance_requirement": "Bootstrap creates identity manifests only. It does not initialize workspace storage, activate a model pilot, grant execution, or permit tool use."
+}

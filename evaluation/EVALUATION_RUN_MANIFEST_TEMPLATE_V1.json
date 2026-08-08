@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "status": "TEMPLATE_NOT_EXECUTED",
+  "run_id": "EVAL-YYYYMMDD-HHMMSS-<APPROVED_SCOPE>",
+  "timestamp_utc": "<UTC_ISO8601>",
+  "producer": "<human_or_authorized_runner>",
+  "workspace_id": "<approved_workspace>",
+  "actor_id": "<approved_actor>",
+  "model_provider": "<approved_provider>",
+  "model_identifier": "<approved_model>",
+  "fixture_hash": "<SHA256>",
+  "candidate_hash": "<SHA256>",
+  "results_hash": "<SHA256>",
+  "review_decision": "PENDING",
+  "retention_class": "LOCAL_AGENTS_EVALUATION_EVIDENCE"
+}

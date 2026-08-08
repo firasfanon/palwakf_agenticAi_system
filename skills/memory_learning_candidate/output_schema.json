@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Local Agent Skill Output V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task_id",
+    "skill_id",
+    "status",
+    "facts",
+    "assumptions",
+    "not_proven",
+    "evidence",
+    "next_action",
+    "escalation_required"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string"
+    },
+    "skill_id": {
+      "const": "memory_learning_candidate"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "COMPLETE_WITHIN_L0_L1",
+        "BLOCKED",
+        "ESCALATION_REQUIRED",
+        "REJECTED_OUT_OF_SCOPE"
+      ]
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "statement",
+          "source"
+        ],
+        "properties": {
+          "statement": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "not_proven": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "claim",
+          "reference",
+          "type"
+        ],
+        "properties": {
+          "claim": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "next_action": {
+      "type": "string"
+    },
+    "escalation_required": {
+      "type": "boolean"
+    }
+  }
+}

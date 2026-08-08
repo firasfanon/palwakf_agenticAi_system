@@ -1,0 +1,19 @@
+{
+  "binding_id": "QUALITY_ACCEPTED_TOOLS_GOAL_PLANNER_SELECTION_BINDING_V1",
+  "contract_version": "1.0.0",
+  "api_prefix": "/api/v1/operational-core/planner-tool-selection",
+  "ui_route": "/agent-console/goal-planner-tool-selection",
+  "quality_state_mapping": {
+    "QUALITY_ACCEPTED": "SELECTABLE",
+    "PASS_WITH_LIMITATIONS": "SELECTABLE_WITH_LIMITATIONS",
+    "HUMAN_REVIEW_REQUIRED": "HUMAN_REVIEW_REQUIRED",
+    "UNASSESSED": "BLOCKED_UNASSESSED",
+    "QUALITY_FAILED": "BLOCKED_QUALITY_FAILED",
+    "QUARANTINED": "FORBIDDEN_QUARANTINED",
+    "REVALIDATION_REQUIRED": "BLOCKED_REVALIDATION_REQUIRED"
+  },
+  "human_authority": true,
+  "execution": "NONE",
+  "persistence": "NONE",
+  "network": "NONE"
+}

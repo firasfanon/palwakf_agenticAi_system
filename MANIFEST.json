@@ -1,0 +1,67 @@
+{
+  "package": "PALWAKF_LOCAL_AGENTS_POST_APPLY_CLOSURE_2026_06_27",
+  "status": "ACCEPTED_AND_CLOSED",
+  "baseline": "PALWAKF_LOCAL_AGENTS_ACCEPTED_BASELINE_SAPF_V1_2026_06_27",
+  "files": [
+    {
+      "path": "APPLY_EVIDENCE_SAPF_V1_2026_06_27.md",
+      "bytes": 1285,
+      "sha256": "990429db95194d0824e26a592e8a6aa725b9a63f9c9653e1dcecac3d9379b766"
+    },
+    {
+      "path": "CHANGELOG_SAPF_V1_2026_06_27.md",
+      "bytes": 1241,
+      "sha256": "165202fe8aa8e8f2c5f2284c440e4a0a1da587bd572a6e57ee4724c469cbc027"
+    },
+    {
+      "path": "ERROR_RECORD_SAPF_V1_2026_06_27.md",
+      "bytes": 1427,
+      "sha256": "26427f39a349f993404fb15e5669bc0abcf981b6e97719a8253e06a575d45ad5"
+    },
+    {
+      "path": "GUIDE_UPDATE_SNIPPET_LOCAL_AGENTS_SAPF_V1_AR.md",
+      "bytes": 1170,
+      "sha256": "460906cb02b4dac7b33c44dc06aa3fb6848738793da2fd8fecb11ca8efd8f151"
+    },
+    {
+      "path": "PALWAKF_LOCAL_AGENTS_ACCEPTED_BASELINE_SAPF_V1_2026_06_27.md",
+      "bytes": 5839,
+      "sha256": "24465e49ddbd9e1f4361293db83341c62c5e7f92f38b0bc1d086321fe4abed1f"
+    },
+    {
+      "path": "PALWAKF_LOCAL_AGENTS_COMPREHENSIVE_HANDOFF_SAPF_V1_2026_06_27.md",
+      "bytes": 3718,
+      "sha256": "26cc6013020d4cb8225537c5b99dad8c9b86fd5bfd6eea5d1a154b635196a26e"
+    },
+    {
+      "path": "PROJECT_STATUS_SAPF_V1_ACCEPTED_AR.md",
+      "bytes": 1120,
+      "sha256": "e77323b005f802972f25c2ec635e3ef02ce480524f61239e2108781af86e6deb"
+    },
+    {
+      "path": "README_AR.md",
+      "bytes": 1201,
+      "sha256": "cad412360dfcc6c4c8f51cf0fbfa8bde15412ca3baf9f4e447dae48397a0e147"
+    },
+    {
+      "path": "lineage/PALWAKF_LOCAL_AGENTS_COMPREHENSIVE_HANDOFF_2026_06_27.md",
+      "bytes": 16910,
+      "sha256": "9fbae80c8dffddc197bbe9249359fcd9053b1fe8c0ec3589bbe68ce874787d58"
+    },
+    {
+      "path": "lineage/PALWAKF_LOCAL_AGENTS_UPDATED_BASELINE_2026_06_27.md",
+      "bytes": 7423,
+      "sha256": "65c684e12f44b69b3ba67dfac27b020cf46db668fae430e6fa6a45b23f1e974c"
+    },
+    {
+      "path": "lineage/SAPF_V1_CANDIDATE_MANIFEST.md",
+      "bytes": 7147,
+      "sha256": "615aeaaad52d241680ea62266be711d81ce9893bdd070252b7e60971178dbec9"
+    },
+    {
+      "path": "lineage/SAPF_V1_CANDIDATE_SESSION_HANDOFF.md",
+      "bytes": 2147,
+      "sha256": "c7994be83283d16b873e01d26ad89419880b59c7af2452d58dd21caa20164be4"
+    }
+  ]
+}

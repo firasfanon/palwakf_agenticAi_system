@@ -1,0 +1,252 @@
+{
+  "schema_version": "1.0.0",
+  "registry_id": "OPEN_SOURCE_CAPABILITY_CENSUS_V1",
+  "generated_at_utc": "2026-07-11T00:00:00Z",
+  "mode": "read_only_census_and_contracts_only",
+  "policy": {
+    "download": false,
+    "install": false,
+    "network_runtime": false,
+    "tool_execution": false,
+    "scanner_execution": false,
+    "shell_execution": false,
+    "git_execution": false,
+    "source_mutation_by_tool": false,
+    "model_inference": false
+  },
+  "capabilities": [
+    {
+      "id": "tree_sitter",
+      "name": "Tree-sitter",
+      "official_source": "https://github.com/tree-sitter/tree-sitter",
+      "license_classification": "MIT",
+      "capability_class": "code_parsing_and_symbol_indexing",
+      "decision": "high_priority_read_only_candidate",
+      "integration_mode": "safe_adapter_contract_only",
+      "adapter_contract": true,
+      "executable_candidates": [
+        "tree-sitter"
+      ],
+      "required_permissions": [
+        "read_project_files"
+      ],
+      "network_requirements": "none_after_local_install",
+      "data_exposure": "local_source_files_only",
+      "execution_risk": "low_when_parser_only",
+      "notes_ar": "مرشح أولوية لرفع دقة فهرسة الرموز والمكونات والمسارات دون تعديل المصدر."
+    },
+    {
+      "id": "opentelemetry",
+      "name": "OpenTelemetry",
+      "official_source": "https://github.com/open-telemetry/opentelemetry-specification",
+      "license_classification": "Apache-2.0",
+      "capability_class": "telemetry_and_observability",
+      "decision": "high_priority_local_telemetry_candidate",
+      "integration_mode": "safe_adapter_contract_only",
+      "adapter_contract": true,
+      "executable_candidates": [
+        "otelcol",
+        "otelcol-contrib"
+      ],
+      "required_permissions": [
+        "write_local_telemetry_events"
+      ],
+      "network_requirements": "none_for_local_exporter",
+      "data_exposure": "must_exclude_prompt_and_source_content_by_default",
+      "execution_risk": "low_with_local_only_export",
+      "notes_ar": "الأساس المفضل للتتبع المحلي المحايد مع حظر محتوى البرومبت والكود افتراضيًا."
+    },
+    {
+      "id": "semgrep",
+      "name": "Semgrep Community Edition",
+      "official_source": "https://github.com/semgrep/semgrep",
+      "license_classification": "LGPL-2.1",
+      "capability_class": "static_code_analysis",
+      "decision": "accepted_candidate_runtime_blocked",
+      "integration_mode": "safe_adapter_contract_only",
+      "adapter_contract": true,
+      "executable_candidates": [
+        "semgrep"
+      ],
+      "required_permissions": [
+        "read_project_files",
+        "write_scoped_scan_report"
+      ],
+      "network_requirements": "none_for_local_rules; external_registry_requires_separate_gate",
+      "data_exposure": "local_source_files",
+      "execution_risk": "medium_due_to_process_execution",
+      "notes_ar": "العقد موجود فقط؛ لا تشغيل ماسح ولا قواعد بعيدة في هذه الدفعة."
+    },
+    {
+      "id": "gitleaks",
+      "name": "Gitleaks",
+      "official_source": "https://github.com/gitleaks/gitleaks",
+      "license_classification": "MIT",
+      "capability_class": "secret_detection",
+      "decision": "accepted_candidate_runtime_blocked",
+      "integration_mode": "safe_adapter_contract_only",
+      "adapter_contract": true,
+      "executable_candidates": [
+        "gitleaks"
+      ],
+      "required_permissions": [
+        "read_project_files",
+        "write_scoped_scan_report"
+      ],
+      "network_requirements": "none_for_local_scan",
+      "data_exposure": "potential_secrets_must_be_redacted",
+      "execution_risk": "medium_due_to_process_execution_and_sensitive_findings",
+      "notes_ar": "أي تقرير مستقبلي يجب أن يخفي قيمة السر ويعرض بصمة وموقعًا منقحًا فقط."
+    },
+    {
+      "id": "trivy",
+      "name": "Trivy",
+      "official_source": "https://github.com/aquasecurity/trivy",
+      "license_classification": "Apache-2.0",
+      "capability_class": "vulnerability_misconfiguration_and_sbom_scanning",
+      "decision": "deferred_accepted_candidate",
+      "integration_mode": "safe_adapter_contract_only",
+      "adapter_contract": true,
+      "executable_candidates": [
+        "trivy"
+      ],
+      "required_permissions": [
+        "read_project_files",
+        "read_dependency_metadata",
+        "write_scoped_scan_report"
+      ],
+      "network_requirements": "vulnerability_database_updates_require_separate_policy",
+      "data_exposure": "local_dependencies_and_configuration",
+      "execution_risk": "medium_high_due_to_database_updates_and_scan_process",
+      "notes_ar": "مؤجل حتى اعتماد سياسة تحديث قاعدة الثغرات وصندوق تشغيل الماسح."
+    },
+    {
+      "id": "temporal",
+      "name": "Temporal",
+      "official_source": "https://github.com/temporalio/temporal",
+      "license_classification": "MIT",
+      "capability_class": "durable_workflow_orchestration",
+      "decision": "architecture_deferred",
+      "integration_mode": "registry_reference_only",
+      "adapter_contract": false,
+      "executable_candidates": [
+        "temporal"
+      ],
+      "required_permissions": [
+        "service_runtime",
+        "persistent_workflow_state"
+      ],
+      "network_requirements": "local_service_ports",
+      "data_exposure": "workflow_payloads",
+      "execution_risk": "high_due_to_second_orchestration_plane",
+      "notes_ar": "لا يدمج قبل ثبوت الحاجة إلى عمليات موزعة وطويلة الأمد."
+    },
+    {
+      "id": "prefect",
+      "name": "Prefect",
+      "official_source": "https://github.com/PrefectHQ/prefect",
+      "license_classification": "Apache-2.0",
+      "capability_class": "python_workflow_orchestration",
+      "decision": "architecture_deferred",
+      "integration_mode": "registry_reference_only",
+      "adapter_contract": false,
+      "executable_candidates": [
+        "prefect"
+      ],
+      "required_permissions": [
+        "python_runtime",
+        "persistent_flow_state"
+      ],
+      "network_requirements": "optional_local_server",
+      "data_exposure": "flow_inputs_and_outputs",
+      "execution_risk": "high_due_to_second_orchestration_plane",
+      "notes_ar": "مرجعي فقط حتى لا يكرر Operational Core الحالي."
+    },
+    {
+      "id": "langfuse",
+      "name": "Langfuse",
+      "official_source": "https://github.com/langfuse/langfuse",
+      "license_classification": "MIT_except_ee_directories",
+      "capability_class": "llm_observability_and_evaluation",
+      "decision": "optional_later_license_boundary_required",
+      "integration_mode": "registry_reference_only",
+      "adapter_contract": false,
+      "executable_candidates": [],
+      "required_permissions": [
+        "telemetry_ingest",
+        "persistent_observability_store"
+      ],
+      "network_requirements": "local_service_stack",
+      "data_exposure": "prompts_responses_and_traces_if_enabled",
+      "execution_risk": "high_privacy_and_infrastructure_impact",
+      "notes_ar": "يجب فصل مجلدات ee ومراجعة الخصوصية قبل أي اعتماد."
+    },
+    {
+      "id": "phoenix",
+      "name": "Arize Phoenix",
+      "official_source": "https://github.com/Arize-ai/phoenix",
+      "license_classification": "Elastic-License-2.0",
+      "capability_class": "ai_observability_and_evaluation",
+      "decision": "license_review_required",
+      "integration_mode": "registry_reference_only",
+      "adapter_contract": false,
+      "executable_candidates": [
+        "phoenix"
+      ],
+      "required_permissions": [
+        "telemetry_ingest",
+        "persistent_observability_store"
+      ],
+      "network_requirements": "local_service_ports",
+      "data_exposure": "prompts_responses_traces_and_evaluation_data",
+      "execution_risk": "high_privacy_license_and_infrastructure_impact",
+      "notes_ar": "ليس Apache-2.0 في الحالة الحالية؛ يلزم فحص ترخيص مستقل."
+    },
+    {
+      "id": "swe_agent",
+      "name": "SWE-agent",
+      "official_source": "https://github.com/SWE-agent/SWE-agent",
+      "license_classification": "MIT",
+      "capability_class": "autonomous_issue_resolution",
+      "decision": "reference_only_current_phase",
+      "integration_mode": "registry_reference_only",
+      "adapter_contract": false,
+      "executable_candidates": [
+        "sweagent",
+        "swe-agent"
+      ],
+      "required_permissions": [
+        "model_access",
+        "repository_write",
+        "process_execution"
+      ],
+      "network_requirements": "often_required_for_issue_and_model_access",
+      "data_exposure": "repository_and_issue_context",
+      "execution_risk": "critical_against_current_no_execution_policy",
+      "notes_ar": "يخالف حدود no-git وno-code-execution وno-self-apply الحالية."
+    },
+    {
+      "id": "aider",
+      "name": "Aider",
+      "official_source": "https://github.com/Aider-AI/aider",
+      "license_classification": "Apache-2.0",
+      "capability_class": "ai_pair_programming_and_code_editing",
+      "decision": "reference_only_current_phase",
+      "integration_mode": "registry_reference_only",
+      "adapter_contract": false,
+      "executable_candidates": [
+        "aider"
+      ],
+      "required_permissions": [
+        "model_access",
+        "repository_write",
+        "git_execution",
+        "process_execution"
+      ],
+      "network_requirements": "depends_on_selected_model",
+      "data_exposure": "codebase_context",
+      "execution_risk": "critical_against_current_no_execution_policy",
+      "notes_ar": "تستخدم أفكاره وتجربة الاستخدام فقط، ولا يدمج تشغيليًا الآن."
+    }
+  ]
+}

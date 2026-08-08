@@ -1,0 +1,41 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_SKILL_AWARE_GOAL_AND_TASK_WORKFLOW_V1_PREPARE_ONLY",
+  "mode": "PREPARE_ONLY_FRONTEND_AUGMENTATION",
+  "accepted_prerequisites": [
+    "EXTERNAL_ENGINEERING_SKILLS_REFERENCE_INTAKE_V1_ACCEPTED",
+    "GOAL_PLANNER_PRODUCTIZATION_V1_PREPARE_ONLY_ACCEPTED",
+    "TASK_DRAFT_REVIEW_FLOW_V1_VISUALLY_ACCEPTED"
+  ],
+  "routes_augmented": [
+    "/agent-console/goal-planner",
+    "/agent-console/tasks",
+    "/agent-console/engineering-skills",
+    "/agent-console/initial-operation"
+  ],
+  "skill_path": [
+    "spec-driven-development",
+    "planning-and-task-breakdown",
+    "context-engineering",
+    "frontend-ui-engineering",
+    "api-and-interface-design",
+    "debugging-and-error-recovery",
+    "code-review-and-quality",
+    "documentation-and-adrs"
+  ],
+  "boundaries": {
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "shell": "NO",
+    "git": "NO",
+    "code_execution": "NO",
+    "self_apply": "NO",
+    "autonomous_build": "NO",
+    "database_persistence": "NONE",
+    "backend_source_mutation": "NONE",
+    "npx_install": "NO",
+    "plugin_install": "NO",
+    "build_auto": "NO",
+    "web_search_runtime": "NO",
+    "platform_mutation": "NONE"
+  }
+}

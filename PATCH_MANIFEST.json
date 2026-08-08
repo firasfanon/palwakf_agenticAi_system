@@ -1,0 +1,72 @@
+{
+  "candidate_id": "MEGA_BATCH_LOCAL_AGENTS_PRODUCT_START_SCREEN_AND_OPERATIONAL_CONSOLE_UX_UI_DISCOVERY_DESIGN_AND_GOVERNED_READ_ONLY_CANDIDATE_V1",
+  "created_on": "2026-07-06",
+  "candidate_status": "CANDIDATE_STATIC_VALIDATION_PASS__NOT_APPLIED__NOT_RUNTIME_EXECUTED__NOT_UAT_EXECUTED",
+  "scope": {
+    "source_project_mutation": "NONE",
+    "target_surface": "frontend React/TypeScript only",
+    "mount_route": "/agent-console (unchanged)",
+    "backend_route_change": "NONE",
+    "api_contract": "GET only; credentials omit"
+  },
+  "guardrails": [
+    "NO_REACT_WRITE_CONTROL",
+    "NO_AUTHORIZATION_TOKEN",
+    "NO_SQLITE_MIGRATION",
+    "NO_MODEL_EXECUTION",
+    "NO_PILOT_EXECUTION",
+    "NO_COMMERCIAL_APPLY",
+    "NO_PRODUCTION"
+  ],
+  "files": [
+    {
+      "path": "frontend/src/App.tsx",
+      "change_type": "modify",
+      "preimage_sha256": "E653175BD9C6A4B4F88C948A9AA023F3D7889DB54C8FFF896106821855AFE3C0",
+      "postimage_sha256": "311CBFF9E827F4937B13FEAFAB1989AB897B675322A87862A9C4BB8E908A8E78",
+      "bytes": 17930
+    },
+    {
+      "path": "frontend/src/api/client.ts",
+      "change_type": "modify",
+      "preimage_sha256": "BF9ACF975E3DA8A62E9544EF1027987B357B11A3AAD5511AA397422DD5F3FB43",
+      "postimage_sha256": "A0FC0ED20DA8ED98F1758B2D0660F8041238B47774F00B83E40C69723B4D191F",
+      "bytes": 1303
+    },
+    {
+      "path": "frontend/src/api/presentation.ts",
+      "change_type": "create",
+      "preimage_sha256": "__ABSENT__",
+      "postimage_sha256": "7A7A99E0F083882A09D2B1294DB11E979FB610746F81CB78AA113E1F4D8AD02B",
+      "bytes": 1573
+    },
+    {
+      "path": "frontend/src/components/Icon.tsx",
+      "change_type": "create",
+      "preimage_sha256": "__ABSENT__",
+      "postimage_sha256": "2C34517B17CE6135D4008299FE2452BDEC70974667204E3F091176BD267FF06C",
+      "bytes": 2041
+    },
+    {
+      "path": "frontend/src/components/Layout.tsx",
+      "change_type": "modify",
+      "preimage_sha256": "65E07645FB0831D27D43C458ED1BC48F6515E6C76F7E2AB460DDF4AD69CB6B88",
+      "postimage_sha256": "436C5A13D19A412C701898A9443ECA938956E2FD2D748A7A38540249F0420D1A",
+      "bytes": 4241
+    },
+    {
+      "path": "frontend/src/components/OperationalPanels.tsx",
+      "change_type": "create",
+      "preimage_sha256": "__ABSENT__",
+      "postimage_sha256": "847F506238DABB92012510E401409E84F7E48B4AACCBFD67E3A161543D4A0D75",
+      "bytes": 2605
+    },
+    {
+      "path": "frontend/src/styles.css",
+      "change_type": "modify",
+      "preimage_sha256": "D218CFE13C2348F093EF470F0C1C56A14652F0902D2BD5719121BC4FD56C03C9",
+      "postimage_sha256": "89AF9E52B01A65941E95C1AD323361C6D4FC80DAD5D33D53F28EAE3D398ED4DB",
+      "bytes": 16576
+    }
+  ]
+}

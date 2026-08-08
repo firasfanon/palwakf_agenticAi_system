@@ -1,0 +1,77 @@
+{
+  "base_url": "http://127.0.0.1:8876",
+  "rows": [
+    {
+      "path": "/agent-console",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 515,
+      "set_cookie": null
+    },
+    {
+      "path": "/agent-console/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 515,
+      "set_cookie": null
+    },
+    {
+      "path": "/agent-console/workspaces",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 515,
+      "set_cookie": null
+    },
+    {
+      "path": "/agent-console/tasks",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 515,
+      "set_cookie": null
+    },
+    {
+      "path": "/agent-console/projects",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 515,
+      "set_cookie": null
+    },
+    {
+      "path": "/agent-console/evidence",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 515,
+      "set_cookie": null
+    },
+    {
+      "path": "/agent-console/reviews",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 515,
+      "set_cookie": null
+    },
+    {
+      "path": "/agent-console/tools",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 515,
+      "set_cookie": null
+    },
+    {
+      "path": "/agent-console/diagnostics",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 515,
+      "set_cookie": null
+    },
+    {
+      "path": "/agent-console/pilot-control",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 515,
+      "set_cookie": null
+    }
+  ],
+  "all_200": true,
+  "no_set_cookie": true
+}

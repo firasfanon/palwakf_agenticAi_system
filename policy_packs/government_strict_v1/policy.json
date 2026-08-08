@@ -1,0 +1,44 @@
+{
+  "audit": {
+    "audit_required": "YES",
+    "hash_chain": "REQUIRED",
+    "retention": "GOVERNMENT_CONTROLLED"
+  },
+  "classification": "government",
+  "execution": {
+    "execution_gateway": "DISABLED_BY_DEFAULT",
+    "execution_mode": "PREPARE_ONLY",
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED"
+  },
+  "integration": {
+    "deployment": "NONE",
+    "external_database_access": "NONE",
+    "secrets_access": "NONE"
+  },
+  "memory": {
+    "cross_workspace_read": "DENY",
+    "cross_workspace_write": "DENY",
+    "external_memory_sync": "DENY",
+    "memory_scope": "WORKSPACE_ONLY"
+  },
+  "non_transferable_constraints": [
+    "NO_PLATFORM_WRITE_WITHOUT_EXPLICIT_AUTHORIZATION",
+    "NO_UNAUDITED_RBAC_OR_RLS_CHANGE",
+    "NO_PRODUCTION_DEPLOYMENT_WITHOUT_GATE"
+  ],
+  "policy_pack_id": "government_strict_v1",
+  "review": {
+    "approval_is_execution": "FALSE",
+    "human_review": "REQUIRED_FOR_SENSITIVE_ACTIONS",
+    "policy_change": "SEPARATE_HUMAN_APPROVAL_REQUIRED"
+  },
+  "tools": {
+    "external_network": "DENY_BY_DEFAULT",
+    "file_write": "DENY_BY_DEFAULT",
+    "git_write": "NONE",
+    "platform_bridge": "EXPLICIT_GATE_ONLY",
+    "tool_profile": "government_restricted"
+  },
+  "version": "1.0.0"
+}

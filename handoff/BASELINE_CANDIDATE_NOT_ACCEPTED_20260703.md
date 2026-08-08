@@ -1,0 +1,26 @@
+---
+document_id: LOCAL_AGENTS_PRODUCTION_READINESS_DISCOVERY_DESIGN_BASELINE_CANDIDATE_20260703
+status: CANDIDATE_NOT_ACCEPTED
+parent_baseline: LOCAL_AGENTS_COMPREHENSIVE_BASELINE_20260702
+---
+
+# Baseline Candidate — غير مقبول بعد
+
+## الحالة
+
+```text
+PARENT_BASELINE = LOCAL_AGENTS_COMPREHENSIVE_BASELINE_20260702
+SOURCE_PROJECT_MUTATION = NONE
+NARROW_PATCH = STAGED_ONLY
+RUNTIME = NOT_EXECUTED
+DEPENDENCY_LOCK = NOT_EXECUTED
+BUILD = NOT_EXECUTED
+BROWSER_UAT = NOT_EXECUTED
+MODEL_EVALUATION = NOT_EXECUTED
+PILOT = NOT_EXECUTED
+PRODUCTION_GO = NOT_ELIGIBLE
+```
+
+## المعيار
+
+لا يحل هذا المستند محل الـBaseline المقبول. يصبح جزءًا من baseline جديد فقط بعد Apply مصرح + post-apply verification + runtime/browser evidence + human acceptance.

@@ -1,0 +1,44 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_INITIAL_OPERATION_READINESS_AND_BLOCKED_CAPABILITY_REASSESSMENT_V1",
+  "status": "initial_operation_readiness_reassessment_only",
+  "routes": [
+    "/agent-console/initial-operation",
+    "/agent-console/",
+    "/agent-console/diagnostics",
+    "/agent-console/pilot-control"
+  ],
+  "ready_now": [
+    "operational_ux",
+    "goal_planner_productization",
+    "task_draft_prepare",
+    "review_flow",
+    "project_reader_read_only"
+  ],
+  "future_gates": [
+    "LOCAL_MODEL_RUNTIME_READINESS_GATE_V1",
+    "CONTROLLED_LOCAL_MODEL_PILOT_GATE_V1",
+    "LOCAL_TASK_STORE_SQLITE_GOVERNED_PERSISTENCE_V1"
+  ],
+  "blocked": [
+    "shell",
+    "git",
+    "code_execution",
+    "self_apply",
+    "autonomous_build",
+    "web_search"
+  ],
+  "boundaries": {
+    "frontend_source_mutation": "YES_SCOPED",
+    "backend_source_mutation": "NONE",
+    "database_persistence": "NONE",
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "shell": "NO",
+    "git": "NO",
+    "code_execution": "NO",
+    "self_apply": "NO",
+    "autonomous_build": "NO",
+    "web_search": "NO",
+    "platform_mutation": "NONE"
+  }
+}

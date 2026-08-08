@@ -1,0 +1,107 @@
+{
+  "package": "LOCAL_AGENT_READ_ONLY_PILOT_LIFECYCLE_CLOSURE_V1_2_REVC",
+  "status": "CANDIDATE_PREPARED_NOT_APPLIED",
+  "file_count": 20,
+  "files": [
+    {
+      "path": "APPLY_GUIDE_AR.md",
+      "sha256": "e4a1e24fe5d9a20cfbf15cb0b9eb4c385b610b1fc9aedd10f82a7dfe8abf9b41",
+      "size_bytes": 1177
+    },
+    {
+      "path": "CANDIDATE_BUILD_VALIDATION_REPORT.json",
+      "sha256": "e4fdfc76e17af8581c7bdd628384fa1552df0dd0dddb5dca07a5abb3cea3e224",
+      "size_bytes": 340
+    },
+    {
+      "path": "CHANGELOG_CANDIDATE.md",
+      "sha256": "b057268093ed0f16d24e15ff7953e01ae9f522022979b850f6052aa7f7700f00",
+      "size_bytes": 819
+    },
+    {
+      "path": "ERROR_RECORD_AR.md",
+      "sha256": "a83f2033f5f9886ad520ebc54e1b6d384c8f76f14d65f3f22d3909c94dc87d91",
+      "size_bytes": 1341
+    },
+    {
+      "path": "MANIFEST.md",
+      "sha256": "005f3cb1e3437d8afe3d85e8416134dc0a5b0f05241ddf887e866670126cb6b7",
+      "size_bytes": 364
+    },
+    {
+      "path": "MANIFEST.md.json",
+      "sha256": "782314a9f2d7ceef4d939ba7108406110bd65d26ac0b7da6906791f25cf32d1a",
+      "size_bytes": 730
+    },
+    {
+      "path": "PROJECT_STATUS_CANDIDATE_AR.md",
+      "sha256": "1b0224bd169b0d586f06caac546b5743ffc4f992890cbabe6ed01bc13828a591",
+      "size_bytes": 412
+    },
+    {
+      "path": "README_AR.md",
+      "sha256": "6ab79d745ba82e6e02b28c5edd24e14569ed1d4168576880278e5fcc5e056b57",
+      "size_bytes": 1079
+    },
+    {
+      "path": "SESSION_HANDOFF_AR.md",
+      "sha256": "61c4c9059696cc666230e38926e88d910d7581bdac5e70c86663e248e3593418",
+      "size_bytes": 1397
+    },
+    {
+      "path": "governance/read_only_pilot_lifecycle_closure/DECISION_RECORD_CONTRACT_V1.md",
+      "sha256": "f21d3370035647bb2f95ddb56ede2dfe37dd7308c9aa4f299ccebde1dfc4c225",
+      "size_bytes": 412
+    },
+    {
+      "path": "governance/read_only_pilot_lifecycle_closure/READ_ONLY_PILOT_HUMAN_REVIEW_AND_ARCHIVE_POLICY_V1.md",
+      "sha256": "bc66089e374b41d61883e19e05cc689217968599c8908bcd0c4b6ad0c0b56869",
+      "size_bytes": 1618
+    },
+    {
+      "path": "scripts/Archive-ReadOnlyPilotAfterHumanReviewV1.ps1",
+      "sha256": "aa7f594e2a115c5cccd3ebf4efff45991f3736f8a639c3501f23b564fe8f7454",
+      "size_bytes": 5028
+    },
+    {
+      "path": "scripts/Install-ReadOnlyPilotLifecycleClosureV1.ps1",
+      "sha256": "11acf1f93c4b8a320701d45388048cbf92f63a101aef9ff13624c4aa6109f609",
+      "size_bytes": 6704
+    },
+    {
+      "path": "scripts/Invoke-ReadOnlyPilotLifecycleClosureEvalsV1.ps1",
+      "sha256": "a226a8994f36f35863ff7e33dbadde11dc91aa472f34379599dbf22cf0ef640f",
+      "size_bytes": 8608
+    },
+    {
+      "path": "scripts/New-ReadOnlyPilotHumanReviewDecisionV1.ps1",
+      "sha256": "8773a213d2c8f29013f10250ed77bfec1548d9f869105fc466ee170114c8a7ef",
+      "size_bytes": 6005
+    },
+    {
+      "path": "scripts/Test-ReadOnlyPilotActiveStateV1.ps1",
+      "sha256": "1adc7d16de39403b367b21b04b7ecd19331f788a5191ba7102f9ed9435622066",
+      "size_bytes": 1143
+    },
+    {
+      "path": "scripts/Test-ReadOnlyPilotLifecycleClosurePackageSyntaxV1.ps1",
+      "sha256": "32fdf4b068ed6b4d8b77f77cd3cc4f3814768fae4060ad24932476eccb4916aa",
+      "size_bytes": 1676
+    },
+    {
+      "path": "scripts/Test-ReadOnlyPilotLifecycleClosurePreflightV1.ps1",
+      "sha256": "455c685489a5209a3ed61dbb434fc392bbe8c118cd26b0c1b05be602af1c749c",
+      "size_bytes": 2337
+    },
+    {
+      "path": "scripts/Test-ReadOnlyPilotLifecycleClosureV1.ps1",
+      "sha256": "eec230f174a75221b4246627eef0e9222ad3722cc9e291540ab9b0f53b65a3e1",
+      "size_bytes": 3444
+    },
+    {
+      "path": "task_contracts/READ_ONLY_PILOT_HUMAN_REVIEW_DECISION_V1.json",
+      "sha256": "67f9833a22bd2aa8f2f026d417fdcb2e8c5be6bb4f318300ecdccf4f2683c11d",
+      "size_bytes": 469
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "contract": "ACCEPTED_LOCAL_AGENTS_BASELINE_20260630",
+  "files": {
+    "backend\\src\\palwakf_local_agents\\app.py": "B2A94CB0BEB2793D62ABCC1ED20C995F474BB9062B58833D8B27EDE5520E0B5F",
+    "backend\\src\\palwakf_local_agents\\local_agent_core\\__init__.py": "325751059C15AB606FDF14D20F37122AADD7CF75299E502A24AA719E49ABA31A",
+    "backend\\src\\palwakf_local_agents\\local_agent_core\\contracts.py": "A76586AB1E9603A44E364D694220225B62E871E2B21D8D7D59BE5FECEA013A85",
+    "backend\\src\\palwakf_local_agents\\local_agent_core\\policy.py": "38FD2BB30CD8A6E940795697226D10EE8D6E302F5C07ABEE44186DB85C3BBF51",
+    "backend\\src\\palwakf_local_agents\\local_agent_core\\router.py": "3C055050884DE13DDB0C6FDB60D10349E1B6687527F234E43892CD5EC6E88187",
+    "backend\\src\\palwakf_local_agents\\local_agent_core\\store.py": "8E22264ABD0D528BF8D3D64FC3B61F732EF04B16B0DE1290FC1AB1842AA836B4",
+    "backend\\tests\\test_governed_local_agent_core.py": "9F5F1C07B93811F5D3EFCA32DA222B066A2C539B399F92608800DD99D2D4EA39",
+    "config\\local_agent_model_pilot_v1.json": "C67BB5C35F5C17DFF375BBB06A661CD81624B7A182B1A727CE9FF1B0063B4F4D"
+  },
+  "known_workspace_matrix": {
+    "palwakf_government": "government_strict_v1",
+    "personal_development": "developer_controlled_v1",
+    "commercial_projects": "client_isolated_v1",
+    "research_learning": "research_read_prepare_v1"
+  },
+  "accepted_state": {
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "shell_execution": "NONE",
+    "git_write": "NONE",
+    "external_network": "NONE"
+  }
+}

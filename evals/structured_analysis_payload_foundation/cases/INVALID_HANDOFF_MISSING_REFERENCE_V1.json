@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "role": "documentation_handoff",
+  "analysis_status": "PENDING_HUMAN_REVIEW",
+  "facts": [
+    {
+      "statement": "Evidence is available.",
+      "evidence_reference_ids": [
+        "EVD-001"
+      ]
+    }
+  ],
+  "assumptions": [],
+  "evidence_gaps": [],
+  "risks_and_constraints": [],
+  "handoff_sections": [
+    {
+      "section": "CURRENT_STATE",
+      "text": "State candidate.",
+      "evidence_reference_ids": []
+    },
+    {
+      "section": "RESUMPTION_POINT",
+      "text": "Review next.",
+      "evidence_reference_ids": [
+        "EVD-001"
+      ]
+    }
+  ],
+  "recommended_next_step": "HUMAN_REVIEW_REQUIRED"
+}

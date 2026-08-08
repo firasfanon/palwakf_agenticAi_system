@@ -1,0 +1,247 @@
+{
+  "candidate_id": "PALWAKF_LOCAL_AGENTS_PRODUCTION_READINESS_AND_AGENT_PERFORMANCE_EVALUATION_V1_DISCOVERY_DESIGN_GOVERNED_EXECUTABLE_CANDIDATE",
+  "result": "PASS",
+  "validated_files": 30,
+  "records": [
+    {
+      "path": "CANDIDATE_BUILD_VALIDATION_REPORT.json",
+      "expected_sha256": "7A757E52D86811CC1107E47B84277C277A3608FC194A24064F7CDD746FFC92A2",
+      "actual_sha256": "7A757E52D86811CC1107E47B84277C277A3608FC194A24064F7CDD746FFC92A2",
+      "bytes_expected": 923,
+      "bytes_actual": 923,
+      "result": "PASS"
+    },
+    {
+      "path": "DISCOVERY_AND_DESIGN_REPORT_AR.md",
+      "expected_sha256": "703C9DC4E9B6E1B63F451556723908A0C3B327F65B70BF2F85AE39BF5C86F762",
+      "actual_sha256": "703C9DC4E9B6E1B63F451556723908A0C3B327F65B70BF2F85AE39BF5C86F762",
+      "bytes_expected": 3361,
+      "bytes_actual": 3361,
+      "result": "PASS"
+    },
+    {
+      "path": "README_AR.md",
+      "expected_sha256": "557E87318A8A93547A1045879892E0368874D9285DDB8709118EDD39998D3847",
+      "actual_sha256": "557E87318A8A93547A1045879892E0368874D9285DDB8709118EDD39998D3847",
+      "bytes_expected": 2566,
+      "bytes_actual": 2566,
+      "result": "PASS"
+    },
+    {
+      "path": "RUN_GUIDE_AR.md",
+      "expected_sha256": "2ECF551AA0CFA5FBA5AF5CC5D40009C572D18262719B6C59C518E72E7AAE12E8",
+      "actual_sha256": "2ECF551AA0CFA5FBA5AF5CC5D40009C572D18262719B6C59C518E72E7AAE12E8",
+      "bytes_expected": 1836,
+      "bytes_actual": 1836,
+      "result": "PASS"
+    },
+    {
+      "path": "contracts/API_AUTHORIZATION_CONTRACT_REGISTER_V1.json",
+      "expected_sha256": "DB214BEBB35FDD6C89C7CEE38F8FAE078A90485AD9F2201ED89895C7191F2FDF",
+      "actual_sha256": "DB214BEBB35FDD6C89C7CEE38F8FAE078A90485AD9F2201ED89895C7191F2FDF",
+      "bytes_expected": 3404,
+      "bytes_actual": 3404,
+      "result": "PASS"
+    },
+    {
+      "path": "evaluation/AGENT_EVALUATION_GOVERNANCE_V1_AR.md",
+      "expected_sha256": "7B4A94E2718844E898C51183D0A55E35380EF7811FCE4CA60C3D94C59872464E",
+      "actual_sha256": "7B4A94E2718844E898C51183D0A55E35380EF7811FCE4CA60C3D94C59872464E",
+      "bytes_expected": 1128,
+      "bytes_actual": 1128,
+      "result": "PASS"
+    },
+    {
+      "path": "evaluation/AGENT_EVALUATION_SCORECARD_V1.json",
+      "expected_sha256": "3B4B04927CB8EF89085E5924F195038D90FABB6AE98D461BCFB198470367CEB6",
+      "actual_sha256": "3B4B04927CB8EF89085E5924F195038D90FABB6AE98D461BCFB198470367CEB6",
+      "bytes_expected": 1047,
+      "bytes_actual": 1047,
+      "result": "PASS"
+    },
+    {
+      "path": "evaluation/EVALUATION_RUN_MANIFEST_TEMPLATE_V1.json",
+      "expected_sha256": "C73CBA163F38EC4E02C20DEF83D45E3573C69BF73EC9B0CC5806912DE6AAAA68",
+      "actual_sha256": "C73CBA163F38EC4E02C20DEF83D45E3573C69BF73EC9B0CC5806912DE6AAAA68",
+      "bytes_expected": 544,
+      "bytes_actual": 544,
+      "result": "PASS"
+    },
+    {
+      "path": "evaluation/fixtures/EVALUATION_CASES_V1.json",
+      "expected_sha256": "2AF6AC5756836010A0EB3A5A9D41B38B192614FFAF9E345E23E90A24E66A18AE",
+      "actual_sha256": "2AF6AC5756836010A0EB3A5A9D41B38B192614FFAF9E345E23E90A24E66A18AE",
+      "bytes_expected": 2095,
+      "bytes_actual": 2095,
+      "result": "PASS"
+    },
+    {
+      "path": "evidence/CANDIDATE_RUNTIME_SMOKE_EVIDENCE_20260703.json",
+      "expected_sha256": "02B69A73A552435E1BAA1C5F4A9F1931D657FD484964A2AAA8B6CC98991A8482",
+      "actual_sha256": "02B69A73A552435E1BAA1C5F4A9F1931D657FD484964A2AAA8B6CC98991A8482",
+      "bytes_expected": 875,
+      "bytes_actual": 875,
+      "result": "PASS"
+    },
+    {
+      "path": "governance/AUTHORIZATION_CLOSURE_DECISION_RECORD_V1_AR.md",
+      "expected_sha256": "EC5A2A6456DBF645066BCB44EEE8B8531F965F2916017D553A6FF5D47EF9A183",
+      "actual_sha256": "EC5A2A6456DBF645066BCB44EEE8B8531F965F2916017D553A6FF5D47EF9A183",
+      "bytes_expected": 1193,
+      "bytes_actual": 1193,
+      "result": "PASS"
+    },
+    {
+      "path": "governance/DURABLE_EVIDENCE_ARCHIVE_CONTRACT_V1_AR.md",
+      "expected_sha256": "D17E3B723D8D0447BB85EF62CB30523642BEF876FD0AF16C10B5332B4B7993A3",
+      "actual_sha256": "D17E3B723D8D0447BB85EF62CB30523642BEF876FD0AF16C10B5332B4B7993A3",
+      "bytes_expected": 990,
+      "bytes_actual": 990,
+      "result": "PASS"
+    },
+    {
+      "path": "governance/RELEASE_GATES_AND_ROLLBACK_V1_AR.md",
+      "expected_sha256": "891808B7B4A19C447DBB45F8214706B7ACEADA41638623814D4E3DD9C1C3C269",
+      "actual_sha256": "891808B7B4A19C447DBB45F8214706B7ACEADA41638623814D4E3DD9C1C3C269",
+      "bytes_expected": 1716,
+      "bytes_actual": 1716,
+      "result": "PASS"
+    },
+    {
+      "path": "handoff/BASELINE_CANDIDATE_NOT_ACCEPTED_20260703.md",
+      "expected_sha256": "83EB6F8456F84FC23E193701829D0C278258E861853C8122F63C2F12F7CD8817",
+      "actual_sha256": "83EB6F8456F84FC23E193701829D0C278258E861853C8122F63C2F12F7CD8817",
+      "bytes_expected": 816,
+      "bytes_actual": 816,
+      "result": "PASS"
+    },
+    {
+      "path": "handoff/CHANGELOG_CANDIDATE_20260703_AR.md",
+      "expected_sha256": "E3ABC0E5F84219DC93DBA97C64DCA462F2B8BD6B85082D880A98FDC8399E8D53",
+      "actual_sha256": "E3ABC0E5F84219DC93DBA97C64DCA462F2B8BD6B85082D880A98FDC8399E8D53",
+      "bytes_expected": 755,
+      "bytes_actual": 755,
+      "result": "PASS"
+    },
+    {
+      "path": "handoff/ERROR_RECORD_PRODUCTION_READINESS_DISCOVERY_20260703_AR.md",
+      "expected_sha256": "8D5256B4CE1243B4E4516BF5D96DAF067C473B6050C8B68C2E8DF533E01C9C12",
+      "actual_sha256": "8D5256B4CE1243B4E4516BF5D96DAF067C473B6050C8B68C2E8DF533E01C9C12",
+      "bytes_expected": 1828,
+      "bytes_actual": 1828,
+      "result": "PASS"
+    },
+    {
+      "path": "handoff/GUIDE_UPDATE_SNIPPET_PALWAKF_PLATFORM_COMPREHENSIVE_GUIDE_20260703_AR.md",
+      "expected_sha256": "A31CCA4423E0F5576C9A865B6F5DA2F2A1A8223FDC83488004B175A620F55B21",
+      "actual_sha256": "A31CCA4423E0F5576C9A865B6F5DA2F2A1A8223FDC83488004B175A620F55B21",
+      "bytes_expected": 1282,
+      "bytes_actual": 1282,
+      "result": "PASS"
+    },
+    {
+      "path": "handoff/LOCAL_AGENTS_COMPREHENSIVE_HANDOFF_20260703_CANDIDATE.md",
+      "expected_sha256": "282BBB677F5DF2626FF55D49AEBCF071C64BE48FCC3A2957D92EDB5D8A653BF6",
+      "actual_sha256": "282BBB677F5DF2626FF55D49AEBCF071C64BE48FCC3A2957D92EDB5D8A653BF6",
+      "bytes_expected": 2134,
+      "bytes_actual": 2134,
+      "result": "PASS"
+    },
+    {
+      "path": "manifests/INPUT_PROVENANCE.json",
+      "expected_sha256": "D44FE086108A22F5181E0F439C6E2FC303D674547C2E7D71DBE3C8DB35A92044",
+      "actual_sha256": "D44FE086108A22F5181E0F439C6E2FC303D674547C2E7D71DBE3C8DB35A92044",
+      "bytes_expected": 549,
+      "bytes_actual": 549,
+      "result": "PASS"
+    },
+    {
+      "path": "manifests/SOURCE_POSTIMAGE_SHA256.json",
+      "expected_sha256": "CCFF30A02D6D3FF874575C74BD83D5BB4A399DD6F44C75C2BC45A320D4FBC8D3",
+      "actual_sha256": "CCFF30A02D6D3FF874575C74BD83D5BB4A399DD6F44C75C2BC45A320D4FBC8D3",
+      "bytes_expected": 415,
+      "bytes_actual": 415,
+      "result": "PASS"
+    },
+    {
+      "path": "manifests/SOURCE_PREIMAGE_SHA256.json",
+      "expected_sha256": "33D6ADF69D29285EDBBB5AD9F49323C211309589480649E99564E70D85CFB528",
+      "actual_sha256": "33D6ADF69D29285EDBBB5AD9F49323C211309589480649E99564E70D85CFB528",
+      "bytes_expected": 369,
+      "bytes_actual": 369,
+      "result": "PASS"
+    },
+    {
+      "path": "scripts/Apply-Candidate.ps1",
+      "expected_sha256": "2B2E84C5FF98E28373F48FF33888D69C8980C138FBC173E93B268A413A947773",
+      "actual_sha256": "2B2E84C5FF98E28373F48FF33888D69C8980C138FBC173E93B268A413A947773",
+      "bytes_expected": 2725,
+      "bytes_actual": 2725,
+      "result": "PASS"
+    },
+    {
+      "path": "scripts/New-DurableEvidenceArchive.ps1",
+      "expected_sha256": "8EF54C7A8F4DA820365BC7CC48B47B8EF5B392CD9246E0672B95F9F8B0A6D4F7",
+      "actual_sha256": "8EF54C7A8F4DA820365BC7CC48B47B8EF5B392CD9246E0672B95F9F8B0A6D4F7",
+      "bytes_expected": 1021,
+      "bytes_actual": 1021,
+      "result": "PASS"
+    },
+    {
+      "path": "scripts/Test-ApiAuthorizationInventory.ps1",
+      "expected_sha256": "99C3104FB6DBC9CF6BA2A2C3A7EE248B7B8C8C72DAFC93229E0E547788EDE36C",
+      "actual_sha256": "99C3104FB6DBC9CF6BA2A2C3A7EE248B7B8C8C72DAFC93229E0E547788EDE36C",
+      "bytes_expected": 2382,
+      "bytes_actual": 2382,
+      "result": "PASS"
+    },
+    {
+      "path": "scripts/Test-PostApply.ps1",
+      "expected_sha256": "BE4AABB898904A2E1F54F0B681965836ECC29466867995D0FD71FFA924E7A0EF",
+      "actual_sha256": "BE4AABB898904A2E1F54F0B681965836ECC29466867995D0FD71FFA924E7A0EF",
+      "bytes_expected": 2232,
+      "bytes_actual": 2232,
+      "result": "PASS"
+    },
+    {
+      "path": "scripts/Test-Preflight.ps1",
+      "expected_sha256": "90979A6133883ABEA54EEF985E81369340EDB40384DDDCB18B5866A6C3E423B9",
+      "actual_sha256": "90979A6133883ABEA54EEF985E81369340EDB40384DDDCB18B5866A6C3E423B9",
+      "bytes_expected": 1758,
+      "bytes_actual": 1758,
+      "result": "PASS"
+    },
+    {
+      "path": "scripts/Test-ReactReadOnlyContract.ps1",
+      "expected_sha256": "0ACD3236552CFAE936CE626CD5BB6F7AC610FD340B7D7110385A8138DA1A2D10",
+      "actual_sha256": "0ACD3236552CFAE936CE626CD5BB6F7AC610FD340B7D7110385A8138DA1A2D10",
+      "bytes_expected": 1521,
+      "bytes_actual": 1521,
+      "result": "PASS"
+    },
+    {
+      "path": "scripts/Validate-CandidateStatic.ps1",
+      "expected_sha256": "F0D0EC9E640CB93ACC6B1270172D0AB43F10C1709FF6C2F00C85106FD112D6F2",
+      "actual_sha256": "F0D0EC9E640CB93ACC6B1270172D0AB43F10C1709FF6C2F00C85106FD112D6F2",
+      "bytes_expected": 1665,
+      "bytes_actual": 1665,
+      "result": "PASS"
+    },
+    {
+      "path": "staged_postimage/backend/src/palwakf_local_agents/app.py",
+      "expected_sha256": "E99552F18D22D140847FE6578222F22058F891B9727B290F04DB9D1A2AD160E0",
+      "actual_sha256": "E99552F18D22D140847FE6578222F22058F891B9727B290F04DB9D1A2AD160E0",
+      "bytes_expected": 3901,
+      "bytes_actual": 3901,
+      "result": "PASS"
+    },
+    {
+      "path": "staged_postimage/frontend/src/api/client.ts",
+      "expected_sha256": "BF9ACF975E3DA8A62E9544EF1027987B357B11A3AAD5511AA397422DD5F3FB43",
+      "actual_sha256": "BF9ACF975E3DA8A62E9544EF1027987B357B11A3AAD5511AA397422DD5F3FB43",
+      "bytes_expected": 1145,
+      "bytes_actual": 1145,
+      "result": "PASS"
+    }
+  ]
+}

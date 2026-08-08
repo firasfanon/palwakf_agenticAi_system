@@ -1,0 +1,765 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_CORE_AGENT_OPERATING_MODEL_AND_WORKSPACE_TASK_LIFECYCLE_CLOSURE_V1",
+  "mode": "ANALYSIS_DESIGN_ONLY",
+  "source_archive": "PALWAKF_LOCAL_AGENTS_FULL_SOURCE_BASELINE_20260709_124733.zip",
+  "source_archive_sha256": "A86EB992B318F1DE65C73156F08B6881D686F52164428BE98373C4B153B82772",
+  "source_archive_size_bytes": 22386659,
+  "source_items_count": 1213,
+  "source_mutation": "NONE",
+  "database_write": "NONE",
+  "model_execution": "NONE",
+  "pilot_execution": "NOT_EXECUTED",
+  "platform_mutation": "NONE",
+  "network": "NONE",
+  "key_file_hashes": {
+    "agents/registry_v2.yaml": "DE63BD1E4EEDEF2D90F9092963E37D75DFE4ADBCDB369636FF72EBA6B7EB23C0",
+    "backend/src/palwakf_local_agents/command_center/read_only_store.py": "764AE9D2D47DBFC55FFB29B38ECB7CEA26FA742F09BFAC999BC20B60A9B4A884",
+    "backend/src/palwakf_local_agents/command_center/router.py": "EE543EB7D2BC21957E00CDEDF7CDC746CE2A728FDF0517887E5E90F8E17411E3",
+    "backend/src/palwakf_local_agents/local_agent_core/registry.py": "07435666AEC0403E77FF477ECE97D26CDC170654751C6AA9485B689DBE8AE6A6",
+    "backend/src/palwakf_local_agents/local_agent_core/contracts.py": "A76586AB1E9603A44E364D694220225B62E871E2B21D8D7D59BE5FECEA013A85",
+    "backend/src/palwakf_local_agents/local_agent_core/policy.py": "38FD2BB30CD8A6E940795697226D10EE8D6E302F5C07ABEE44186DB85C3BBF51",
+    "backend/src/palwakf_local_agents/local_agent_core/router.py": "0B5101A3B4A5C3D8271AFDEDEF1B115072F9CC6E447177E808B0412B674AD1AF",
+    "backend/src/palwakf_local_agents/local_agent_core/store.py": "8E22264ABD0D528BF8D3D64FC3B61F732EF04B16B0DE1290FC1AB1842AA836B4",
+    "backend/src/palwakf_local_agents/governed_operations/contracts.py": "16B579A46C3206E76B95CFBAC10867A0799C793EA199E076644959F6DE1834A4",
+    "backend/src/palwakf_local_agents/governed_operations/router.py": "4AECC4F88B6D2D09C681E0AB48AB3B577AF2F1EBD4983B346BCBD4B3E138544D",
+    "backend/src/palwakf_local_agents/governed_operations/store.py": "06C9593C93B355CB7D461196CF72C80724189464B1904B7F9F89FF9E001FFDAF",
+    "backend/src/palwakf_local_agents/governed_capability_foundation/router.py": "9B288EC09E2A7AEC1079F2D9DF7BCD707C840BD4E6EBBB3FECCC121A1B1EB2E2",
+    "backend/src/palwakf_local_agents/legacy_write_authorization.py": "D074075954D422F03548140D87D9257131C9C418F92029D2B5FC2F85AAEFC2B3",
+    "backend/src/palwakf_local_agents/app.py": "A2E6CFED25919A1715A3D25C509BA4A169CF6BBA6006CC282F8790C7DF2AC361",
+    "frontend/src/App.tsx": "D6ED7CD7A926EF2B0FF5CBED1C4A7FE0F536D087CC20BEB405823B2E728A6F6B",
+    "frontend/src/api/client.ts": "A0FC0ED20DA8ED98F1758B2D0660F8041238B47774F00B83E40C69723B4D191F",
+    "config/local_actor_scope_registry_v1.json": "643E0ABED4A924E17EF8D9B3680853C880EB5E6C9C4FE9EC87AB77EA00692B61",
+    "config/controlled_first_prompt_pilot_v1.json": "F818D60DA70C42037FC1EB275872B472318757A45D0A432A56490FDDD8C28AD4"
+  },
+  "agent_registry_v2": {
+    "contract_version": "2.0",
+    "role_count": 14,
+    "statuses": {
+      "admission_required_v2": 5,
+      "disabled_pending_admission": 9
+    },
+    "autonomy_ceilings": {
+      "L1_PLAN_ONLY": 14
+    },
+    "roles": [
+      {
+        "role_id": "coordinator",
+        "title_ar": "المنسق المركزي",
+        "status": "admission_required_v2",
+        "autonomy_ceiling": "L1_PLAN_ONLY"
+      },
+      {
+        "role_id": "sovereignty_reviewer",
+        "title_ar": "مراجع الحوكمة والسيادة",
+        "status": "admission_required_v2",
+        "autonomy_ceiling": "L1_PLAN_ONLY"
+      },
+      {
+        "role_id": "knowledge_researcher",
+        "title_ar": "باحث المعرفة والمصادر",
+        "status": "admission_required_v2",
+        "autonomy_ceiling": "L1_PLAN_ONLY"
+      },
+      {
+        "role_id": "ui_ux_designer",
+        "title_ar": "مصمم UX/UI",
+        "status": "admission_required_v2",
+        "autonomy_ceiling": "L1_PLAN_ONLY"
+      },
+      {
+        "role_id": "documentation_handoff",
+        "title_ar": "مساعد التوثيق والتسليم",
+        "status": "admission_required_v2",
+        "autonomy_ceiling": "L1_PLAN_ONLY"
+      },
+      {
+        "role_id": "product_analyst",
+        "title_ar": "محلل المنتج",
+        "status": "disabled_pending_admission",
+        "autonomy_ceiling": "L1_PLAN_ONLY"
+      },
+      {
+        "role_id": "solution_architect",
+        "title_ar": "مهندس الحلول والمعمارية",
+        "status": "disabled_pending_admission",
+        "autonomy_ceiling": "L1_PLAN_ONLY"
+      },
+      {
+        "role_id": "qa_security_reviewer",
+        "title_ar": "مراجع الجودة والأمن",
+        "status": "disabled_pending_admission",
+        "autonomy_ceiling": "L1_PLAN_ONLY"
+      },
+      {
+        "role_id": "tester",
+        "title_ar": "مخطط الاختبارات",
+        "status": "disabled_pending_admission",
+        "autonomy_ceiling": "L1_PLAN_ONLY"
+      },
+      {
+        "role_id": "coding_builder",
+        "title_ar": "مخطط التغيير البرمجي",
+        "status": "disabled_pending_admission",
+        "autonomy_ceiling": "L1_PLAN_ONLY"
+      },
+      {
+        "role_id": "frontend_engineer",
+        "title_ar": "مهندس الواجهة الأمامية",
+        "status": "disabled_pending_admission",
+        "autonomy_ceiling": "L1_PLAN_ONLY"
+      },
+      {
+        "role_id": "backend_engineer",
+        "title_ar": "مهندس الخلفية",
+        "status": "disabled_pending_admission",
+        "autonomy_ceiling": "L1_PLAN_ONLY"
+      },
+      {
+        "role_id": "database_engineer",
+        "title_ar": "مهندس قاعدة البيانات",
+        "status": "disabled_pending_admission",
+        "autonomy_ceiling": "L1_PLAN_ONLY"
+      },
+      {
+        "role_id": "release_engineer",
+        "title_ar": "مهندس الإصدار والتشغيل",
+        "status": "disabled_pending_admission",
+        "autonomy_ceiling": "L1_PLAN_ONLY"
+      }
+    ]
+  },
+  "backend_local_agent_core_registry": {
+    "agent_count": 6,
+    "agents": [
+      "policy_guardian_agent_v1",
+      "local_agent_coordinator_v1",
+      "evidence_audit_agent_v1",
+      "repository_test_triage_agent_v1",
+      "task_planning_runbook_agent_v1",
+      "human_review_copilot_v1"
+    ]
+  },
+  "frontend_use_read_paths": [
+    "/api/v1/local-agents/dashboard",
+    "/api/v1/local-agent-core/agents",
+    "/api/v1/workspaces",
+    "/api/v1/workspaces",
+    "/api/v1/governed-operations/workspaces",
+    "/api/v1/local-agents/tasks",
+    "/api/v1/local-agents/reviews",
+    "/api/v1/local-agents/evidence",
+    "/api/v1/local-agent-core/agents",
+    "/api/v1/local-agent-core/workspaces/palwakf_government/model-pilot/status",
+    "/health"
+  ],
+  "route_counts": {
+    "GET": 61,
+    "POST": 15
+  },
+  "backend_routes": [
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "GET",
+      "path": "/agent-console",
+      "handler": "",
+      "full_path": "/agent-console"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "GET",
+      "path": "/agent-console/",
+      "handler": "",
+      "full_path": "/agent-console/"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "GET",
+      "path": "/agent-console/workspaces",
+      "handler": "",
+      "full_path": "/agent-console/workspaces"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "GET",
+      "path": "/agent-console/tasks",
+      "handler": "",
+      "full_path": "/agent-console/tasks"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "GET",
+      "path": "/agent-console/projects",
+      "handler": "",
+      "full_path": "/agent-console/projects"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "GET",
+      "path": "/agent-console/evidence",
+      "handler": "",
+      "full_path": "/agent-console/evidence"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "GET",
+      "path": "/agent-console/reviews",
+      "handler": "react_console_ui",
+      "full_path": "/agent-console/reviews"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "GET",
+      "path": "/agent-console/tools",
+      "handler": "react_console_ui",
+      "full_path": "/agent-console/tools"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "GET",
+      "path": "/agent-console/diagnostics",
+      "handler": "react_console_ui",
+      "full_path": "/agent-console/diagnostics"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "GET",
+      "path": "/agent-console/pilot-control",
+      "handler": "react_console_ui",
+      "full_path": "/agent-console/pilot-control"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "GET",
+      "path": "/health",
+      "handler": "health",
+      "full_path": "/health"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "GET",
+      "path": "/api/agents",
+      "handler": "agents",
+      "full_path": "/api/agents"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "GET",
+      "path": "/api/tasks",
+      "handler": "tasks",
+      "full_path": "/api/tasks"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "POST",
+      "path": "/api/tasks",
+      "handler": "create_task",
+      "full_path": "/api/tasks"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "GET",
+      "path": "/api/audit",
+      "handler": "audit",
+      "full_path": "/api/audit"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/app.py",
+      "method": "POST",
+      "path": "/api/tasks/{task_id}/run",
+      "handler": "run_task",
+      "full_path": "/api/tasks/{task_id}/run"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/command_center/router.py",
+      "method": "GET",
+      "path": "/dashboard",
+      "handler": "dashboard",
+      "full_path": "/api/v1/local-agents/dashboard"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/command_center/router.py",
+      "method": "GET",
+      "path": "/tasks",
+      "handler": "tasks",
+      "full_path": "/api/v1/local-agents/tasks"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/command_center/router.py",
+      "method": "GET",
+      "path": "/tasks/{task_id}",
+      "handler": "task_detail",
+      "full_path": "/api/v1/local-agents/tasks/{task_id}"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/command_center/router.py",
+      "method": "GET",
+      "path": "/reviews",
+      "handler": "reviews",
+      "full_path": "/api/v1/local-agents/reviews"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/command_center/router.py",
+      "method": "GET",
+      "path": "/evidence",
+      "handler": "evidence",
+      "full_path": "/api/v1/local-agents/evidence"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/command_center/router.py",
+      "method": "GET",
+      "path": "/agents",
+      "handler": "agents",
+      "full_path": "/api/v1/local-agents/agents"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/command_center/router.py",
+      "method": "GET",
+      "path": "/governance",
+      "handler": "governance",
+      "full_path": "/api/v1/local-agents/governance"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/command_center/router.py",
+      "method": "GET",
+      "path": "/system-health",
+      "handler": "system_health",
+      "full_path": "/api/v1/local-agents/system-health"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_capability_foundation/router.py",
+      "method": "GET",
+      "path": "/health",
+      "handler": "health",
+      "full_path": "/health"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_capability_foundation/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/status",
+      "handler": "workspace_status",
+      "full_path": "/api/v1/governed-capability-foundation/workspaces/{workspace_id}/status"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_capability_foundation/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/tasks",
+      "handler": "tasks",
+      "full_path": "/api/v1/governed-capability-foundation/workspaces/{workspace_id}/tasks"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_capability_foundation/router.py",
+      "method": "POST",
+      "path": "/workspaces/{workspace_id}/tasks",
+      "handler": "create_task",
+      "full_path": "/api/v1/governed-capability-foundation/workspaces/{workspace_id}/tasks"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_capability_foundation/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/projects",
+      "handler": "projects",
+      "full_path": "/api/v1/governed-capability-foundation/workspaces/{workspace_id}/projects"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_capability_foundation/router.py",
+      "method": "POST",
+      "path": "/workspaces/{workspace_id}/projects",
+      "handler": "create_project",
+      "full_path": "/api/v1/governed-capability-foundation/workspaces/{workspace_id}/projects"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_capability_foundation/router.py",
+      "method": "POST",
+      "path": "/workspaces/{workspace_id}/reviews",
+      "handler": "review",
+      "full_path": "/api/v1/governed-capability-foundation/workspaces/{workspace_id}/reviews"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_capability_foundation/router.py",
+      "method": "POST",
+      "path": "/workspaces/{workspace_id}/tools/{tool_name}",
+      "handler": "tool",
+      "full_path": "/api/v1/governed-capability-foundation/workspaces/{workspace_id}/tools/{tool_name}"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_capability_foundation/router.py",
+      "method": "GET",
+      "path": "/pilot/status",
+      "handler": "pilot_status",
+      "full_path": "/api/v1/governed-capability-foundation/pilot/status"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_capability_foundation/router.py",
+      "method": "POST",
+      "path": "/pilot/execute",
+      "handler": "execute_pilot",
+      "full_path": "/api/v1/governed-capability-foundation/pilot/execute"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "GET",
+      "path": "/health",
+      "handler": "health",
+      "full_path": "/health"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "GET",
+      "path": "/workspaces",
+      "handler": "workspace_registry",
+      "full_path": "/api/v1/governed-operations/workspaces"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/controls",
+      "handler": "controls",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/controls"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/dashboard",
+      "handler": "dashboard",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/dashboard"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/tasks",
+      "handler": "list_tasks",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/tasks"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "POST",
+      "path": "/workspaces/{workspace_id}/tasks",
+      "handler": "create_task",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/tasks"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/tasks/{task_id}",
+      "handler": "task_bundle",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/tasks/{task_id}"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/tasks/{task_id}/history",
+      "handler": "task_history",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/tasks/{task_id}/history"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/tasks/{task_id}/readiness",
+      "handler": "readiness",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/tasks/{task_id}/readiness"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/tasks/{task_id}/integrity",
+      "handler": "task_integrity",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/tasks/{task_id}/integrity"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "POST",
+      "path": "/workspaces/{workspace_id}/tasks/{task_id}/submit",
+      "handler": "submit",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/tasks/{task_id}/submit"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "POST",
+      "path": "/workspaces/{workspace_id}/tasks/{task_id}/start-review",
+      "handler": "start_review",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/tasks/{task_id}/start-review"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "POST",
+      "path": "/workspaces/{workspace_id}/tasks/{task_id}/review",
+      "handler": "review",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/tasks/{task_id}/review"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "POST",
+      "path": "/workspaces/{workspace_id}/tasks/{task_id}/archive",
+      "handler": "archive",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/tasks/{task_id}/archive"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/reviews",
+      "handler": "reviews",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/reviews"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/evidence",
+      "handler": "evidence",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/evidence"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "POST",
+      "path": "/workspaces/{workspace_id}/evidence",
+      "handler": "add_evidence",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/evidence"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/integrity",
+      "handler": "integrity",
+      "full_path": "/api/v1/governed-operations/workspaces/{workspace_id}/integrity"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "GET",
+      "path": "/legacy/status",
+      "handler": "legacy_status",
+      "full_path": "/api/v1/governed-operations/legacy/status"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "GET",
+      "path": "/operations",
+      "handler": "operations_ui",
+      "full_path": "/api/v1/governed-operations/operations"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/governed_operations/router.py",
+      "method": "GET",
+      "path": "/operations/",
+      "handler": "operations_ui",
+      "full_path": "/api/v1/governed-operations/operations/"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+      "method": "GET",
+      "path": "/health",
+      "handler": "health",
+      "full_path": "/health"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+      "method": "GET",
+      "path": "/agents",
+      "handler": "agents",
+      "full_path": "/api/v1/local-agent-core/agents"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/agents",
+      "handler": "workspace_agents",
+      "full_path": "/api/v1/local-agent-core/workspaces/{workspace_id}/agents"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/agents/{agent_id}/controls",
+      "handler": "controls",
+      "full_path": "/api/v1/local-agent-core/workspaces/{workspace_id}/agents/{agent_id}/controls"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/memory-boundary",
+      "handler": "memory_boundary",
+      "full_path": "/api/v1/local-agent-core/workspaces/{workspace_id}/memory-boundary"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/model-pilot/status",
+      "handler": "model_pilot_status",
+      "full_path": "/api/v1/local-agent-core/workspaces/{workspace_id}/model-pilot/status"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+      "method": "POST",
+      "path": "/workspaces/{workspace_id}/model-pilot/drafts",
+      "handler": "create_model_pilot_draft",
+      "full_path": "/api/v1/local-agent-core/workspaces/{workspace_id}/model-pilot/drafts"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/preparations",
+      "handler": "preparations",
+      "full_path": "/api/v1/local-agent-core/workspaces/{workspace_id}/preparations"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+      "method": "POST",
+      "path": "/workspaces/{workspace_id}/preparations",
+      "handler": "create_preparation",
+      "full_path": "/api/v1/local-agent-core/workspaces/{workspace_id}/preparations"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/preparations/{preparation_id}",
+      "handler": "preparation",
+      "full_path": "/api/v1/local-agent-core/workspaces/{workspace_id}/preparations/{preparation_id}"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/review-packets",
+      "handler": "review_packets",
+      "full_path": "/api/v1/local-agent-core/workspaces/{workspace_id}/review-packets"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+      "method": "GET",
+      "path": "/workspaces/{workspace_id}/integrity",
+      "handler": "integrity",
+      "full_path": "/api/v1/local-agent-core/workspaces/{workspace_id}/integrity"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+      "method": "GET",
+      "path": "/local-agents",
+      "handler": "local_agents_ui",
+      "full_path": "/api/v1/local-agent-core/local-agents"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+      "method": "GET",
+      "path": "/local-agents/",
+      "handler": "local_agents_ui",
+      "full_path": "/api/v1/local-agent-core/local-agents/"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/workspace_core/router.py",
+      "method": "GET",
+      "path": "/health",
+      "handler": "health",
+      "full_path": "/health"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/workspace_core/router.py",
+      "method": "GET",
+      "path": "/{workspace_id}",
+      "handler": "workspace",
+      "full_path": "/api/v1/workspaces/{workspace_id}"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/workspace_core/router.py",
+      "method": "GET",
+      "path": "/{workspace_id}/policy",
+      "handler": "policy",
+      "full_path": "/api/v1/workspaces/{workspace_id}/policy"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/workspace_core/router.py",
+      "method": "GET",
+      "path": "/{workspace_id}/readiness",
+      "handler": "readiness",
+      "full_path": "/api/v1/workspaces/{workspace_id}/readiness"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/workspace_core/router.py",
+      "method": "GET",
+      "path": "/{workspace_id}/audit-integrity",
+      "handler": "audit_integrity",
+      "full_path": "/api/v1/workspaces/{workspace_id}/audit-integrity"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/workspace_core/router.py",
+      "method": "GET",
+      "path": "/workspaces",
+      "handler": "workspace_ui",
+      "full_path": "/api/v1/workspaces/workspaces"
+    },
+    {
+      "file": "backend/src/palwakf_local_agents/workspace_core/router.py",
+      "method": "GET",
+      "path": "/workspaces/",
+      "handler": "workspace_ui",
+      "full_path": "/api/v1/workspaces/workspaces/"
+    }
+  ],
+  "command_center_static_agents": [
+    "coordinator",
+    "sovereignty_reviewer",
+    "knowledge_researcher",
+    "documentation_handoff"
+  ],
+  "governed_task_lifecycle_existing": {
+    "states": [
+      "draft",
+      "inbox",
+      "under_review",
+      "approved",
+      "rejected",
+      "returned",
+      "archived"
+    ],
+    "transitions": {
+      "draft": [
+        "inbox",
+        "archived"
+      ],
+      "inbox": [
+        "under_review",
+        "archived"
+      ],
+      "under_review": [
+        "approved",
+        "rejected",
+        "returned"
+      ],
+      "returned": [
+        "inbox",
+        "archived"
+      ],
+      "approved": [
+        "archived"
+      ],
+      "rejected": [
+        "archived"
+      ],
+      "archived": []
+    }
+  },
+  "actor_registry": {
+    "contract": "LOCAL_ACTOR_SCOPE_REGISTRY_V1",
+    "default_access": "DENY",
+    "actor_count": 0
+  },
+  "pilot_config": {
+    "pilot_workspace_id": "research_learning",
+    "execution": {
+      "model_execution": "NONE_UNTIL_SEPARATE_EXPLICIT_RUNTIME_AUTHORIZATION",
+      "pilot_execution": "NOT_EXECUTED",
+      "allowed_workspace": "research_learning",
+      "allowed_tools": "NONE",
+      "allowed_file_access": "NONE",
+      "allowed_external_network": "NONE",
+      "allowed_shell": "NONE",
+      "allowed_git_write": "NONE",
+      "allowed_project_write": "NONE",
+      "human_review_required": "Firas_Fanon"
+    },
+    "provider_kind": "ollama_local_only"
+  },
+  "noted_design_gaps": [
+    "THREE_AGENT_REGISTRY_PLANES_PRESENT",
+    "AGENT_PREPARATION_NOT_FORMALLY_BOUND_TO_GOVERNED_TASK_ID",
+    "COMMAND_CENTER_FILE_QUEUE_TASKS_AND_GOVERNED_OPERATIONS_SQLITE_TASKS_ARE_SEPARATE_PLANES",
+    "MODEL_PILOT_HAS_MULTIPLE_PLANES_AND_REMAINS_OUT_OF_SCOPE",
+    "FRONTEND_REACT_CONSOLE_IS_GET_ONLY",
+    "ACTOR_REGISTRY_DEFAULT_DENY_WITH_ZERO_ACTORS"
+  ]
+}

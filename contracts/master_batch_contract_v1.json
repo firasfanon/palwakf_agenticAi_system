@@ -1,0 +1,39 @@
+{
+  "package_id": "PALWAKF_LOCAL_AGENTS_MEGA_BATCH_01_TO_06_UNIFIED_GOVERNED_CAPABILITY_FOUNDATION_V1_FINAL_CONSOLIDATED_EXECUTION_CARRIER_REBUILD_CANDIDATE",
+  "contract": "MEGA_BATCH_01_TO_06_UNIFIED_GOVERNED_CAPABILITY_FOUNDATION_V1_FINAL_CONSOLIDATED_EXECUTION_CARRIER_REBUILD",
+  "candidate_role": "FINAL_EXECUTION_CARRIER_CANDIDATE",
+  "build_policy": {
+    "windows_powershell_5_1_parse_required": true,
+    "runtime_helper_self_test_required": true,
+    "idempotent_preflight_required": true,
+    "exact_postimage_reconciliation_required": true,
+    "authorized_actor_scope_required": true,
+    "commercial_client_boundary_required": true,
+    "post_apply_uat_required": true
+  },
+  "phase_gates": [
+    "G0_CANDIDATE_INTEGRITY",
+    "G1_PREFLIGHT",
+    "G2_WHATIF",
+    "G3_EXPLICIT_APPLY",
+    "G4_POST_APPLY_STATIC",
+    "G5_RUNTIME_DEFAULT_DENY_UAT",
+    "G6_HUMAN_REVIEW_READY",
+    "G7_SEPARATE_PILOT_RUNTIME_AUTHORIZATION"
+  ],
+  "execution_boundaries": {
+    "model_execution_during_apply": "NONE",
+    "pilot_execution_during_apply": "NOT_EXECUTED",
+    "shell_execution": "NONE",
+    "git_write": "NONE",
+    "deployment": "NONE",
+    "external_network": "NONE",
+    "actor_registry_default": "DENY"
+  },
+  "pilot": {
+    "workspace_id": "research_learning",
+    "human_reviewer": "Firas_Fanon",
+    "execution": "SEPARATE_EXPLICIT_RUNTIME_AUTHORIZATION_REQUIRED"
+  },
+  "apply_carrier": true
+}

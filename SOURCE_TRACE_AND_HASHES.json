@@ -1,0 +1,78 @@
+{
+  "inspection_id": "LOCAL_AGENTS_READ_ONLY_FRONTEND_VISUAL_INSPECTION_AND_START_SCREEN_EVIDENCE_V1",
+  "parent_baseline": "WINDOWS_PYTHON_3_12_10_CONFIRMATION_ACCEPTED",
+  "source_project_mutation": "NONE",
+  "archive_derived_only": true,
+  "render_limit": "Chromium navigation blocked in analysis environment; source-derived previews are not Windows runtime screenshots.",
+  "source_files": [
+    {
+      "path": "frontend/dist/index.html",
+      "sha256": "dafea7a7aa12de2be786d89eab0f3f259810fbd8f0f236730d6a7d093ee35e8f",
+      "bytes": 515
+    },
+    {
+      "path": "frontend/dist/assets/index-BLhDdh2Z.css",
+      "sha256": "7dba88b30ecd84a49e7a65157adfce4ded6a1b0dc9288d872b39d6a5a7b41670",
+      "bytes": 3368
+    },
+    {
+      "path": "frontend/dist/assets/index-BPZmFY1Y.js",
+      "sha256": "777f353cf1c280b3c45caefb1736b3f6b9ad18e618c9fec7cd3a4456769e3b68",
+      "bytes": 151096
+    },
+    {
+      "path": "frontend/src/App.tsx",
+      "sha256": "e653175bd9c6a4b4f88c948a9aa023f3d7889db54c8fff896106821855afe3c0",
+      "bytes": 6772
+    },
+    {
+      "path": "frontend/src/components/Layout.tsx",
+      "sha256": "65e07645fb0831d27d43c458ed1bc48f6515e6c76f7e2ab460ddf4ad69cb6b88",
+      "bytes": 2581
+    },
+    {
+      "path": "frontend/src/styles.css",
+      "sha256": "d218cfe13c2348f093ef470f0c1c56a14652f0902d2bd5719121bc4fd56c03c9",
+      "bytes": 4050
+    },
+    {
+      "path": "frontend/src/api/client.ts",
+      "sha256": "bf9acf975e3da8a62e9544ef1027987b357b11a3aad5511aa397422dd5f3fb43",
+      "bytes": 1145
+    },
+    {
+      "path": "backend/src/palwakf_local_agents/app.py",
+      "sha256": "fabef31d964257d440fecb88659730915b17ebd202f294dea93de8d1609c3df5",
+      "bytes": 4549
+    },
+    {
+      "path": "evidence/http_contract_probe.json",
+      "sha256": "6e1f274f2ea6fad061cbc28cdc46838e2ebafe2415770d9989f38390588a00ec",
+      "bytes": 5356
+    },
+    {
+      "path": "contracts/API_AUTHORIZATION_CONTRACT_REGISTER_V1.json",
+      "sha256": "db214bebb35fdd6c89c7cee38f8fae078a90485ad9f2201ed89895c7191f2fdf",
+      "bytes": 3404
+    }
+  ],
+  "current_react_routes": [
+    "/agent-console",
+    "/agent-console/workspaces",
+    "/agent-console/tasks",
+    "/agent-console/projects",
+    "/agent-console/evidence",
+    "/agent-console/reviews",
+    "/agent-console/tools",
+    "/agent-console/diagnostics",
+    "/agent-console/pilot-control"
+  ],
+  "react_contract": {
+    "method": "GET only",
+    "credentials": "omit",
+    "authorization_header": "absent",
+    "browser_storage": "absent",
+    "react_write": "not enabled"
+  },
+  "next_recommended_batch": "MEGA_BATCH_LOCAL_AGENTS_PRODUCT_START_SCREEN_AND_OPERATIONAL_CONSOLE_UX_UI_DISCOVERY_DESIGN_AND_GOVERNED_READ_ONLY_CANDIDATE_V1"
+}

@@ -1,0 +1,20 @@
+{
+  "contract_id": "READ_ONLY_PILOT_HUMAN_REVIEW_DECISION_V1",
+  "record_type": "HUMAN_REVIEW_DECISION",
+  "review_scope": "READ_ONLY_PILOT_RUN_REVIEW_ONLY",
+  "allowed_decisions": [
+    "ACCEPTED",
+    "REJECTED"
+  ],
+  "archive_status": "ARCHIVED_AFTER_HUMAN_REVIEW",
+  "forbidden_effects": [
+    "platform_mutation",
+    "database_access",
+    "git_write",
+    "deployment",
+    "secrets_access",
+    "memory_write",
+    "model_execution",
+    "task_approval"
+  ]
+}

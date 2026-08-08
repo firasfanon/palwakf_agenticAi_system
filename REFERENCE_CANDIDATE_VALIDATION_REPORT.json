@@ -1,0 +1,37 @@
+{
+  "contract": "LEGACY_TEST_CONTRACT_MIGRATION_AND_CONTROLLED_POSITIVE_AUTHORIZATION_UAT_V1",
+  "candidate_status": "PREPARED_NOT_APPLIED",
+  "python_compile": "PASS",
+  "candidate_full_backend_suite": {
+    "passed": 65,
+    "failed": 0,
+    "warnings": 54
+  },
+  "baseline_full_backend_suite": {
+    "passed": 48,
+    "failed": 16
+  },
+  "targeted_negative_uat_tests": 25,
+  "controlled_positive_authorization_uat_tests": 1,
+  "production_source_tree_hash_equality": true,
+  "production_source_files_changed": [],
+  "patch_file_count": 8,
+  "patch_files": [
+    "backend/tests/conftest.py",
+    "backend/tests/test_governed_local_agent_core.py",
+    "backend/tests/test_governed_operations.py",
+    "backend/tests/test_governed_operations_workspace_scoping.py",
+    "backend/tests/test_workspace_core.py",
+    "backend/tests/test_legacy_write_authorization_positive_uat.py",
+    "scripts/Test-LegacyTestContractMigrationAndPositiveAuthorizationUatV1Static.ps1",
+    "scripts/Run-LegacyTestContractMigrationAndPositiveAuthorizationUatV1.ps1"
+  ],
+  "excluded": [
+    "REACT_WRITE",
+    "MODEL_EXECUTION",
+    "PILOT_EXECUTION",
+    "COMMERCIAL_POSITIVE_UAT",
+    "PRODUCTION_PROMOTION"
+  ],
+  "created_at_utc": "2026-07-04T13:21:19.530651+00:00"
+}

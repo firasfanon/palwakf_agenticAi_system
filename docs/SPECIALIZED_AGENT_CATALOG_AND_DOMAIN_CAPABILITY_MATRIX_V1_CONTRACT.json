@@ -1,0 +1,31 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_SPECIALIZED_AGENT_CATALOG_AND_DOMAIN_CAPABILITY_MATRIX_V1_DESIGN_ONLY",
+  "mode": "DESIGN_ONLY_FRONTEND_POLISH",
+  "new_route": "/agent-console/domain-capabilities",
+  "domains": [
+    "Flutter/Dart",
+    "React/Next.js",
+    "Supabase/SQL/DB",
+    "GIS/Maps/Aerial",
+    "Documents/OCR",
+    "Translation",
+    "QA/Security/DevOps"
+  ],
+  "boundaries": {
+    "frontend_source_mutation": "YES_SCOPED",
+    "backend_source_mutation": "NONE",
+    "database_persistence": "NONE",
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "shell": "NO",
+    "git": "NO",
+    "code_execution": "NO",
+    "self_apply": "NO",
+    "web_search": "NO",
+    "platform_mutation": "NONE",
+    "ocr_runtime": "NO",
+    "gis_processing_runtime": "NO",
+    "translation_runtime": "NO",
+    "docker": "NO"
+  }
+}

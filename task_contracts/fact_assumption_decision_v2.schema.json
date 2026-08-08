@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fact Assumption Decision Register V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_id",
+    "record_type",
+    "statement",
+    "scope",
+    "status"
+  ],
+  "properties": {
+    "record_id": {
+      "type": "string",
+      "pattern": "^(FACT|ASM|DEC)-[A-Z0-9-]+$"
+    },
+    "record_type": {
+      "enum": [
+        "FACT",
+        "ASSUMPTION",
+        "DECISION"
+      ]
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 5
+    },
+    "source": {
+      "type": "string"
+    },
+    "confidence": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ]
+    },
+    "scope": {
+      "enum": [
+        "Task",
+        "System",
+        "Project",
+        "Temporary"
+      ]
+    },
+    "status": {
+      "enum": [
+        "Active",
+        "NeedsReview",
+        "Approved",
+        "Rejected",
+        "Archived"
+      ]
+    }
+  }
+}

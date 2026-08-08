@@ -1,0 +1,87 @@
+﻿# Secrets / environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*credentials*
+*service-account*
+
+# Python local environment / caches
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Frontend dependencies / generated output
+node_modules/
+frontend/node_modules/
+dist/
+build/
+frontend/dist/
+coverage/
+.vite/
+.cache/
+
+# Local execution / UAT output
+output/
+
+# Generated applied-worktree artifacts
+APPLIED_WORKTREE_BUILD/
+APPLIED_WORKTREE_DELTA/
+
+# Backups
+backups/
+*.bak
+*.backup
+
+# Delivery / archive containers
+*.zip
+*.7z
+*.rar
+*.z01
+*.z02
+*.z03
+*.z04
+*.z05
+*.z06
+*.z07
+*.z08
+*.z09
+
+# Logs
+*.log
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local operational/runtime state
+runtime_state/
+
+# Python packaging metadata
+*.egg-info/
+
+# Local operational databases and ledgers
+audit/*.sqlite
+audit/events.jsonl
+workspaces/**/*.sqlite
+
+# Generated runtime context snapshots
+runtime/context/*.json
+
+# Local task instances
+tasks/approved/*.json
+tasks/archived/*.json
+
+# Local human-review instances
+audit/human_reviews/*.json

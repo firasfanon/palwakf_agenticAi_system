@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "role": "knowledge_researcher",
+  "analysis_status": "PENDING_HUMAN_REVIEW",
+  "facts": [
+    {
+      "statement": "Evidence is available.",
+      "evidence_reference_ids": [
+        "EVD-999"
+      ]
+    }
+  ],
+  "assumptions": [],
+  "evidence_gaps": [],
+  "risks_and_constraints": [],
+  "source_assessments": [
+    {
+      "evidence_reference_id": "EVD-001",
+      "assessment": "Reference only.",
+      "trust_state": "REFERENCE_CONTENT_ONLY"
+    }
+  ],
+  "recommended_next_step": "HUMAN_REVIEW_REQUIRED"
+}

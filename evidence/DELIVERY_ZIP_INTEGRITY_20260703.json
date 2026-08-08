@@ -1,0 +1,29 @@
+{
+  "result": "PASS",
+  "records": [
+    {
+      "filename": "PALWAKF_LOCAL_AGENTS_READ_ONLY_RUNTIME_HARDENING_APPLIED_SOURCE_20260703.zip",
+      "sha256": "857521E69BA4184910A144071E2CDB95A3CA7B47C7EE8514AB3D0696052A37F8",
+      "bytes": 11197415,
+      "zip_test": "PASS",
+      "bad_member": null,
+      "entry_count": 3169
+    },
+    {
+      "filename": "PALWAKF_LOCAL_AGENTS_READ_ONLY_RUNTIME_HARDENING_APPLY_UPDATES_ONLY_20260703.zip",
+      "sha256": "4FD327B3205C26405B4234418B120481AAAE2A1ACB6546D8ADB10DE6B00B3B7B",
+      "bytes": 31157,
+      "zip_test": "PASS",
+      "bad_member": null,
+      "entry_count": 23
+    },
+    {
+      "filename": "PALWAKF_LOCAL_AGENTS_READ_ONLY_RUNTIME_HARDENING_APPLY_DELIVERY_20260703.zip",
+      "sha256": "227CA793CF28483F5E135E4895FF92260DCBE005B4708EF9E20B756CFF83AD24",
+      "bytes": 10622176,
+      "zip_test": "PASS",
+      "bad_member": null,
+      "entry_count": 25
+    }
+  ]
+}

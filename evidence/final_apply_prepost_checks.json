@@ -1,0 +1,130 @@
+{
+  "candidate": "PALWAKF_LOCAL_AGENTS_LEGACY_TEST_CONTRACT_MIGRATION_AND_CONTROLLED_POSITIVE_AUTHORIZATION_UAT_V1_DISCOVERY_DESIGN_GOVERNED_EXECUTABLE_CANDIDATE_20260704",
+  "replica": "/mnt/data/work_final_apply_replica/palwakf_local_agents",
+  "checks": [
+    {
+      "path": "backend/tests/test_governed_local_agent_core.py",
+      "phase": "preimage",
+      "expected": "9F5F1C07B93811F5D3EFCA32DA222B066A2C539B399F92608800DD99D2D4EA39",
+      "actual": "9F5F1C07B93811F5D3EFCA32DA222B066A2C539B399F92608800DD99D2D4EA39",
+      "pass": true
+    },
+    {
+      "path": "backend/tests/test_governed_operations.py",
+      "phase": "preimage",
+      "expected": "764B4F80A9E82E67B385FC4D1BFBA915BFA097224630C6452DBAF6B618A55EC6",
+      "actual": "764B4F80A9E82E67B385FC4D1BFBA915BFA097224630C6452DBAF6B618A55EC6",
+      "pass": true
+    },
+    {
+      "path": "backend/tests/test_governed_operations_workspace_scoping.py",
+      "phase": "preimage",
+      "expected": "1937A284B4E30DDF00D8619448A4E55D824E5410BD06E3AA342919A348C2BAC8",
+      "actual": "1937A284B4E30DDF00D8619448A4E55D824E5410BD06E3AA342919A348C2BAC8",
+      "pass": true
+    },
+    {
+      "path": "backend/tests/test_workspace_core.py",
+      "phase": "preimage",
+      "expected": "35670B3F0247534105D2AFD8BCCF5129AA64D7CDC6063FE48BAE540B301943AA",
+      "actual": "35670B3F0247534105D2AFD8BCCF5129AA64D7CDC6063FE48BAE540B301943AA",
+      "pass": true
+    },
+    {
+      "path": "backend/tests/conftest.py",
+      "phase": "preimage_absent",
+      "expected": "ABSENT",
+      "actual": "ABSENT",
+      "pass": true
+    },
+    {
+      "path": "backend/tests/test_legacy_write_authorization_positive_uat.py",
+      "phase": "preimage_absent",
+      "expected": "ABSENT",
+      "actual": "ABSENT",
+      "pass": true
+    },
+    {
+      "path": "scripts/Run-LegacyTestContractMigrationAndPositiveAuthorizationUatV1.ps1",
+      "phase": "preimage_absent",
+      "expected": "ABSENT",
+      "actual": "ABSENT",
+      "pass": true
+    },
+    {
+      "path": "scripts/Test-LegacyTestContractMigrationAndPositiveAuthorizationUatV1Static.ps1",
+      "phase": "preimage_absent",
+      "expected": "ABSENT",
+      "actual": "ABSENT",
+      "pass": true
+    },
+    {
+      "path": "backend/tests/conftest.py",
+      "phase": "postimage",
+      "expected": "C960313A689D9C55DE8C3FF66A2DF8642158FE5A150265A0118EBCD0BA9F8C97",
+      "actual": "C960313A689D9C55DE8C3FF66A2DF8642158FE5A150265A0118EBCD0BA9F8C97",
+      "pass": true
+    },
+    {
+      "path": "backend/tests/test_governed_local_agent_core.py",
+      "phase": "postimage",
+      "expected": "3564C35A06D9A1D509384B9291D4C3F9F14B799132DE0840A87892B39EE53F20",
+      "actual": "3564C35A06D9A1D509384B9291D4C3F9F14B799132DE0840A87892B39EE53F20",
+      "pass": true
+    },
+    {
+      "path": "backend/tests/test_governed_operations.py",
+      "phase": "postimage",
+      "expected": "073785F3EE97EE59EC2EF5D9E75F83505EB8DBFAF6CD99131F570F4D068BEE1C",
+      "actual": "073785F3EE97EE59EC2EF5D9E75F83505EB8DBFAF6CD99131F570F4D068BEE1C",
+      "pass": true
+    },
+    {
+      "path": "backend/tests/test_governed_operations_workspace_scoping.py",
+      "phase": "postimage",
+      "expected": "C4927C6C433FAD7D1547B7B13AAF94A636457429EB39690F180F09448FE83213",
+      "actual": "C4927C6C433FAD7D1547B7B13AAF94A636457429EB39690F180F09448FE83213",
+      "pass": true
+    },
+    {
+      "path": "backend/tests/test_workspace_core.py",
+      "phase": "postimage",
+      "expected": "F871AFD0692C97EEC515DD293184D6F727DC98592EE34DDAEB8E57B7FBD1223C",
+      "actual": "F871AFD0692C97EEC515DD293184D6F727DC98592EE34DDAEB8E57B7FBD1223C",
+      "pass": true
+    },
+    {
+      "path": "backend/tests/test_legacy_write_authorization_positive_uat.py",
+      "phase": "postimage",
+      "expected": "93ABB5E578C4127849AF04F2FD43A560423010D96A490CA20A8CA7711586CFC3",
+      "actual": "93ABB5E578C4127849AF04F2FD43A560423010D96A490CA20A8CA7711586CFC3",
+      "pass": true
+    },
+    {
+      "path": "scripts/Test-LegacyTestContractMigrationAndPositiveAuthorizationUatV1Static.ps1",
+      "phase": "postimage",
+      "expected": "58197383AA0FF931A6DE141A6540B3CF528A4F58DBD0C859FCCD83491839CBEE",
+      "actual": "58197383AA0FF931A6DE141A6540B3CF528A4F58DBD0C859FCCD83491839CBEE",
+      "pass": true
+    },
+    {
+      "path": "scripts/Run-LegacyTestContractMigrationAndPositiveAuthorizationUatV1.ps1",
+      "phase": "postimage",
+      "expected": "59F264F17A50570C221849DF438446614DB03FBF49DD29F98342E572A2B52300",
+      "actual": "59F264F17A50570C221849DF438446614DB03FBF49DD29F98342E572A2B52300",
+      "pass": true
+    }
+  ],
+  "payload_files": [
+    "backend/tests/conftest.py",
+    "backend/tests/test_governed_local_agent_core.py",
+    "backend/tests/test_governed_operations.py",
+    "backend/tests/test_governed_operations_workspace_scoping.py",
+    "backend/tests/test_legacy_write_authorization_positive_uat.py",
+    "backend/tests/test_workspace_core.py",
+    "scripts/Run-LegacyTestContractMigrationAndPositiveAuthorizationUatV1.ps1",
+    "scripts/Test-LegacyTestContractMigrationAndPositiveAuthorizationUatV1Static.ps1"
+  ],
+  "preimage": "PASS",
+  "postimage": "PASS"
+}

@@ -1,0 +1,17 @@
+ابدأ هذه الجلسة باعتبار هذه الحزمة مرجع التوريث الحاكم المحدث لمشروع PalWakf Local Agents.
+
+المطلوب أولًا:
+1) اقرأ ملف:
+   PALWAKF_LOCAL_AGENTS_COMPREHENSIVE_HANDOFF_AND_BASELINE_STATE_R2_20260719.md
+2) اقرأ:
+   PALWAKF_LOCAL_AGENTS_CURRENT_STATE_R2_20260719.json
+3) ثبّت أن أحدث Baseline مقبول رسميًا هو:
+   GOVERNED_CODING_MODEL_PROVIDER_AND_CANDIDATE_GENERATION_V1_ACCEPTED_20260719
+4) القبول الصريح مسجل بتاريخ 2026-07-19.
+5) لا تفسر القبول كتفويض لتشغيل النموذج الحي أو تطبيق Candidate.
+6) الحدود المستمرة: Loopback فقط، Redirects محجوبة، Proxy معطل، Shell/Git/DB Write/Self-Apply محجوبة، وSource Apply محجوب.
+7) الـCandidate المرجعي الحالي cand-a1836fd428779f8a ما يزال HUMAN_REVIEW_REQUIRED واختباراته PASS ولم يطبق على المصدر.
+8) المرحلة التالية:
+   MEGA_BATCH_LOCAL_AGENTS_FIRST_GOVERNED_CODING_MODEL_PROBE_AND_MODEL_GENERATED_CANDIDATE_UAT_V1
+9) تتطلب المرحلة التالية تفويضًا منفصلًا لبناء/تطبيق الدفعة، وتفويضًا بشريًا منفصلًا لأي Live Model Probe.
+10) التزم بأسلوب Mega Batch، وحزمة تنفيذية + Updates-only + SHA-256 + Runner PowerShell 5.1 + أدلة UAT مختصرة.

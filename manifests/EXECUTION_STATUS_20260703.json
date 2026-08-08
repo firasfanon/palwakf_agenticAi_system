@@ -1,0 +1,17 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_REACT_DEPENDENCY_LOCK_DETERMINISTIC_BUILD_AND_LOCAL_BROWSER_UAT_V1",
+  "date": "2026-07-03",
+  "results": {
+    "package_lock": "PASS",
+    "npm_ci_ignore_scripts": "PASS",
+    "typescript_check": "PASS",
+    "deterministic_build": "PASS",
+    "real_dist_mount_http": "PASS",
+    "react_route_http_uat": "PASS",
+    "browser_rendered_uat": "BLOCKED_BY_ENVIRONMENT_POLICY",
+    "backend_pytest": "33_PASSED__6_FAILED",
+    "react_write": "NOT_ENABLED",
+    "model_pilot": "NOT_EXECUTED",
+    "production": "NOT_APPROVED"
+  }
+}

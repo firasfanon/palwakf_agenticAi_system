@@ -1,0 +1,33 @@
+﻿{
+  "contract": "KNOWN_OPEN_DEBTS_FROM_ACCEPTED_GOVERNING_STATE_20260630",
+  "items": [
+    {
+      "severity": "P1",
+      "classification": "TEST_COVERAGE_DEBT",
+      "finding": "No fresh negative runtime proof of cross-workspace rejection after bootstrap is captured by this static review.",
+      "evidence": "Post-apply bootstrap UAT verified physical manifests and workspace list, but did not execute dedicated cross-workspace denial paths.",
+      "recommended_action": "Prepare a dedicated negative runtime workspace-scope UAT before enabling any workspace operation."
+    },
+    {
+      "severity": "P1",
+      "classification": "OPERATIONAL_DEBT",
+      "finding": "Governed Operations Runtime Negative UAT remains not evidenced as executed in the accepted governing handoff.",
+      "evidence": "Governing state records it as authorized previously but not executed.",
+      "recommended_action": "Close it as a separate controlled UAT before connecting new governed operations routes."
+    },
+    {
+      "severity": "P2",
+      "classification": "CAPABILITY_GAP",
+      "finding": "Personal, commercial, and research workspaces are policy-only and have no isolated task or project registry.",
+      "evidence": "Each policy-only workspace contains only workspace_manifest.json.",
+      "recommended_action": "Design a workspace capability foundation with isolated registries only after scoped requirements are approved."
+    },
+    {
+      "severity": "P2",
+      "classification": "GOVERNANCE_DEBT",
+      "finding": "A cross-workspace human-review and durable evidence-ledger workflow is not yet evidenced.",
+      "evidence": "Local agent core exists; no accepted cross-workspace human-review lifecycle evidence is recorded.",
+      "recommended_action": "Build Human Review and Evidence Ledger Foundation before enabling productive tool execution."
+    }
+  ]
+}

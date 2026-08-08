@@ -1,0 +1,20 @@
+{
+  "registry_version": "1.0",
+  "execution_policy": "all_skills_read_only_or_plan_only_in_v1",
+  "skills": [
+    {"skill_id":"task_intake","risk":"LOW","min_autonomy":"L0_READ_ONLY","tool_mode":"none","evidence_required":["task_json"]},
+    {"skill_id":"task_triage","risk":"LOW","min_autonomy":"L0_READ_ONLY","tool_mode":"read_only","evidence_required":["task_json","governing_docs"]},
+    {"skill_id":"evidence_assessment","risk":"LOW","min_autonomy":"L0_READ_ONLY","tool_mode":"read_only","evidence_required":["evidence_register"]},
+    {"skill_id":"project_state_review","risk":"LOW","min_autonomy":"L0_READ_ONLY","tool_mode":"read_only","evidence_required":["current_state","baseline"]},
+    {"skill_id":"baseline_comparison","risk":"LOW","min_autonomy":"L0_READ_ONLY","tool_mode":"read_only","evidence_required":["baseline"]},
+    {"skill_id":"risk_classification","risk":"LOW","min_autonomy":"L0_READ_ONLY","tool_mode":"none","evidence_required":["task_json"]},
+    {"skill_id":"governance_review","risk":"LOW","min_autonomy":"L0_READ_ONLY","tool_mode":"read_only","evidence_required":["policy"]},
+    {"skill_id":"prompt_injection_review","risk":"LOW","min_autonomy":"L0_READ_ONLY","tool_mode":"none","evidence_required":["task_json"]},
+    {"skill_id":"data_classification_review","risk":"LOW","min_autonomy":"L0_READ_ONLY","tool_mode":"none","evidence_required":["task_json"]},
+    {"skill_id":"approval_gate_review","risk":"LOW","min_autonomy":"L0_READ_ONLY","tool_mode":"read_only","evidence_required":["approval_record"]},
+    {"skill_id":"knowledge_source_review","risk":"LOW","min_autonomy":"L0_READ_ONLY","tool_mode":"read_only","evidence_required":["source_map"]},
+    {"skill_id":"fact_assumption_separation","risk":"LOW","min_autonomy":"L0_READ_ONLY","tool_mode":"none","evidence_required":["knowledge_register"]},
+    {"skill_id":"ui_ux_contract_review","risk":"LOW","min_autonomy":"L1_PLAN_ONLY","tool_mode":"read_only","evidence_required":["requirements"]},
+    {"skill_id":"rtl_accessibility_review","risk":"LOW","min_autonomy":"L1_PLAN_ONLY","tool_mode":"read_only","evidence_required":["ui_contract"]}
+  ]
+}

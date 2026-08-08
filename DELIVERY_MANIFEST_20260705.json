@@ -1,0 +1,29 @@
+{
+  "contract": "LEGACY_TEST_CONTRACT_MIGRATION_AND_CONTROLLED_POSITIVE_AUTHORIZATION_UAT_V1",
+  "accepted_at": "2026-07-05",
+  "acceptance_status": "WINDOWS_PYTHON_3_12_10_CONFIRMATION_ACCEPTED",
+  "run_id": "LEGACY_TEST_CONTRACT_POSITIVE_AUTH_UAT_20260705T010712Z",
+  "evidence_archive": "LEGACY_TEST_CONTRACT_POSITIVE_AUTH_UAT_20260705T010712Z.zip",
+  "evidence_archive_sha256": "4E9E9EF304818160E96BB5E51D610431CD071C65810876F782B765A670657324",
+  "targeted_negative_and_positive_uat": {
+    "status": "PASS",
+    "count": "26/26"
+  },
+  "full_backend_suite": {
+    "status": "PASS",
+    "count": "65/65"
+  },
+  "execution_scope": "ISOLATED_WORKTREE_ONLY",
+  "source_project_mutation": "NONE",
+  "gates_not_opened": [
+    "REACT_WRITE",
+    "MODEL_EXECUTION",
+    "PILOT_EXECUTION",
+    "COMMERCIAL_POSITIVE_UAT",
+    "PRODUCTION_PROMOTION"
+  ],
+  "notes": [
+    "FastAPI startup event deprecation remains non-blocking technical debt.",
+    "Starlette/httpx warning remains non-blocking dependency debt."
+  ]
+}

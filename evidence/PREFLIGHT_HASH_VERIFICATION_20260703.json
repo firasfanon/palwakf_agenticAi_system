@@ -1,0 +1,19 @@
+{
+  "gate": "G1_PREFLIGHT",
+  "result": "PASS",
+  "records": [
+    {
+      "relative_path": "backend/src/palwakf_local_agents/app.py",
+      "expected_preimage_sha256": "98DC540CC9453B71426D114C2FBDF66A10D0DECC889C82BAC73913D174507B5E",
+      "actual_preimage_sha256": "98DC540CC9453B71426D114C2FBDF66A10D0DECC889C82BAC73913D174507B5E",
+      "result": "PASS"
+    },
+    {
+      "relative_path": "frontend/src/api/client.ts",
+      "expected_preimage_sha256": "0D84518420365B9D59E803EF2C18021CDD3C42529D6CD7D8595D4D37D2B6D753",
+      "actual_preimage_sha256": "0D84518420365B9D59E803EF2C18021CDD3C42529D6CD7D8595D4D37D2B6D753",
+      "result": "PASS"
+    }
+  ],
+  "project_root_mode": "ISOLATED_REPLICA_INPUT_FROM_USER_SUPPLIED_SOURCE_ARCHIVE"
+}

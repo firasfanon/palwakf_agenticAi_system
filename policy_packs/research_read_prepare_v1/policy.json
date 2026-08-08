@@ -1,0 +1,43 @@
+{
+  "audit": {
+    "audit_required": "YES_FOR_EXPORTS",
+    "hash_chain": "REQUIRED",
+    "retention": "OWNER_CONTROLLED"
+  },
+  "classification": "research",
+  "execution": {
+    "execution_gateway": "DISABLED_BY_DEFAULT",
+    "execution_mode": "READ_AND_PREPARE",
+    "model_execution": "NONE_BY_DEFAULT",
+    "pilot_execution": "NOT_EXECUTED_BY_DEFAULT"
+  },
+  "integration": {
+    "deployment": "NONE",
+    "external_database_access": "NONE_BY_DEFAULT",
+    "secrets_access": "NONE"
+  },
+  "memory": {
+    "cross_workspace_read": "DENY",
+    "cross_workspace_write": "DENY",
+    "external_memory_sync": "OWNER_APPROVAL_REQUIRED",
+    "memory_scope": "WORKSPACE_ONLY"
+  },
+  "non_transferable_constraints": [
+    "NO_UNVERIFIED_CITATION_RELEASE",
+    "NO_RESEARCH_DATA_CROSS_SCOPE_EXPORT"
+  ],
+  "policy_pack_id": "research_read_prepare_v1",
+  "review": {
+    "approval_is_execution": "FALSE",
+    "human_review": "REQUIRED_FOR_EXTERNAL_PUBLICATION_OR_DATA_EXPORT",
+    "policy_change": "OWNER_APPROVAL_REQUIRED"
+  },
+  "tools": {
+    "external_network": "ALLOWLIST_ONLY",
+    "file_write": "PREPARE_ONLY",
+    "git_write": "NONE_BY_DEFAULT",
+    "platform_bridge": "NOT_CONFIGURED",
+    "tool_profile": "research_read_prepare"
+  },
+  "version": "1.0.0"
+}

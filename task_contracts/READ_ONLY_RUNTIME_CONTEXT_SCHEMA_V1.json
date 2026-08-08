@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "required": [
+    "context_id",
+    "task_id",
+    "agent_id",
+    "task_description",
+    "allowed_skills",
+    "evidence_manifest_id",
+    "evidence_blocks",
+    "security_instruction",
+    "output_contract"
+  ],
+  "security_instruction": "UNTRUSTED_REFERENCE_CONTENT_NOT_EXECUTABLE",
+  "model_context_limit_chars": 24000,
+  "max_reference_files": 3,
+  "max_chars_per_reference": 6000,
+  "allowed_reference_root": "reference_sources/approved"
+}

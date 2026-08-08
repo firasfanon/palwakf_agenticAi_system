@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0.0",
+  "mode": "contracts_only_disabled",
+  "contracts": [
+    {
+      "adapter_id": "tree_sitter_read_only_index_adapter_v1",
+      "capability_id": "tree_sitter",
+      "enabled": false,
+      "allowed_inputs": [
+        "workspace_scope",
+        "language_allowlist",
+        "file_count_limit"
+      ],
+      "allowed_outputs": [
+        "symbol_metadata",
+        "component_metadata",
+        "route_metadata",
+        "source_ranges"
+      ],
+      "forbidden": [
+        "source_write",
+        "network",
+        "shell_pipeline",
+        "dynamic_code_execution"
+      ],
+      "activation_gate": "TREE_SITTER_CODEBASE_INDEX_UPLIFT_V1_READ_ONLY"
+    },
+    {
+      "adapter_id": "opentelemetry_local_trace_adapter_v1",
+      "capability_id": "opentelemetry",
+      "enabled": false,
+      "allowed_inputs": [
+        "event_name",
+        "status",
+        "duration_ms",
+        "non_sensitive_attributes"
+      ],
+      "allowed_outputs": [
+        "local_trace_event",
+        "local_metric"
+      ],
+      "forbidden": [
+        "prompt_content",
+        "response_content",
+        "source_content",
+        "remote_export"
+      ],
+      "activation_gate": "OPENTELEMETRY_OPERATIONAL_TRACE_FOUNDATION_V1_LOCAL_ONLY"
+    },
+    {
+      "adapter_id": "semgrep_governed_scan_adapter_v1",
+      "capability_id": "semgrep",
+      "enabled": false,
+      "allowed_inputs": [
+        "workspace_scope",
+        "local_rules_path",
+        "language_allowlist"
+      ],
+      "allowed_outputs": [
+        "redacted_findings",
+        "summary_counts",
+        "scanner_exit_class"
+      ],
+      "forbidden": [
+        "remote_rules_without_approval",
+        "autofix",
+        "source_write",
+        "automatic_retry"
+      ],
+      "activation_gate": "SEMGREP_CONTROLLED_READ_ONLY_SCAN_V1"
+    },
+    {
+      "adapter_id": "gitleaks_governed_secret_scan_adapter_v1",
+      "capability_id": "gitleaks",
+      "enabled": false,
+      "allowed_inputs": [
+        "workspace_scope",
+        "config_path_optional"
+      ],
+      "allowed_outputs": [
+        "redacted_secret_findings",
+        "fingerprints",
+        "summary_counts"
+      ],
+      "forbidden": [
+        "secret_value_output",
+        "git_mutation",
+        "remote_upload",
+        "automatic_remediation"
+      ],
+      "activation_gate": "GITLEAKS_CONTROLLED_REDACTED_SCAN_V1"
+    },
+    {
+      "adapter_id": "trivy_governed_scan_adapter_v1",
+      "capability_id": "trivy",
+      "enabled": false,
+      "allowed_inputs": [
+        "workspace_scope",
+        "scanner_allowlist",
+        "offline_database_path"
+      ],
+      "allowed_outputs": [
+        "redacted_findings",
+        "sbom_metadata",
+        "summary_counts"
+      ],
+      "forbidden": [
+        "database_update_without_approval",
+        "container_runtime_without_gate",
+        "remote_repository_scan",
+        "autofix"
+      ],
+      "activation_gate": "TRIVY_OFFLINE_DATABASE_AND_SCAN_SANDBOX_V1"
+    }
+  ]
+}

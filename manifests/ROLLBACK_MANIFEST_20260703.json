@@ -1,0 +1,14 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_REACT_DEPENDENCY_LOCK_DETERMINISTIC_BUILD_AND_LOCAL_BROWSER_UAT_V1",
+  "rollback_authority": "EXPLICIT_HUMAN_DECISION_REQUIRED",
+  "rollback_actions": [
+    "delete frontend/package-lock.json",
+    "delete frontend/dist/",
+    "delete backups/react_dependency_lock_deterministic_build_and_local_browser_uat_v1_20260703/"
+  ],
+  "must_not_restore": [
+    "backend/src/palwakf_local_agents/app.py",
+    "frontend/src/api/client.ts"
+  ],
+  "reason": "Those two code files belong to the prior accepted read-only hardening baseline, not this batch."
+}

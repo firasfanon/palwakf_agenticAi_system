@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "required": [
+    "task_id",
+    "title",
+    "description",
+    "system_scope",
+    "risk",
+    "autonomy",
+    "requested_agent",
+    "requested_skills",
+    "allowed_reference_paths",
+    "evidence_required",
+    "human_approval_required"
+  ],
+  "runner_constraints": {
+    "risk": "LOW",
+    "autonomy": "L0_READ_ONLY",
+    "agents": [
+      "coordinator",
+      "sovereignty_reviewer"
+    ],
+    "allowed_reference_root": "reference_sources/approved",
+    "max_reference_files": 3
+  }
+}

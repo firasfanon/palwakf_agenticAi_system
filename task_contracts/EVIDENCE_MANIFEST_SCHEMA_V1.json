@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "required": [
+    "manifest_id",
+    "task_id",
+    "created_at_utc",
+    "tool_mode",
+    "reference_root",
+    "evidence_items",
+    "security_posture",
+    "platform_mutation",
+    "database_access"
+  ],
+  "reference_root": "reference_sources/approved",
+  "evidence_item_required": [
+    "evidence_id",
+    "relative_path",
+    "sha256",
+    "read_at_utc",
+    "classification",
+    "snippet_ids",
+    "security_flags"
+  ],
+  "forbidden_roots": [
+    "palwakf",
+    "supabase",
+    "secrets",
+    ".env",
+    "git"
+  ],
+  "output_only": "output/evidence_manifests"
+}

@@ -1,0 +1,43 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_REACT_DEPENDENCY_LOCK_DETERMINISTIC_BUILD_AND_LOCAL_BROWSER_UAT_V1",
+  "status": "PARTIAL_ACCEPTANCE_BUILD_AND_HTTP_RUNTIME_ONLY",
+  "node": "v22.16.0",
+  "npm": "10.9.2",
+  "python_runtime_validation": "3.13.5",
+  "target_python_contract": ">=3.11,<3.13",
+  "lockfile_version": 3,
+  "npm_ci": "PASS",
+  "typescript_check": "PASS",
+  "vite_build": "PASS",
+  "repeated_clean_build": "PASS",
+  "health": {
+    "path": "/health",
+    "method": "GET",
+    "status": 200,
+    "content_type": "application/json",
+    "body_prefix": "{\"service\":\"palwakf-local-agents\",\"bind_scope\":\"127.0.0.1_only\",\"agent_execution_enabled\":false,\"platform_mutation_enabled\":false,\"database_access_enabled\":false,\"safety_ok\":true,\"timestamp\":\"2026-07-02T22:22:34.846409+00:00\"}"
+  },
+  "real_dist_asset_http_all_200": true,
+  "react_route_http_all_200": true,
+  "react_route_http_no_set_cookie": true,
+  "read_only_contract": {
+    "source_credentials_omit": true,
+    "source_same_origin_absent": true,
+    "source_write_method_literals_absent": true,
+    "source_token_storage_absent": true,
+    "built_credentials_omit_present": true,
+    "built_write_method_literals_absent": true
+  },
+  "browser_rendered_uat": "BLOCKED_BY_ENVIRONMENT_POLICY",
+  "backend_pytest": {
+    "passed": 33,
+    "failed": 6,
+    "status": "CONTRACT_RECONCILIATION_REQUIRED"
+  },
+  "prohibited_actions": {
+    "react_write": "NOT_ENABLED",
+    "model_execution": "NOT_EXECUTED",
+    "pilot": "NOT_EXECUTED",
+    "deployment": "NOT_EXECUTED"
+  }
+}

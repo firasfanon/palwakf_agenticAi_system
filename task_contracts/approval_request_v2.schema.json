@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Approval Request V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "approval_id",
+    "requested_action",
+    "risk",
+    "scope",
+    "evidence",
+    "rollback",
+    "status"
+  ],
+  "properties": {
+    "approval_id": {
+      "type": "string",
+      "pattern": "^APR-[A-Z0-9-]+$"
+    },
+    "requested_action": {
+      "type": "string"
+    },
+    "risk": {
+      "enum": [
+        "HIGH",
+        "CRITICAL"
+      ]
+    },
+    "scope": {
+      "type": "string"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rollback": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "Pending",
+        "Approved",
+        "Rejected",
+        "Expired"
+      ]
+    }
+  }
+}

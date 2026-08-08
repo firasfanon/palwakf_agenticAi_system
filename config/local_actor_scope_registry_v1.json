@@ -1,0 +1,7 @@
+{
+  "contract": "LOCAL_ACTOR_SCOPE_REGISTRY_V1",
+  "version": "1.0",
+  "default_access": "DENY",
+  "actors": [],
+  "operator_note": "No bearer token or actor is provisioned by this batch. All governed capability workspace routes deny by default until a separately approved actor-provisioning workflow writes hashed token records."
+}

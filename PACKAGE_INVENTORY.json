@@ -1,0 +1,127 @@
+[
+  {
+    "path": "ARCHITECTURE_DECISION_AR.md",
+    "sha256": "F69B8C47B3EF65AD2D32B8BAF2D1AC8BECED8D1EAA2627A76AA76AB6F14CC334",
+    "bytes": 845
+  },
+  {
+    "path": "EXECUTION_MATRIX_AR.md",
+    "sha256": "DF1FA1264539FB6772C4220BD3A9BA2350F419AC353581F587B79F9715585FC6",
+    "bytes": 448
+  },
+  {
+    "path": "README_AR.md",
+    "sha256": "4CC5389D4E27F72F439A0C8503910BF9F4ADC014CB2628E79A45830000429542",
+    "bytes": 1610
+  },
+  {
+    "path": "RUN_GUIDE_AR.md",
+    "sha256": "BAAB4A380852B189F13BE44F381A3D52B0F93BC51B944078B25D150C099A5A12",
+    "bytes": 566
+  },
+  {
+    "path": "payload/backend/src/palwakf_local_agents/app.py",
+    "sha256": "98DC540CC9453B71426D114C2FBDF66A10D0DECC889C82BAC73913D174507B5E",
+    "bytes": 3806
+  },
+  {
+    "path": "payload/frontend/.gitignore",
+    "sha256": "A459038AF144BB649DD32C98F20E160838EC500ED5580FB1669ED0860196E140",
+    "bytes": 46
+  },
+  {
+    "path": "payload/frontend/.local_agents_react_foundation.json",
+    "sha256": "3D4069274CDB1618F92E10BF5817CDDE6BB6F9E7F8B0568CFA45C2757FE43015",
+    "bytes": 242
+  },
+  {
+    "path": "payload/frontend/index.html",
+    "sha256": "7F3FFF37F7E65C74ADED263A622946E7F71D21449BCC60FF59DD7F994D4316FD",
+    "bytes": 389
+  },
+  {
+    "path": "payload/frontend/package.json",
+    "sha256": "F9FFA375FAAC9ED6398DC2756F85EFDDBE07D247F1BAF00A4FBEED14F7C3F578",
+    "bytes": 590
+  },
+  {
+    "path": "payload/frontend/src/App.tsx",
+    "sha256": "E653175BD9C6A4B4F88C948A9AA023F3D7889DB54C8FFF896106821855AFE3C0",
+    "bytes": 6772
+  },
+  {
+    "path": "payload/frontend/src/api/client.ts",
+    "sha256": "0D84518420365B9D59E803EF2C18021CDD3C42529D6CD7D8595D4D37D2B6D753",
+    "bytes": 1152
+  },
+  {
+    "path": "payload/frontend/src/api/types.ts",
+    "sha256": "A68AE0A5E1498C2FF57FA78DDA2804A3EF79DFB049EFA4256214538A3FF12A16",
+    "bytes": 341
+  },
+  {
+    "path": "payload/frontend/src/components/Layout.tsx",
+    "sha256": "65E07645FB0831D27D43C458ED1BC48F6515E6C76F7E2AB460DDF4AD69CB6B88",
+    "bytes": 2581
+  },
+  {
+    "path": "payload/frontend/src/components/StatusPanel.tsx",
+    "sha256": "32111D309C507ACD693E0AFB7E7D952E96DA702E3B33267DF16EA23FC9F2717A",
+    "bytes": 742
+  },
+  {
+    "path": "payload/frontend/src/main.tsx",
+    "sha256": "A6BCAE9C4F04D6FF36406B2966379834342B41B08B83BA7BD0334712D6CF87F0",
+    "bytes": 236
+  },
+  {
+    "path": "payload/frontend/src/styles.css",
+    "sha256": "D218CFE13C2348F093EF470F0C1C56A14652F0902D2BD5719121BC4FD56C03C9",
+    "bytes": 4050
+  },
+  {
+    "path": "payload/frontend/tsconfig.json",
+    "sha256": "CC32A3C2BE133425D30E112E3DC863C9DBE1ECBBDD81123ABF6D6A0300A8AE5C",
+    "bytes": 525
+  },
+  {
+    "path": "payload/frontend/vite.config.ts",
+    "sha256": "71C009370350B53B6258AFB2A0AFD59B6ECDC46406E06E0C4C5AAB458EB79C48",
+    "bytes": 401
+  },
+  {
+    "path": "payload/react_foundation_manifest.json",
+    "sha256": "DAA57B01578CC5F895122E74AD44D55B25F07FACDC08C4D5F3FAB86C09FA3388",
+    "bytes": 5912
+  },
+  {
+    "path": "scripts/Install-ReactTypeScriptFrontendFoundation.ps1",
+    "sha256": "6141D7F6BF96644D0C94EADD0F0EE89D8B1F9ADD61E347B58A822DA9233F4529",
+    "bytes": 4085
+  },
+  {
+    "path": "scripts/Invoke-ReactTypeScriptFrontendFoundationReadiness.ps1",
+    "sha256": "86F935B651A44BB30F85D4FF655235B36403B00AA3ACFAC5B7662EF5D08977D3",
+    "bytes": 1287
+  },
+  {
+    "path": "scripts/Invoke-ReactTypeScriptFrontendFoundationWhatIf.ps1",
+    "sha256": "75CB1F2E339384728DE6B99402EAB4DA1AFD966FD98588E896B35FD67A3A70AB",
+    "bytes": 2081
+  },
+  {
+    "path": "scripts/Test-ReactTypeScriptFrontendFoundationCandidateSyntax.ps1",
+    "sha256": "52831DF1A48AA90C1C7176F3CAB785849242D727E11293A22262D18796FB564B",
+    "bytes": 4098
+  },
+  {
+    "path": "scripts/Test-ReactTypeScriptFrontendFoundationPostApply.ps1",
+    "sha256": "94DAE066E442E6309501966E15432BA1EB7DD39F65A1E83C3F46CA99E3753781",
+    "bytes": 3757
+  },
+  {
+    "path": "scripts/Test-ReactTypeScriptFrontendFoundationPreflight.ps1",
+    "sha256": "C60A6B2EF9D981A1B6C3363516D7C821A71B371B429344C5AC51E5CD64A2C482",
+    "bytes": 4293
+  }
+]

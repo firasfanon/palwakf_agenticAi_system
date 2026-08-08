@@ -1,0 +1,10 @@
+{
+  "files": [
+    "frontend/dist/index.html",
+    "frontend/dist/assets/project-continuity-task-board-v1.js",
+    "frontend/dist/assets/project-continuity-task-board-v1.css",
+    "frontend/src/projectContinuityMemoryTaskBoard.v1.ts",
+    "docs/PROJECT_CONTINUITY_MEMORY_AND_TASK_BOARD_V1_AR.md",
+    "docs/PROJECT_CONTINUITY_MEMORY_AND_TASK_BOARD_V1_CONTRACT.json"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "project_root": "C:\\Users\\DELL\\StudioProjects\\palwakf_local_agents",
+  "output_root": "D:\\PALWAKF_ASSISTANT_BASELINES",
+  "application_origin": "http://127.0.0.1:8010",
+  "provider": "ollama",
+  "provider_base_url": "http://127.0.0.1:11434",
+  "model": "qwen2.5:3b",
+  "timeout_seconds": 180,
+  "max_output": 1200,
+  "temperature": 0.0,
+  "authorization_token": "AUTHORIZE_LOCAL_AGENTS_GOVERNED_MODEL_CANDIDATE_TIMEOUT_RETRY_QWEN2_5_3B_LOOPBACK_ONLY_V1",
+  "harness_version": "1.0.4",
+  "automatic_retry": false,
+  "attempt_limit": 1
+}

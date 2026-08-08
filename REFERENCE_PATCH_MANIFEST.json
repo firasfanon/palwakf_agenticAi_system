@@ -1,0 +1,17 @@
+{
+  "contract": "LEGACY_TEST_CONTRACT_MIGRATION_AND_CONTROLLED_POSITIVE_AUTHORIZATION_UAT_V1",
+  "payload_root": "PATCH_PAYLOAD",
+  "targets": [
+    "backend/tests/conftest.py",
+    "backend/tests/test_governed_local_agent_core.py",
+    "backend/tests/test_governed_operations.py",
+    "backend/tests/test_governed_operations_workspace_scoping.py",
+    "backend/tests/test_workspace_core.py",
+    "backend/tests/test_legacy_write_authorization_positive_uat.py",
+    "scripts/Test-LegacyTestContractMigrationAndPositiveAuthorizationUatV1Static.ps1",
+    "scripts/Run-LegacyTestContractMigrationAndPositiveAuthorizationUatV1.ps1"
+  ],
+  "preimage": "PREIMAGE_SHA256.json",
+  "postimage": "POSTIMAGE_SHA256.json",
+  "production_source_changed": false
+}

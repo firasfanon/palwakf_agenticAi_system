@@ -1,0 +1,38 @@
+{
+  "contract": "AUTHORIZATION_BOUNDARY_RECONCILIATION_STATE_V1",
+  "app_preimage_sha256": "B2A94CB0BEB2793D62ABCC1ED20C995F474BB9062B58833D8B27EDE5520E0B5F",
+  "legacy_preimage_hashes": {
+    "backend/src/palwakf_local_agents/governed_capability_foundation/__init__.py": "17BCE7AC8DB9C80BE8364E7E0542FE0A6096199CC6429860C05CB706BC7B0BD9",
+    "backend/src/palwakf_local_agents/governed_capability_foundation/contracts.py": "8CAB01EF2C196BF1C4BE9C05D6199094151B142E3F9B9DA3D43B5BFFA571A155",
+    "backend/src/palwakf_local_agents/governed_capability_foundation/router.py": "7F5B18AFBE684D8B9F3929174904556E3FB01727906332B3CED223DA17EBC7EA",
+    "backend/src/palwakf_local_agents/governed_capability_foundation/store.py": "F5C94B10121564005A04AC60821347A6CB6154AA22014C17B9A36AD95F43A585",
+    "backend/src/palwakf_local_agents/governed_capability_foundation/tools.py": "99974285838B25A5E8AE0B95D53428E81D17330C88DEA468F0D4DC7FE0A8D2D0",
+    "backend/tests/test_governed_capability_foundation.py": "FE9CE751ECF4E3DBD85235152D6A24235C1C549C7737F00ECA38BEF477F0A32A",
+    "config/controlled_first_prompt_pilot_v1.json": "F818D60DA70C42037FC1EB275872B472318757A45D0A432A56490FDDD8C28AD4",
+    "workspaces/palwakf_government/workspace_manifest.json": "78F4A5A833CDCBF9B5E6CF2F776C0F66B926413A6C85F6E30330470750D16550",
+    "evidence/ledger/ledger_contract.json": "E8F745C71D9CB38840BB7B585859B5171716E743E252AECC97FA8D4D7C1C2F0B"
+  },
+  "postimage_hashes": {
+    "backend/src/palwakf_local_agents/governed_capability_foundation/__init__.py": "17BCE7AC8DB9C80BE8364E7E0542FE0A6096199CC6429860C05CB706BC7B0BD9",
+    "backend/src/palwakf_local_agents/governed_capability_foundation/authz.py": "5481FF1A53FCFA028810A2A93E54E68146062E5DDAEE1EABE39603A203688768",
+    "backend/src/palwakf_local_agents/governed_capability_foundation/contracts.py": "A9DA65BAB38E27C26CA7872CAE39745108F68D47A00EE0368BC709A7E43323FF",
+    "backend/src/palwakf_local_agents/governed_capability_foundation/router.py": "DBB877A99821F9B44D685D60CC29B68C56EF1F77478EC51DF17C8CDBDFD73E66",
+    "backend/src/palwakf_local_agents/governed_capability_foundation/store.py": "FE2110A57AD387D5745FF3BC1AC70F39DFD0181F5FD26F3EBAE3DC00EC803956",
+    "backend/src/palwakf_local_agents/governed_capability_foundation/tools.py": "99974285838B25A5E8AE0B95D53428E81D17330C88DEA468F0D4DC7FE0A8D2D0",
+    "backend/tests/test_governed_capability_foundation.py": "E487262F9538191FAA5D80665A052BA0C230E4C1732988575D46A007E565B939",
+    "config/local_actor_scope_registry_v1.json": "643E0ABED4A924E17EF8D9B3680853C880EB5E6C9C4FE9EC87AB77EA00692B61",
+    "evidence/ledger/ledger_contract.json": "E53157D1383C43F39E4C0154C0AEFBF5109E6E3B7FD03B5F0EAC70081B691E00"
+  },
+  "unchanged_exact_hashes": {
+    "config/controlled_first_prompt_pilot_v1.json": "F818D60DA70C42037FC1EB275872B472318757A45D0A432A56490FDDD8C28AD4",
+    "workspaces/palwakf_government/workspace_manifest.json": "78F4A5A833CDCBF9B5E6CF2F776C0F66B926413A6C85F6E30330470750D16550"
+  },
+  "new_preimage_absent": [
+    "backend/src/palwakf_local_agents/governed_capability_foundation/authz.py",
+    "config/local_actor_scope_registry_v1.json"
+  ],
+  "dynamic_state": {
+    "workspace_foundation_databases": "ABSENT_OR_SCHEMA_COMPATIBLE",
+    "evidence_entries": "PRESERVE_EXISTING_APPEND_ONLY"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "role": "documentation_handoff",
+  "analysis_status": "PENDING_HUMAN_REVIEW",
+  "facts": [
+    {
+      "statement": "The approved reference limits the pilot to read-only evidence handling.",
+      "evidence_reference_ids": [
+        "EVD-001"
+      ]
+    }
+  ],
+  "assumptions": [],
+  "evidence_gaps": [
+    "No execution evidence is attached."
+  ],
+  "risks_and_constraints": [
+    "No baseline may be accepted without human review."
+  ],
+  "handoff_sections": [
+    {
+      "section": "CURRENT_STATE",
+      "text": "A read-only structured payload candidate is available for review.",
+      "evidence_reference_ids": [
+        "EVD-001"
+      ]
+    },
+    {
+      "section": "RESUMPTION_POINT",
+      "text": "Human review must assess evidence before any task transition.",
+      "evidence_reference_ids": [
+        "EVD-001"
+      ]
+    }
+  ],
+  "recommended_next_step": "HUMAN_REVIEW_REQUIRED"
+}

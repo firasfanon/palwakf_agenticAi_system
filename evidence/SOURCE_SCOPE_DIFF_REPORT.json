@@ -1,0 +1,56 @@
+{
+  "comparison": "PRISTINE_EVIDENCE_SNAPSHOT_TO_APPLIED_EVIDENCE_DERIVED_ISOLATED_WORKTREE",
+  "source_change_count": 7,
+  "approved_source_change_count": 7,
+  "unapproved_source_change_count": 0,
+  "source_scope_result": "PASS",
+  "changes": [
+    {
+      "path": "frontend/src/App.tsx",
+      "before": "E653175BD9C6A4B4F88C948A9AA023F3D7889DB54C8FFF896106821855AFE3C0",
+      "after": "311CBFF9E827F4937B13FEAFAB1989AB897B675322A87862A9C4BB8E908A8E78",
+      "allowed": true
+    },
+    {
+      "path": "frontend/src/api/client.ts",
+      "before": "BF9ACF975E3DA8A62E9544EF1027987B357B11A3AAD5511AA397422DD5F3FB43",
+      "after": "A0FC0ED20DA8ED98F1758B2D0660F8041238B47774F00B83E40C69723B4D191F",
+      "allowed": true
+    },
+    {
+      "path": "frontend/src/api/presentation.ts",
+      "before": "__ABSENT__",
+      "after": "7A7A99E0F083882A09D2B1294DB11E979FB610746F81CB78AA113E1F4D8AD02B",
+      "allowed": true
+    },
+    {
+      "path": "frontend/src/components/Icon.tsx",
+      "before": "__ABSENT__",
+      "after": "2C34517B17CE6135D4008299FE2452BDEC70974667204E3F091176BD267FF06C",
+      "allowed": true
+    },
+    {
+      "path": "frontend/src/components/Layout.tsx",
+      "before": "65E07645FB0831D27D43C458ED1BC48F6515E6C76F7E2AB460DDF4AD69CB6B88",
+      "after": "436C5A13D19A412C701898A9443ECA938956E2FD2D748A7A38540249F0420D1A",
+      "allowed": true
+    },
+    {
+      "path": "frontend/src/components/OperationalPanels.tsx",
+      "before": "__ABSENT__",
+      "after": "847F506238DABB92012510E401409E84F7E48B4AACCBFD67E3A161543D4A0D75",
+      "allowed": true
+    },
+    {
+      "path": "frontend/src/styles.css",
+      "before": "D218CFE13C2348F093EF470F0C1C56A14652F0902D2BD5719121BC4FD56C03C9",
+      "after": "89AF9E52B01A65941E95C1AD323361C6D4FC80DAD5D33D53F28EAE3D398ED4DB",
+      "allowed": true
+    }
+  ],
+  "ignored_generated_paths": [
+    "frontend/node_modules/**",
+    "frontend/dist/**",
+    ".pytest_cache/**"
+  ]
+}

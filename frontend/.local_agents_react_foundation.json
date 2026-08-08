@@ -1,0 +1,7 @@
+{
+  "contract": "LOCAL_AGENTS_REACT_TYPESCRIPT_FRONTEND_FOUNDATION_V1",
+  "mode": "SOURCE_FOUNDATION_ONLY",
+  "runtime_activation": "PENDING_DEPENDENCY_RESOLUTION_AND_BUILD",
+  "model_execution": "NONE",
+  "pilot_execution": "NOT_EXECUTED"
+}

@@ -1,0 +1,2 @@
+/agent-console/assets/index-BPZmFY1Y.js
+/agent-console/assets/index-BLhDdh2Z.css

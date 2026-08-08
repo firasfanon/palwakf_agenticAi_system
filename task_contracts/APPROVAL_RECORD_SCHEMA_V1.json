@@ -1,0 +1,6 @@
+{
+  "schema_version": "1.0",
+  "required": ["approval_id", "record_kind", "record_id", "decision", "approver", "decided_at_utc", "reason"],
+  "allowed_record_kind": ["TASK", "MEMORY", "LEARNING"],
+  "allowed_decision": ["APPROVED", "REJECTED"]
+}

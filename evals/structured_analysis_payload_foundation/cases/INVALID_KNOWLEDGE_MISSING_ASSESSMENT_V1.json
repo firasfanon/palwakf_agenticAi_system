@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "role": "knowledge_researcher",
+  "analysis_status": "PENDING_HUMAN_REVIEW",
+  "facts": [
+    {
+      "statement": "Evidence is available.",
+      "evidence_reference_ids": [
+        "EVD-001"
+      ]
+    }
+  ],
+  "assumptions": [],
+  "evidence_gaps": [],
+  "risks_and_constraints": [],
+  "source_assessments": [],
+  "recommended_next_step": "HUMAN_REVIEW_REQUIRED"
+}

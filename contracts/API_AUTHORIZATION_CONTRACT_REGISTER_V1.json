@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "status": "DISCOVERY_DESIGN_REGISTER_ONLY",
+  "principles": [
+    "NO_REACT_WRITE_CONTROL",
+    "SERVER_SIDE_ACTOR_WORKSPACE_CLIENT_AUTHZ_REQUIRED",
+    "DEFAULT_DENY_WHEN_AUTHORIZATION_CANNOT_BE_PROVEN",
+    "NO_TOKEN_PERSISTENCE",
+    "NO_COOKIE_CREDENTIALS_FROM_REACT_READ_CLIENT"
+  ],
+  "react_current_reads": [
+    {
+      "route": "/health",
+      "method": "GET",
+      "consumer": "Diagnostics",
+      "classification": "LOCAL_RUNTIME_HEALTH",
+      "authz_state": "UNSCOPED_READ_ONLY_STATUS",
+      "react_binding": "ALLOWED_READ_ONLY",
+      "evidence_required": "Runtime response plus route inventory"
+    },
+    {
+      "route": "/api/v1/local-agents/dashboard",
+      "method": "GET",
+      "consumer": "Command Center",
+      "classification": "READ_ONLY_DASHBOARD",
+      "authz_state": "LEGACY_READ_ONLY_SURFACE_NOT_YET_UNIFIED",
+      "react_binding": "ALLOWED_READ_ONLY_WITH_GOVERNANCE_LABEL",
+      "evidence_required": "No sensitive/cross-workspace content review"
+    },
+    {
+      "route": "/api/v1/local-agent-core/agents",
+      "method": "GET",
+      "consumer": "Command Center",
+      "classification": "READ_ONLY_AGENT_REGISTRY",
+      "authz_state": "LEGACY_READ_ONLY_SURFACE_NOT_YET_UNIFIED",
+      "react_binding": "ALLOWED_READ_ONLY_WITH_GOVERNANCE_LABEL",
+      "evidence_required": "Registry content classification review"
+    },
+    {
+      "route": "/api/v1/workspaces",
+      "method": "GET",
+      "consumer": "Workspaces",
+      "classification": "WORKSPACE_MASTER_STATUS",
+      "authz_state": "UNSCOPED_READ_ONLY_METADATA",
+      "react_binding": "ALLOWED_READ_ONLY",
+      "evidence_required": "Policy classification review"
+    },
+    {
+      "route": "/api/v1/governed-operations/workspaces",
+      "method": "GET",
+      "consumer": "Workspaces",
+      "classification": "GOVERNED_OPERATIONS_STATUS",
+      "authz_state": "LEGACY_READ_ONLY_SURFACE_NOT_YET_UNIFIED",
+      "react_binding": "ALLOWED_READ_ONLY_WITH_GOVERNANCE_LABEL",
+      "evidence_required": "No task/project detail exposure"
+    }
+  ],
+  "prohibited_react_write_bindings": [
+    {
+      "route_family": "/api/tasks",
+      "reason": "Root legacy POST uses local safety flags but does not present actor/workspace/client authorization in its route signature.",
+      "status": "PROHIBITED_PENDING_SERVER_AUTHORIZATION_CLOSURE"
+    },
+    {
+      "route_family": "/api/v1/governed-operations/workspaces/{workspace_id}/...",
+      "reason": "Workspace isolation exists, but route-level authenticated actor enforcement is not uniformly demonstrated in the current router signature.",
+      "status": "PROHIBITED_PENDING_UNIFIED_AUTHORIZATION_PROOF"
+    },
+    {
+      "route_family": "/api/v1/governed-capability-foundation/workspaces/{workspace_id}/...",
+      "reason": "Server-side actor and workspace-scope dependency exists; React write UI remains prohibited until identity transport, CSRF/session model, client-scope negative UAT, and end-to-end evidence are approved.",
+      "status": "PROHIBITED_PENDING_VERTICAL_SLICE_AUTHORIZATION_UAT"
+    }
+  ],
+  "future_vertical_slice_minimum_contract": [
+    "request_schema",
+    "response_schema",
+    "actor_identity_source",
+    "workspace_scope_check",
+    "commercial_client_scope_check_when_applicable",
+    "default_deny_failure_model",
+    "audit_event",
+    "evidence_reference",
+    "negative_UAT"
+  ]
+}

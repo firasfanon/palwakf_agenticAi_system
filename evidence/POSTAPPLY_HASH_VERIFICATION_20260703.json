@@ -1,0 +1,20 @@
+{
+  "gate": "G1_POSTAPPLY_HASH",
+  "result": "PASS",
+  "records": [
+    {
+      "relative_path": "backend/src/palwakf_local_agents/app.py",
+      "preimage_sha256": "98DC540CC9453B71426D114C2FBDF66A10D0DECC889C82BAC73913D174507B5E",
+      "postimage_sha256": "E99552F18D22D140847FE6578222F22058F891B9727B290F04DB9D1A2AD160E0",
+      "backup_relative_path": "backups/production_readiness_read_only_runtime_hardening_20260703_010000/backend/src/palwakf_local_agents/app.py",
+      "result": "PASS"
+    },
+    {
+      "relative_path": "frontend/src/api/client.ts",
+      "preimage_sha256": "0D84518420365B9D59E803EF2C18021CDD3C42529D6CD7D8595D4D37D2B6D753",
+      "postimage_sha256": "BF9ACF975E3DA8A62E9544EF1027987B357B11A3AAD5511AA397422DD5F3FB43",
+      "backup_relative_path": "backups/production_readiness_read_only_runtime_hardening_20260703_010000/frontend/src/api/client.ts",
+      "result": "PASS"
+    }
+  ]
+}

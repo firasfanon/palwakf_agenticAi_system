@@ -1,0 +1,14 @@
+{
+  "package": "PALWAKF_LOCAL_AGENTS_MEGA_BATCH_MULTI_WORKSPACE_AGENT_CAPABILITY_EXPANSION_V1_PREFLIGHT_ANCHOR_RECONCILIATION_REPAIR_CANDIDATE",
+  "repair_scope": "PREFLIGHT_ANCHOR_REGEX_ONLY",
+  "repaired_file": "scripts/Test-MultiWorkspaceAgentCapabilityExpansionV1BootstrapPreflight.ps1",
+  "defect": "PowerShell regex anchors used double backslashes and searched for literal backslashes, producing zero import/mount counts despite accepted app.py baseline.",
+  "repaired_import_pattern": "from \\.local_agent_core import mount_local_agent_core",
+  "repaired_mount_pattern": "mount_local_agent_core\\(app,\\s*project_root\\s*=\\s*PROJECT_ROOT\\)",
+  "project_source_mutation": "NONE",
+  "bootstrap_templates_mutation": "NONE",
+  "installer_logic_mutation": "NONE",
+  "model_execution": "NONE",
+  "pilot_execution": "NOT_EXECUTED",
+  "created_at": "2026-06-30"
+}

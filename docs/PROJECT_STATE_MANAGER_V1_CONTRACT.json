@@ -1,0 +1,38 @@
+{
+  "batch": "MEGA_BATCH_LOCAL_AGENTS_PROJECT_STATE_MANAGER_V1_DESIGN_ONLY",
+  "route": "/agent-console/state-manager",
+  "state_model": [
+    "goal_state",
+    "plan_draft_state",
+    "tool_selection_state",
+    "task_drafts_state",
+    "review_status_state",
+    "charter_boundary_state",
+    "runtime_execution_state"
+  ],
+  "allowed_transitions_now": [
+    "Goal -> Plan Draft (design only)",
+    "Plan Draft -> Tool Selection (contract suggestion only)",
+    "Tool Selection -> Task Draft (backend prepare envelope only)",
+    "Task Draft -> Accepted as Plan (human review only)"
+  ],
+  "blocked_transitions": [
+    "Accepted as Plan -> Apply/Execution",
+    "Any State -> Self-Apply",
+    "Any State -> Hidden Execution"
+  ],
+  "persistence": "NONE",
+  "boundaries": {
+    "model_execution": "NONE",
+    "pilot_execution": "NOT_EXECUTED",
+    "shell": "NO",
+    "git": "NO",
+    "code_execution": "NO",
+    "self_apply": "NO",
+    "autonomous_build": "NO",
+    "database_persistence": "NONE",
+    "backend_source_mutation": "NONE",
+    "web_search": "NO",
+    "platform_mutation": "NONE"
+  }
+}

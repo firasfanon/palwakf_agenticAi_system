@@ -1,0 +1,75 @@
+{
+  "base_url": "http://127.0.0.1:8876",
+  "requests": [
+    {
+      "path": "/health",
+      "method": "GET",
+      "status": 200,
+      "content_type": "application/json",
+      "body_prefix": "{\"service\":\"palwakf-local-agents\",\"bind_scope\":\"127.0.0.1_only\",\"agent_execution_enabled\":false,\"platform_mutation_enabled\":false,\"database_access_enabled\":false,\"safety_ok\":true,\"timestamp\":\"2026-07-02T22:22:34.846409+00:00\"}"
+    },
+    {
+      "path": "/agent-console",
+      "method": "GET",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "body_prefix": "<!doctype html>\n<html lang=\"ar\" dir=\"rtl\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <meta name=\"color-scheme\" content=\"dark\" />\n    <title>منصة المساعدين المحليين</title>\n    <script type=\"module\" crossorigin src=\"/agent-console/assets/index-BPZmFY1Y.js\"></script>\n    <link rel=\"stylesheet\" crossorigin href=\"/agent-console/assets/index-BLhDdh2Z.css\">\n  </head>\n  <body>\n    <div id=\"root\"></div>\n  </body>\n</html>\n"
+    },
+    {
+      "path": "/agent-console/",
+      "method": "GET",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "body_prefix": "<!doctype html>\n<html lang=\"ar\" dir=\"rtl\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <meta name=\"color-scheme\" content=\"dark\" />\n    <title>منصة المساعدين المحليين</title>\n    <script type=\"module\" crossorigin src=\"/agent-console/assets/index-BPZmFY1Y.js\"></script>\n    <link rel=\"stylesheet\" crossorigin href=\"/agent-console/assets/index-BLhDdh2Z.css\">\n  </head>\n  <body>\n    <div id=\"root\"></div>\n  </body>\n</html>\n"
+    },
+    {
+      "path": "/agent-console/assets/",
+      "method": "GET",
+      "status": 404,
+      "content_type": "application/json",
+      "body_prefix": "{\"detail\":\"Not Found\"}"
+    },
+    {
+      "path": "/api/v1/local-agents/dashboard",
+      "method": "GET",
+      "status": 200,
+      "content_type": "application/json",
+      "body_prefix": "{\"system_posture\":{\"label_ar\":\"واجهة قراءة ومراجعة فقط\",\"MODEL_EXECUTION\":\"NONE\",\"PILOT_EXECUTION\":\"NOT_EXECUTED\",\"PLATFORM_MUTATION\":\"NONE\",\"DATABASE_ACCESS\":\"NONE\",\"GIT_WRITE\":\"NONE\",\"DEPLOYMENT\":\"NONE\",\"SECRETS_ACCESS\":\"NONE\",\"MEMORY_WRITE\":\"NONE\"},\"counts\":{\"inbox\":0,\"approved\":1,\"archived\":0,\"reviews\":0,\"evidence\":34},\"active_approved_tasks\":[{\"queue\":\"approved\",\"task_id\":\"SAPF_DOCUMENTATION_HANDOFF_PILOT_001\",\"title\":\"Structured payload documentation handoff pilot\",\"description\":\"Read only"
+    },
+    {
+      "path": "/api/v1/local-agent-core/agents",
+      "method": "GET",
+      "status": 200,
+      "content_type": "application/json",
+      "body_prefix": "{\"items\":[{\"agent_id\":\"policy_guardian_agent_v1\",\"display_name\":\"Policy Guardian\",\"arabic_name\":\"وكيل حارس السياسة\",\"purpose\":\"Evaluates a requested preparation against workspace policy and non-transferable restrictions.\",\"allowed_capabilities\":[\"policy_review\",\"risk_flags\",\"review_gate\"],\"execution_mode\":\"LOCAL_DETERMINISTIC_PREPARE_ONLY\",\"model_execution\":\"NONE\",\"human_review\":\"REQUIRED_FOR_FUTURE_EXECUTION\"},{\"agent_id\":\"local_agent_coordinator_v1\",\"display_name\":\"Local Agent Coordinator\",\"ar"
+    },
+    {
+      "path": "/api/v1/workspaces",
+      "method": "GET",
+      "status": 200,
+      "content_type": "application/json",
+      "body_prefix": "{\"items\":[{\"workspace_id\":\"commercial_projects\",\"display_name\":\"Commercial Projects\",\"classification\":\"commercial\",\"policy_pack_id\":\"client_isolated_v1\",\"policy_version\":\"1.0.0\",\"lifecycle_state\":\"declared_not_activated\",\"legacy_data_migration\":\"NOT_APPLICABLE\",\"execution_mode\":\"PREPARE_ONLY_UNTIL_CLIENT_POLICY_BINDING\",\"workspace_paths\":{\"workspace_root\":\"workspaces/commercial_projects\",\"state_db\":\"workspaces/commercial_projects/state.sqlite\",\"audit_db\":\"workspaces/commercial_projects/audit.sql"
+    },
+    {
+      "path": "/api/v1/governed-operations/workspaces",
+      "method": "GET",
+      "status": 200,
+      "content_type": "application/json",
+      "body_prefix": "{\"items\":[{\"workspace_id\":\"commercial_projects\",\"display_name\":\"Commercial Projects\",\"classification\":\"commercial\",\"lifecycle_state\":\"declared_not_activated\",\"policy_pack_id\":\"client_isolated_v1\",\"policy_version\":\"1.0.0\",\"workspace_operations_binding\":\"BOUND_LOCAL_STATE_ON_EXPLICIT_HUMAN_ACTION\",\"workspace_storage_initialized\":false,\"task_storage_scope\":\"workspaces/commercial_projects/governed_operations.sqlite\",\"legacy_governed_operations\":\"SEPARATE_NOT_MIGRATED\",\"permission_intersection\":{\"wor"
+    },
+    {
+      "path": "/api/tasks",
+      "method": "GET",
+      "status": 200,
+      "content_type": "application/json",
+      "body_prefix": "[]"
+    },
+    {
+      "path": "/api/tasks/DOES-NOT-EXIST/run",
+      "method": "GET",
+      "status": 405,
+      "content_type": "application/json",
+      "body_prefix": "{\"detail\":\"Method Not Allowed\"}"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "evidence_id": "CANDIDATE-RUNTIME-SMOKE-20260703-REACT-CONDITIONAL-MOUNT",
+  "scope": "temporary isolated candidate copy only",
+  "source_project_mutation": "NONE",
+  "frontend_dist": "synthetic temporary minimal dist created only in disposable candidate test directory",
+  "service_start": "NOT_EXECUTED",
+  "network": "NOT_EXECUTED",
+  "model_execution": "NOT_EXECUTED",
+  "pilot_execution": "NOT_EXECUTED",
+  "check": "import palwakf_local_agents.app and inspect FastAPI route registry",
+  "required_paths": [
+    "/agent-console",
+    "/agent-console/",
+    "/agent-console/assets"
+  ],
+  "result": "PASS",
+  "ambient_runtime_warning": "A non-project spreadsheet warmup warning was emitted by the execution environment on stderr; the Python process exit code was 0 and the FastAPI import/route assertion passed.",
+  "temporary_test_directory": "REMOVED_AFTER_PASS"
+}

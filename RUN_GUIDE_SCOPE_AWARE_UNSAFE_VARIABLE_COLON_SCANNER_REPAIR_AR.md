@@ -1,0 +1,13 @@
+# دليل تشغيل فاحص Scope-Aware
+
+نفّذ Readiness فقط. يجب أن تظهر البوابات التالية: 
+
+```text
+CANDIDATE_POWERSHELL_PARSE=PASS
+CANDIDATE_SCOPE_AWARE_UNSAFE_VARIABLE_COLON_SCANNER_SELF_TEST=PASS
+CANDIDATE_UNSAFE_VARIABLE_COLON_SCAN=PASS
+CANDIDATE_UNSAFE_VARIABLE_COLON_SCAN_REAL_FINDING_COUNT=0
+CANDIDATE_SYNTAX_RESULT=PASS
+```
+
+لا يوجد Apply ولا يتم تشغيل Preflight أو WhatIf من هذه الحزمة قبل قبول فحصها.

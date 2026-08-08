@@ -1,0 +1,12 @@
+{
+  "approved_target_files": [
+    "backend/src/palwakf_local_agents/app.py",
+    "frontend/src/api/client.ts"
+  ],
+  "observed_changed_files_excluding_apply_backup": [
+    "backend/src/palwakf_local_agents/app.py",
+    "frontend/src/api/client.ts"
+  ],
+  "apply_backup_created": "backups/production_readiness_read_only_runtime_hardening_20260703_010000",
+  "result": "PASS_ONLY_TWO_APPROVED_CODE_FILES_CHANGED"
+}
