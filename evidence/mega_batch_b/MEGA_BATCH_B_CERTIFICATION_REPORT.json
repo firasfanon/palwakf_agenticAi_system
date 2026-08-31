@@ -1,0 +1,498 @@
+{
+  "project_id": "PALWAKF_LOCAL_AGENTS",
+  "mega_batch": "AGENTIC_LEARNING_MULTI_AGENT_AND_END_TO_END_INTEGRATION_V1",
+  "base_sha": "1807b450f17904d17cfbe418ded7d61ee5029b56",
+  "gates": [
+    {
+      "gate": "EXTERNAL_AUTHORITY_EXECUTION",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "gate": "GOVERNED_LEARNING",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "gate": "REPLACEABLE_PROVIDER_CONTRACT",
+      "passed": true,
+      "detail": {
+        "execution_providers": [
+          "PALWAKF_NATIVE_AGENT",
+          "HERMES_AGENT"
+        ],
+        "model_providers": [
+          "none",
+          "ollama"
+        ],
+        "replaceable": true,
+        "policy_source": "EXTERNAL_AUTHORIZATION_ENVELOPE"
+      }
+    },
+    {
+      "gate": "OLLAMA_DISCOVERY",
+      "passed": true,
+      "detail": {
+        "provider_id": "ollama",
+        "healthy": true,
+        "models": [
+          "deepseek-v4-flash:cloud",
+          "gemma4:latest",
+          "glm-5.2:cloud",
+          "llama3.2:3b",
+          "qwen2.5:3b",
+          "kimi-k2.7-code:cloud"
+        ],
+        "capabilities": [
+          "generate",
+          "structured_output",
+          "health",
+          "list_models"
+        ],
+        "latency_ms": 100.6,
+        "locality": "LOCAL_ENDPOINT",
+        "privacy": "LOCAL_BY_ENDPOINT_POLICY"
+      }
+    },
+    {
+      "gate": "HERMES_DISCOVERY",
+      "passed": true,
+      "detail": {
+        "provider_id": "HERMES_AGENT",
+        "discovered": true,
+        "healthy": true,
+        "version_output": "Hermes Agent v0.20.5 (2026.8.19) آ· upstream d10ef89e آ· local f4df86fe (+20 carried commits)\nInstall directory: C:\\Users\\DELL\\AppData\\Local\\hermes\\hermes-agent\nInstall method: git\nPython: 3.11.16\nOpenAI SDK: 2.24.0\nUpdate available: 1141 commits behind â€” run 'hermes update'",
+        "certification": "DISCOVERED_NOT_YET_READ_ONLY_CERTIFIED",
+        "filesystem_policy": "DENY_UNTIL_CERTIFIED",
+        "network_policy": "DENY_UNTIL_CERTIFIED"
+      }
+    },
+    {
+      "gate": "HERMES_READ_ONLY_CERTIFICATION_INHERITED",
+      "passed": true,
+      "detail": {
+        "certification": "PASS",
+        "provider": "custom",
+        "endpoint": "http://127.0.0.1:11434/v1",
+        "model": "llama3.2:3b",
+        "model_context_length": 131072,
+        "reasoning_policy": "none",
+        "tool_surface": "vision_only",
+        "max_turns": 1,
+        "process_exit": 0,
+        "expected_response": true,
+        "tool_calls_zero": true,
+        "runtime_failure": false,
+        "head_unchanged": true,
+        "git_status_unchanged": true,
+        "git_diff_unchanged": true,
+        "project_files_unchanged": true,
+        "no_project_file_mutation": true,
+        "no_git_mutation": true,
+        "bounded_write_tested": false,
+        "bounded_write_status": "EXPLICITLY_DEFERRED_SEPARATE_AUTHORITY_REQUIRED",
+        "evidence_basis": "CONTROLLED_FINAL_COMBINED_READ_ONLY_GATE",
+        "recorded_utc": "2026-08-31T19:05:54.4531014Z"
+      }
+    },
+    {
+      "gate": "NO_SELF_AUTHORIZATION_OR_AUTO_PROMOTION",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "e2e_result": {
+    "receipt": {
+      "run_id": "run-d5de256a-eac4-4228-b2ee-fe4f6463217a",
+      "project_id": "PALWAKF_LOCAL_AGENTS",
+      "task_id": "AGENTIC_LEARNING_MULTI_AGENT_AND_END_TO_END_INTEGRATION_V1",
+      "state_package_id": "state-b-cert",
+      "agent_id": "coordinator_agentic_v1",
+      "role_id": "coordinator",
+      "skill_ids": [],
+      "provider_id": "PALWAKF_NATIVE_AGENT",
+      "provider_mode": "READ_ONLY_DIAGNOSTIC",
+      "model_provider": "none",
+      "model_id": null,
+      "tools": [],
+      "environment": {
+        "project_id": "PALWAKF_LOCAL_AGENTS",
+        "repository": "firasfanon/palwakf_agenticAi_system",
+        "task_branch": "task/AGENTIC_LEARNING_MULTI_AGENT_AND_END_TO_END_INTEGRATION_V1",
+        "base_sha": "1807b450f17904d17cfbe418ded7d61ee5029b56",
+        "expected_head": "1807b450f17904d17cfbe418ded7d61ee5029b56",
+        "worktree": "C:\\Users\\DELL\\StudioProjects\\palwakf_agenticAi_system",
+        "filesystem_policy": {
+          "mode": "READ_ONLY",
+          "allowed_roots": [
+            "C:\\Users\\DELL\\StudioProjects\\palwakf_agenticAi_system"
+          ]
+        },
+        "network_policy": {
+          "read": true,
+          "write": false
+        },
+        "tool_policy": [],
+        "secrets_policy": "DENY",
+        "db_authority": "NONE",
+        "resource_budget": {
+          "timeout_seconds": 60,
+          "max_files": 500,
+          "max_bytes": 5000000
+        }
+      },
+      "base_sha": "1807b450f17904d17cfbe418ded7d61ee5029b56",
+      "before_head": "1807b450f17904d17cfbe418ded7d61ee5029b56",
+      "authorized_scope": {
+        "authorization_id": "auth-b-cert",
+        "issuer": "WORKSPACE_MANAGER",
+        "project_id": "PALWAKF_LOCAL_AGENTS",
+        "task_id": "AGENTIC_LEARNING_MULTI_AGENT_AND_END_TO_END_INTEGRATION_V1",
+        "allowed_agent_ids": [
+          "coordinator_agentic_v1"
+        ],
+        "allowed_task_classes": [
+          "READ_ONLY_DIAGNOSTIC"
+        ],
+        "allowed_provider_ids": [
+          "PALWAKF_NATIVE_AGENT",
+          "HERMES_AGENT"
+        ],
+        "allowed_model_providers": [
+          "none",
+          "ollama"
+        ],
+        "allowed_filesystem_roots": [
+          "C:\\Users\\DELL\\StudioProjects\\palwakf_agenticAi_system"
+        ],
+        "read_only": true,
+        "allow_network_read": true,
+        "allow_network_write": false
+      },
+      "plan": [
+        "validate_external_authority",
+        "resolve_agent",
+        "resolve_provider",
+        "run_bounded_read_only_diagnostic",
+        "emit_receipt"
+      ],
+      "actions": [
+        {
+          "type": "READ_ONLY_REPOSITORY_MANIFEST",
+          "files": 225,
+          "bytes": 338847
+        }
+      ],
+      "observations": [
+        {
+          "manifest_sample": [
+            {
+              "path": "#U062a#U0634#U063a#U064a#U0644 #U0627#U0644#U0633#U064a#U0631#U0641#U0631.docx",
+              "size": 12620
+            },
+            {
+              "path": ".env.example",
+              "size": 199
+            },
+            {
+              "path": ".gitignore",
+              "size": 1082
+            },
+            {
+              "path": "APPLY_AND_ROLLBACK_PLAN_AR.md",
+              "size": 1578
+            },
+            {
+              "path": "APPLY_EVIDENCE_HUMAN_REVIEW_ARCHIVE_CLOSURE_2026_06_27.md",
+              "size": 984
+            },
+            {
+              "path": "APPLY_EVIDENCE_LIFECYCLE_CLOSURE_REVC_2026_06_27.md",
+              "size": 3772
+            },
+            {
+              "path": "APPLY_EVIDENCE_SAPF_V1_2026_06_27.md",
+              "size": 1285
+            },
+            {
+              "path": "APPLY_EXECUTION_REPORT_AR.md",
+              "size": 2035
+            },
+            {
+              "path": "APPLY_GUIDE_AR.md",
+              "size": 1177
+            },
+            {
+              "path": "APPLY_GUIDE_COMMAND_CENTER_EVENT_LISTENER_DEDUPLICATION_CLOSURE_V1_AR.md",
+              "size": 250
+            },
+            {
+              "path": "APPLY_GUIDE_COMMAND_CENTER_NARROW_VIEWPORT_RESPONSIVE_CLOSURE_V1_AR.md",
+              "size": 631
+            },
+            {
+              "path": "APPLY_GUIDE_COMMAND_CENTER_V1_1_REVB_AR.md",
+              "size": 753
+            },
+            {
+              "path": "APPLY_GUIDE_COMMAND_CENTER_V1_2_REVC_AR.md",
+              "size": 957
+            },
+            {
+              "path": "APPLY_GUIDE_COMMAND_CENTER_V1_2_REVD_AR.md",
+              "size": 746
+            },
+            {
+              "path": "APPLY_GUIDE_COMMAND_CENTER_V1_AR.md",
+              "size": 1673
+            },
+            {
+              "path": "APPLY_GUIDE_GOVERNED_LOCAL_AGENT_CORE_EXPLICIT_APP_MOUNT_RECONCILIATION_V1_AR.md",
+              "size": 871
+            },
+            {
+              "path": "APPLY_GUIDE_GOVERNED_LOCAL_AGENT_CORE_EXPLICIT_APP_MOUNT_RECONCILIATION_V1_VALIDATION_PACKAGE_REPAIR_AR.md",
+              "size": 1559
+            },
+            {
+              "path": "APPLY_GUIDE_GOVERNED_LOCAL_AGENT_CORE_EXPLICIT_APP_MOUNT_RECONCILIATION_V1_WHATIF_REPAIR_AR.md",
+              "size": 1380
+            },
+            {
+              "path": "APPLY_GUIDE_GOVERNED_LOCAL_AGENT_CORE_V1_AR.md",
+              "size": 1389
+            },
+            {
+              "path": "APPLY_GUIDE_GOVERNED_OPERATIONS_BROWSER_JS_SYNTAX_CLOSURE_V1_AR.md",
+              "size": 1167
+            },
+            {
+              "path": "APPLY_GUIDE_GOVERNED_OPERATIONS_FOUNDATION_V1_AR.md",
+              "size": 447
+            },
+            {
+              "path": "APPLY_GUIDE_GOVERNED_OPERATIONS_WORKBENCH_AUDIT_ASSURANCE_V2_AR.md",
+              "size": 765
+            },
+            {
+              "path": "APPLY_GUIDE_GOVERNED_OPERATIONS_WORKSPACE_SCOPING_V1_AR.md",
+              "size": 1085
+            },
+            {
+              "path": "APPLY_GUIDE_LOCAL_AGENT_CONTROLLED_MODEL_PILOT_V1_AR.md",
+              "size": 2001
+            },
+            {
+              "path": "APPLY_GUIDE_MULTI_WORKSPACE_AGENT_CAPABILITY_EXPANSION_V1_BOOTSTRAP_AR.md",
+              "size": 1153
+            },
+            {
+              "path": "APPLY_GUIDE_MULTI_WORKSPACE_CORE_EXPLICIT_APP_MOUNT_RECONCILIATION_V1_AR.md",
+              "size": 1233
+            },
+            {
+              "path": "APPLY_GUIDE_MULTI_WORKSPACE_CORE_EXPLICIT_APP_MOUNT_RECONCILIATION_V1_PREFLIGHT_REPORTING_FIX_AR.md",
+              "size": 1702
+            },
+            {
+              "path": "APPLY_GUIDE_MULTI_WORKSPACE_CORE_POLICY_PACKS_V1_AR.md",
+              "size": 701
+            },
+            {
+              "path": "APPLY_GUIDE_READ_ONLY_PILOT_LIFECYCLE_CLOSURE_V1_AR.md",
+              "size": 1177
+            },
+            {
+              "path": "APPLY_GUIDE_STRUCTURED_ANALYSIS_PAYLOAD_FOUNDATION_V1_AR.md",
+              "size": 2823
+            },
+            {
+              "path": "APPLY_GUIDE_WORKSPACE_CORE_OPERATIONAL_UI_UX_LANGUAGE_CLOSURE_V1_AR.md",
+              "size": 788
+            },
+            {
+              "path": "ARCHITECTURE_DECISION_AR.md",
+              "size": 845
+            },
+            {
+              "path": "ARTIFACT_MANIFEST.json",
+              "size": 1597
+            },
+            {
+              "path": "BACKEND_FRONTEND_ALIGNMENT_GUIDE_LOCAL_AGENTS_V1_AR.md",
+              "size": 3231
+            },
+            {
+              "path": "BASELINE_ADDENDUM_20260706.md",
+              "size": 697
+            },
+            {
+              "path": "baseline_binding.json",
+              "size": 5050
+            },
+            {
+              "path": "BASELINE_CANDIDATE_NOT_ACCEPTED_AR.md",
+              "size": 671
+            },
+            {
+              "path": "BASELINE_STATUS_AR.md",
+              "size": 447
+            },
+            {
+              "path": "BUILD_ARTIFACT_MANIFEST.json",
+              "size": 675
+            },
+            {
+              "path": "BUILD_STATUS.json",
+              "size": 860
+            },
+            {
+              "path": "CANDIDATE_BUILD_VALIDATION_REPORT.json",
+              "size": 340
+            },
+            {
+              "path": "CANDIDATE_BUILD_VALIDATION_REPORT.md",
+              "size": 660
+            },
+            {
+              "path": "CANDIDATE_POSTIMAGE_SHA256.json",
+              "size": 1480
+            },
+            {
+              "path": "CANDIDATE_REPAIR_NOTICE_PREFLIGHT_RUNTIME_V1.md",
+              "size": 1155
+            },
+            {
+              "path": "CANDIDATE_SOURCE_HASHES.json",
+              "size": 1627
+            },
+            {
+              "path": "CANDIDATE_SOURCE_POSTIMAGE_SHA256.json",
+              "size": 1480
+            },
+            {
+              "path": "CANDIDATE_VALIDATION_REPORT.json",
+              "size": 1250
+            },
+            {
+              "path": "CHANGELOG_20260703_NPM_LOCKFILE_REGISTRY_PROVENANCE_REPAIR_V7.md",
+              "size": 501
+            },
+            {
+              "path": "CHANGELOG_20260703_REACT_LOCK_BUILD_HTTP_UAT.md",
+              "size": 1024
+            },
+            {
+              "path": "CHANGELOG_20260703_READ_ONLY_RUNTIME_HARDENING_APPLY.md",
+              "size": 1006
+            }
+          ],
+          "objective": "Mega Batch B governed E2E diagnostic and learning proof."
+        }
+      ],
+      "changed_files": [],
+      "tests": [],
+      "errors": [],
+      "retries": 0,
+      "evidence": [
+        {
+          "type": "RUN_RECEIPT_JSON",
+          "path": "C:\\Users\\DELL\\AppData\\Local\\Temp\\palwakf_agentic_ai_evidence\\run-d5de256a-eac4-4228-b2ee-fe4f6463217a.json"
+        }
+      ],
+      "final_result": "PASS",
+      "next_action": "EXTERNAL_REVIEW_REQUIRED",
+      "started_at": "2026-08-31T20:21:15.512595+00:00",
+      "finished_at": "2026-08-31T20:21:15.512595+00:00"
+    },
+    "experience": {
+      "experience_id": "exp-ce11c967-c4f9-4d3b-baa2-952b88c26be5",
+      "project_id": "PALWAKF_LOCAL_AGENTS",
+      "task_id": "AGENTIC_LEARNING_MULTI_AGENT_AND_END_TO_END_INTEGRATION_V1",
+      "run_id": "run-d5de256a-eac4-4228-b2ee-fe4f6463217a",
+      "agent_id": "coordinator_agentic_v1",
+      "role_id": "coordinator",
+      "objective": "Mega Batch B governed E2E diagnostic and learning proof.",
+      "observation": {
+        "final_result": "PASS",
+        "changed_files": [],
+        "errors": []
+      },
+      "result": "PASS",
+      "evidence_refs": [
+        {
+          "type": "RUN_RECEIPT_JSON",
+          "path": "C:\\Users\\DELL\\AppData\\Local\\Temp\\palwakf_agentic_ai_evidence\\run-d5de256a-eac4-4228-b2ee-fe4f6463217a.json"
+        }
+      ],
+      "created_at": "2026-08-31T20:21:15.513594+00:00"
+    },
+    "evaluation": {
+      "evaluation_id": "eval-561310d9-b7ec-466b-9ba0-0a3a64cdf27b",
+      "project_id": "PALWAKF_LOCAL_AGENTS",
+      "task_id": "AGENTIC_LEARNING_MULTI_AGENT_AND_END_TO_END_INTEGRATION_V1",
+      "run_id": "run-d5de256a-eac4-4228-b2ee-fe4f6463217a",
+      "evaluator": "PALWAKF_EVALUATION_ENGINE_V1",
+      "score": 1.0,
+      "passed": true,
+      "reasons": [
+        "RUN_RESULT_PASS",
+        "NO_PROJECT_MUTATION",
+        "NO_ERRORS"
+      ],
+      "created_at": "2026-08-31T20:21:15.513594+00:00"
+    },
+    "learning_candidates": [
+      {
+        "candidate_id": "learn-548481a8-e6f8-4f3d-bd62-932cba09e79c",
+        "project_id": "PALWAKF_LOCAL_AGENTS",
+        "task_id": "AGENTIC_LEARNING_MULTI_AGENT_AND_END_TO_END_INTEGRATION_V1",
+        "source_run_id": "run-d5de256a-eac4-4228-b2ee-fe4f6463217a",
+        "candidate_type": "PROJECT_LESSON",
+        "statement": "A governed read-only run completed under external authority with zero project mutation and evidence-backed evaluation.",
+        "rationale": "Derived from a PASS run and PASS evaluation; promotion remains external.",
+        "evidence_refs": [
+          {
+            "type": "RUN_RECEIPT_JSON",
+            "path": "C:\\Users\\DELL\\AppData\\Local\\Temp\\palwakf_agentic_ai_evidence\\run-d5de256a-eac4-4228-b2ee-fe4f6463217a.json"
+          }
+        ],
+        "promotion_status": "EXTERNAL_REVIEW_REQUIRED",
+        "created_at": "2026-08-31T20:21:15.515594+00:00"
+      }
+    ],
+    "mind_review": {
+      "review_id": "mind-0fed9876-ceab-48d5-97db-de83eddb0629",
+      "project_id": "PALWAKF_LOCAL_AGENTS",
+      "candidate_ids": [
+        "learn-548481a8-e6f8-4f3d-bd62-932cba09e79c"
+      ],
+      "review_mode": "CANDIDATE_ONLY_NO_AUTO_PROMOTION",
+      "accepted_project_knowledge": false,
+      "next_action": "MIND_EXTERNAL_REVIEW_REQUIRED",
+      "created_at": "2026-08-31T20:21:15.516594+00:00"
+    },
+    "mind_submission": {
+      "submission_id": "mind-sub-a8b0906c-c982-42d5-bb20-05e338caddca",
+      "project_id": "PALWAKF_LOCAL_AGENTS",
+      "task_id": "AGENTIC_LEARNING_MULTI_AGENT_AND_END_TO_END_INTEGRATION_V1",
+      "candidate_ids": [
+        "learn-548481a8-e6f8-4f3d-bd62-932cba09e79c"
+      ],
+      "knowledge_authority": "EXTERNAL_MIND_WORKSPACE_REVIEW",
+      "auto_promotion": false,
+      "created_at": "2026-08-31T20:21:15.516594+00:00"
+    },
+    "evidence_paths": {
+      "experience": "C:\\Users\\DELL\\StudioProjects\\palwakf_agenticAi_system\\evidence\\mega_batch_b\\learning_runtime\\exp-ce11c967-c4f9-4d3b-baa2-952b88c26be5.json",
+      "evaluation": "C:\\Users\\DELL\\StudioProjects\\palwakf_agenticAi_system\\evidence\\mega_batch_b\\learning_runtime\\eval-561310d9-b7ec-466b-9ba0-0a3a64cdf27b.json",
+      "candidates": [
+        "C:\\Users\\DELL\\StudioProjects\\palwakf_agenticAi_system\\evidence\\mega_batch_b\\learning_runtime\\learn-548481a8-e6f8-4f3d-bd62-932cba09e79c.json"
+      ]
+    },
+    "institutional_knowledge_promoted": false,
+    "external_review_required": true
+  },
+  "final_invariant": true,
+  "final_result": "PASS"
+}
