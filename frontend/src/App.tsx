@@ -1832,7 +1832,7 @@ function EngineeringSkillsRegistryPage() {
 
     <section className="initial-readiness compact skills-intake-summary">
       <div className="initial-readiness-metrics">
-        <MetricCard icon="tool" label="Mapped" value={String(mappedCount)} detail="تستخدم كـ workflow تحضيري" tone="green"/>
+        <MetricCard icon="tool" label="Mapped" value={String(mappedCount)} detail="تستخدم كـ workflow تحضيري" tone="blue"/>
         <MetricCard icon="shield" label="Reference" value="3" detail="مرجع قراءة فقط" tone="blue"/>
         <MetricCard icon="lock" label="Future-gated" value={String(futureCount)} detail="تحتاج بوابة لاحقة" tone="gold"/>
       </div>

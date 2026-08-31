@@ -18,6 +18,7 @@ from .governed_capability_foundation import mount_governed_capability_foundation
 from .project_reader import mount_project_reader
 from .backend_frontend_alignment import mount_backend_frontend_alignment
 from .operational_core_v1 import mount_operational_core_v1
+from .agentic_core_v1 import mount_agentic_core_v1
 from palwakf_local_agents.open_source_capabilities_v1 import router as open_source_capabilities_v1_router
 from palwakf_local_agents.open_source_tools_operational_admission_wave1_v1 import router as open_source_tools_wave1_v1_router
 from palwakf_local_agents.quality_gated_read_only_operations_wave1_v1 import router as operations_wave1_v1_router
@@ -45,6 +46,7 @@ def create_app(project_root: Path | None = None) -> FastAPI:
     mount_project_reader(app, project_root=resolved_project_root)
     mount_backend_frontend_alignment(app, project_root=resolved_project_root)
     mount_operational_core_v1(app, project_root=resolved_project_root)
+    mount_agentic_core_v1(app, project_root=resolved_project_root, source_commit_sha="8c1280413ecc6d45a9991dcb059279be14c330e3")
 
     react_console_dist = resolved_project_root / "frontend" / "dist"
     react_console_index = react_console_dist / "index.html"
