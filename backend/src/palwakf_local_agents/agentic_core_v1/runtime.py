@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import fnmatch
 import os
 import tempfile
 from pathlib import Path
@@ -51,7 +52,13 @@ class AgenticRuntime:
             raise AuthorityError("WRITE_REQUIRES_SEPARATE_AUTHORITY")
         if auth.allow_network_write or env.network_policy.write:
             raise AuthorityError("NETWORK_WRITE_DENIED")
-        if env.base_sha != self.source_commit_sha or env.expected_head != self.source_commit_sha:
+        if env.filesystem_policy.allowed_patterns != auth.allowed_path_patterns:
+            raise AuthorityError("FILESYSTEM_PATTERN_AUTHORITY_MISMATCH")
+        if not env.filesystem_policy.allowed_patterns:
+            raise AuthorityError("FILESYSTEM_PATTERN_REQUIRED")
+        # base_sha is the historical task base; expected_head is the currently
+        # authorized remote/worktree head and must match the runtime source.
+        if env.expected_head != self.source_commit_sha:
             raise AuthorityError("SOURCE_SHA_MISMATCH")
 
         agents = {a.agent_id: a for a in build_projection(self.project_root, self.source_commit_sha)}
@@ -84,16 +91,24 @@ class AgenticRuntime:
         budget = request.environment.resource_budget
         manifest = []
         bytes_seen = 0
+        patterns = request.environment.filesystem_policy.allowed_patterns
         for path in self.project_root.rglob("*"):
             if len(manifest) >= budget.max_files:
                 break
-            if ".git" in path.parts or not path.is_file():
+            if (
+                ".git" in path.parts
+                or ".palwakf_apply_backup" in path.parts
+                or not path.is_file()
+            ):
+                continue
+            relative = path.relative_to(self.project_root).as_posix()
+            if not any(fnmatch.fnmatchcase(relative, pattern) for pattern in patterns):
                 continue
             size = path.stat().st_size
             if bytes_seen + size > budget.max_bytes:
                 break
             bytes_seen += size
-            manifest.append({"path": path.relative_to(self.project_root).as_posix(), "size": size})
+            manifest.append({"path": relative, "size": size})
 
         receipt = RunReceipt(
             project_id=request.project_id,

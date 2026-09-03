@@ -20,6 +20,7 @@ class ProviderId(str, Enum):
 class FilesystemPolicy(BaseModel):
     mode: Literal["READ_ONLY", "BOUNDED_WRITE"] = "READ_ONLY"
     allowed_roots: list[str] = Field(default_factory=list)
+    allowed_patterns: list[str] = Field(default_factory=lambda: ["**"])
 
 
 class NetworkPolicy(BaseModel):
@@ -66,6 +67,7 @@ class AuthorizationEnvelope(BaseModel):
     allowed_provider_ids: list[ProviderId]
     allowed_model_providers: list[str] = Field(default_factory=lambda: ["none", "ollama"])
     allowed_filesystem_roots: list[str] = Field(default_factory=list)
+    allowed_path_patterns: list[str] = Field(default_factory=lambda: ["**"])
     read_only: bool = True
     allow_network_read: bool = False
     allow_network_write: bool = False
