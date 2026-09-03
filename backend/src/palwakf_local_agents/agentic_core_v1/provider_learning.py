@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any
+from urllib.parse import urlparse
 
 from .learning import EvaluationReceipt, ExperienceRecord, LearningCandidate
 from .providers import HermesProvider, OllamaProvider
@@ -39,7 +40,11 @@ def collect_provider_learning(
     if "OLLAMA_PROVIDER_LEARNING" in capabilities:
         if not package.allow_network_read:
             raise ValueError("OLLAMA_PROVIDER_NETWORK_READ_NOT_AUTHORIZED")
-        probes.append(("MODEL_PROVIDER", "ollama", OllamaProvider()))
+        ollama = OllamaProvider()
+        host = urlparse(ollama.endpoint).hostname
+        if host not in {"127.0.0.1", "localhost", "::1"}:
+            raise ValueError("OLLAMA_PROVIDER_ENDPOINT_NOT_LOCAL")
+        probes.append(("MODEL_PROVIDER", "ollama", ollama))
     if "HERMES_PROVIDER_LEARNING" in capabilities:
         probes.append(("EXECUTION_PROVIDER", "HERMES_AGENT", HermesProvider()))
 

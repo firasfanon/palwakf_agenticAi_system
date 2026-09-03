@@ -51,6 +51,11 @@ def test_canonical_workspace_package_executes_and_emits_mind_bundle():
     assert result.learning_bundle.auto_promotion is False
     assert result.learning_bundle.source_sha == SOURCE
     assert len(result.learning_bundle.candidates) == 1
+    assert result.execution["authorized_scope"]["allowed_path_patterns"] == ["backend/**"]
+    manifest = result.execution["observations"][0]["manifest_sample"]
+    assert manifest
+    assert all(item["path"].startswith("backend/") for item in manifest)
+    assert all(".palwakf_apply_backup" not in item["path"] for item in manifest)
 
 
 def test_canonical_workspace_package_rejects_stale_expected_head():

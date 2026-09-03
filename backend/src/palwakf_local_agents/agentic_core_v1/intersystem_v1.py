@@ -132,6 +132,7 @@ def execute_integration_pilot(
         allowed_provider_ids=[provider],
         allowed_model_providers=[package.requested_model_provider],
         allowed_filesystem_roots=[str(project_root)],
+        allowed_path_patterns=list(package.scope_patterns),
         read_only=True,
         allow_network_read=package.allow_network_read,
         allow_network_write=False,
@@ -146,6 +147,7 @@ def execute_integration_pilot(
         filesystem_policy=FilesystemPolicy(
             mode="READ_ONLY",
             allowed_roots=[str(project_root)],
+            allowed_patterns=list(package.scope_patterns),
         ),
         network_policy=NetworkPolicy(
             read=package.allow_network_read,

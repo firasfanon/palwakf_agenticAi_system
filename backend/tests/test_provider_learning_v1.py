@@ -7,6 +7,8 @@ from palwakf_local_agents.agentic_core_v1.provider_learning import collect_provi
 
 
 class _FakeOllama:
+    endpoint = "http://127.0.0.1:11434"
+
     def health(self):
         return {
             "provider_id": "ollama",
@@ -88,3 +90,24 @@ def test_provider_learning_creates_experience_evaluation_and_candidates(
         "HERMES_AGENT",
     }
     assert all(c.promotion_status == "EXTERNAL_REVIEW_REQUIRED" for c in result["candidates"])
+
+
+class _RemoteOllama(_FakeOllama):
+    endpoint = "https://ollama.example.invalid"
+
+
+def test_provider_learning_rejects_non_local_ollama_endpoint(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        "palwakf_local_agents.agentic_core_v1.provider_learning.OllamaProvider",
+        lambda: _RemoteOllama(),
+    )
+    service = AgenticLearningService(
+        project_root=tmp_path,
+        source_commit_sha="1" * 40,
+    )
+    with pytest.raises(ValueError, match="OLLAMA_PROVIDER_ENDPOINT_NOT_LOCAL"):
+        collect_provider_learning(
+            learning=service,
+            package=_package(network_read=True),
+            execution_receipt=_receipt(),
+        )
