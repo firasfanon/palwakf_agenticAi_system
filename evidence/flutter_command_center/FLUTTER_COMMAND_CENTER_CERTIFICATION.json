@@ -1,0 +1,41 @@
+{
+  "project_id": "PALWAKF_LOCAL_AGENTS",
+  "task_id": "AGENTIC_AI_FLUTTER_COMMAND_CENTER_AND_OPERATIONAL_DASHBOARD_V1",
+  "base_sha": "19b9c8e9d2c52b955dfb1fd273dfecaa4f8383e6",
+  "target_product_ui": "FLUTTER",
+  "react_status": "TRANSITIONAL_LEGACY_FALLBACK_ONLY",
+  "gates": {
+    "FLUTTER_PROJECT_PRESENT": true,
+    "COMMAND_CENTER_SOURCE_PRESENT": true,
+    "AGENTIC_API_CLIENT_PRESENT": true,
+    "REACT_FALLBACK_PRESERVED": true,
+    "BACKEND_APP_PRESENT": true,
+    "FLUTTER_STATIC_MOUNT_PRESENT": true,
+    "REACT_ROUTE_PRESERVED": true,
+    "ARABIC_RTL_PRESENT": true,
+    "RESPONSIVE_NAVIGATION_PRESENT": true,
+    "LAYOUT_CONSTRAINT_BREAKPOINT_PRESENT": true,
+    "TOP_BAR_RESPONSIVE_GUARD_PRESENT": true,
+    "AUTHORITY_BOUNDARY_VISIBLE": true,
+    "NO_FAKE_LIVE_RUN_DATA_LABEL": true,
+    "READ_ONLY_GET_ENDPOINTS_BOUND": true,
+    "NO_MUTATING_HTTP_METHOD_IN_FLUTTER_API_V1": true
+  },
+  "target_device_gates": {
+    "FLUTTER_FORMAT": "PASS",
+    "FLUTTER_ANALYZE": "PASS",
+    "FLUTTER_TEST": "PASS",
+    "FLUTTER_BUILD_WEB": "PASS",
+    "FLUTTER_BUILD_WINDOWS": "PASS",
+    "BACKEND_REGRESSION": "PASS",
+    "REACT_TYPESCRIPT": "PASS",
+    "REACT_BUILD": "PASS",
+    "GIT_DIFF_CHECK": "PASS"
+  },
+  "browser_uat": "NOT_RUN_REQUIRED_NEXT",
+  "responsive_browser_uat": "NOT_RUN_REQUIRED_NEXT",
+  "production_readiness": "NOT_CERTIFIED",
+  "main_mutation": "NO",
+  "baseline_promotion": "NO",
+  "final_result": "PASS_PRE_BROWSER_UAT"
+}

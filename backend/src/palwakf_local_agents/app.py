@@ -72,6 +72,16 @@ def create_app(project_root: Path | None = None) -> FastAPI:
         def react_console_ui() -> FileResponse:
             return FileResponse(react_console_index, media_type="text/html; charset=utf-8")
 
+    flutter_command_dist = resolved_project_root / "flutter_app" / "build" / "web"
+    flutter_command_index = flutter_command_dist / "index.html"
+    if flutter_command_dist.is_dir() and flutter_command_index.is_file():
+        app.mount(
+            "/agentic-command",
+            StaticFiles(directory=flutter_command_dist, html=True),
+            name="agentic_flutter_command_center",
+        )
+
+
     @app.on_event("startup")
     def startup() -> None:
         store.initialize()
