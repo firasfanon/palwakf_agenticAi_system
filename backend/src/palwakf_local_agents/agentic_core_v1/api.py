@@ -8,6 +8,11 @@ from pydantic import BaseModel
 
 from .contracts import RunRequest
 from .external_contracts import WorkspaceStatePackage
+from .intersystem_v1 import (
+    AgenticIntegrationPilotResultV1,
+    WorkspaceAuthorityPackageV1,
+    execute_integration_pilot,
+)
 from .learning_service import AgenticLearningService
 from .providers import HermesProvider, NativeProvider, OllamaProvider
 from .registry_projection import build_projection
@@ -56,6 +61,26 @@ def mount_agentic_core_v1(app: FastAPI, *, project_root: Path, source_commit_sha
             return runtime.execute(request).model_dump(mode="json")
         except AuthorityError as error:
             raise HTTPException(status_code=403, detail={"code": str(error), "fail_closed": True}) from error
+
+    @app.post(
+        "/api/v1/agentic/integration/read-only-pilot",
+        response_model=AgenticIntegrationPilotResultV1,
+    )
+    def integration_read_only_pilot(
+        payload: WorkspaceAuthorityPackageV1,
+    ) -> AgenticIntegrationPilotResultV1:
+        try:
+            return execute_integration_pilot(
+                learning=learning,
+                package=payload,
+                project_root=project_root,
+                source_commit_sha=source_commit_sha,
+            )
+        except (AuthorityError, ValueError) as error:
+            raise HTTPException(
+                status_code=403,
+                detail={"code": str(error), "fail_closed": True},
+            ) from error
 
     @app.post("/api/v1/agentic/learning/runs")
     def governed_learning_run(payload: GovernedLearningRun) -> dict:

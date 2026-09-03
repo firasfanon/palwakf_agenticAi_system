@@ -21,8 +21,7 @@ class AgenticLearningService:
 
     def execute_and_learn(self, *, package: WorkspaceStatePackage, request: RunRequest) -> dict[str, Any]:
         self.external.validate_workspace_package(package)
-        if request.state_package_id != package.state_package_id:
-            raise ValueError("RUN_STATE_PACKAGE_MISMATCH")
+        self.external.validate_run_binding(package=package, request=request)
         receipt = self.runtime.execute(request)
         experience = ExperienceRecord(project_id=receipt.project_id, task_id=receipt.task_id, run_id=receipt.run_id, agent_id=receipt.agent_id, role_id=receipt.role_id, objective=request.objective, observation={"final_result": receipt.final_result, "changed_files": list(receipt.changed_files), "errors": list(receipt.errors)}, result=receipt.final_result, evidence_refs=list(receipt.evidence))
         experience_path = self.store.add_experience(experience)

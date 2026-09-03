@@ -5,7 +5,7 @@ from uuid import uuid4
 
 from pydantic import BaseModel, Field, model_validator
 
-from .contracts import AuthorizationEnvelope, utc_now
+from .contracts import AuthorizationEnvelope, RunRequest, utc_now
 from .learning import LearningCandidate
 
 
@@ -47,11 +47,30 @@ class ExternalContractAdapter:
     def validate_workspace_package(self, package: WorkspaceStatePackage) -> WorkspaceStatePackage:
         if not package.task_branch.startswith("task/"):
             raise ValueError("WORKSPACE_TASK_BRANCH_REQUIRED")
-        if package.base_sha != package.expected_head:
-            raise ValueError("WORKSPACE_HEAD_BINDING_MISMATCH")
         if package.authorization.allow_network_write:
             raise ValueError("WORKSPACE_NETWORK_WRITE_AUTHORITY_REJECTED")
         return package
+
+    def validate_run_binding(
+        self,
+        *,
+        package: WorkspaceStatePackage,
+        request: RunRequest,
+    ) -> None:
+        if request.state_package_id != package.state_package_id:
+            raise ValueError("RUN_STATE_PACKAGE_MISMATCH")
+        if request.project_id != package.project_id or request.task_id != package.task_id:
+            raise ValueError("RUN_STATE_PACKAGE_SCOPE_MISMATCH")
+        if request.environment.repository != package.repository:
+            raise ValueError("RUN_REPOSITORY_BINDING_MISMATCH")
+        if request.environment.task_branch != package.task_branch:
+            raise ValueError("RUN_TASK_BRANCH_BINDING_MISMATCH")
+        if request.environment.base_sha != package.base_sha:
+            raise ValueError("RUN_BASE_SHA_BINDING_MISMATCH")
+        if request.environment.expected_head != package.expected_head:
+            raise ValueError("RUN_EXPECTED_HEAD_BINDING_MISMATCH")
+        if request.authorization != package.authorization:
+            raise ValueError("RUN_AUTHORIZATION_BINDING_MISMATCH")
 
     def mind_submission(self, *, package: WorkspaceStatePackage, candidates: list[LearningCandidate]) -> MindCandidateSubmission:
         if any(c.project_id != package.project_id or c.task_id != package.task_id for c in candidates):

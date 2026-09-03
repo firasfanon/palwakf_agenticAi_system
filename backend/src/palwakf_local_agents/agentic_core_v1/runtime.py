@@ -51,7 +51,9 @@ class AgenticRuntime:
             raise AuthorityError("WRITE_REQUIRES_SEPARATE_AUTHORITY")
         if auth.allow_network_write or env.network_policy.write:
             raise AuthorityError("NETWORK_WRITE_DENIED")
-        if env.base_sha != self.source_commit_sha or env.expected_head != self.source_commit_sha:
+        # base_sha is the historical task base; expected_head is the currently
+        # authorized remote/worktree head and must match the runtime source.
+        if env.expected_head != self.source_commit_sha:
             raise AuthorityError("SOURCE_SHA_MISMATCH")
 
         agents = {a.agent_id: a for a in build_projection(self.project_root, self.source_commit_sha)}
