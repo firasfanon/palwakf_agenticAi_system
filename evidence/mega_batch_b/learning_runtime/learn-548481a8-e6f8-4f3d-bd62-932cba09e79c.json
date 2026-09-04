@@ -1,0 +1,17 @@
+{
+  "candidate_id": "learn-548481a8-e6f8-4f3d-bd62-932cba09e79c",
+  "project_id": "PALWAKF_LOCAL_AGENTS",
+  "task_id": "AGENTIC_LEARNING_MULTI_AGENT_AND_END_TO_END_INTEGRATION_V1",
+  "source_run_id": "run-d5de256a-eac4-4228-b2ee-fe4f6463217a",
+  "candidate_type": "PROJECT_LESSON",
+  "statement": "A governed read-only run completed under external authority with zero project mutation and evidence-backed evaluation.",
+  "rationale": "Derived from a PASS run and PASS evaluation; promotion remains external.",
+  "evidence_refs": [
+    {
+      "type": "RUN_RECEIPT_JSON",
+      "path": "C:\\Users\\DELL\\AppData\\Local\\Temp\\palwakf_agentic_ai_evidence\\run-d5de256a-eac4-4228-b2ee-fe4f6463217a.json"
+    }
+  ],
+  "promotion_status": "EXTERNAL_REVIEW_REQUIRED",
+  "created_at": "2026-08-31T20:21:15.515594+00:00"
+}

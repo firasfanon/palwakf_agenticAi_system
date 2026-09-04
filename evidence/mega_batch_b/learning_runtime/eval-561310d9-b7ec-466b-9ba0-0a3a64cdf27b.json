@@ -1,0 +1,15 @@
+{
+  "evaluation_id": "eval-561310d9-b7ec-466b-9ba0-0a3a64cdf27b",
+  "project_id": "PALWAKF_LOCAL_AGENTS",
+  "task_id": "AGENTIC_LEARNING_MULTI_AGENT_AND_END_TO_END_INTEGRATION_V1",
+  "run_id": "run-d5de256a-eac4-4228-b2ee-fe4f6463217a",
+  "evaluator": "PALWAKF_EVALUATION_ENGINE_V1",
+  "score": 1.0,
+  "passed": true,
+  "reasons": [
+    "RUN_RESULT_PASS",
+    "NO_PROJECT_MUTATION",
+    "NO_ERRORS"
+  ],
+  "created_at": "2026-08-31T20:21:15.513594+00:00"
+}

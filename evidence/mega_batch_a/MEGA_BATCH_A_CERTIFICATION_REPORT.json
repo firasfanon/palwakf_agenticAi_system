@@ -1,0 +1,98 @@
+{
+  "timestamp": "2026-08-31T19:10:37.630483+00:00",
+  "base_sha": "8c1280413ecc6d45a9991dcb059279be14c330e3",
+  "gates": {
+    "UNIFIED_AGENT_MODEL": "PASS",
+    "ROLE_RUNTIME_SKILL_TASK_MAPPING": "PASS",
+    "NATIVE_RUNTIME": "PASS",
+    "MODEL_PROVIDER_ABSTRACTION": "PASS",
+    "EXECUTION_PROVIDER_ABSTRACTION": "PASS",
+    "EXECUTION_ISOLATION": "PASS",
+    "RUN_RECEIPT": "PASS",
+    "NO_SELF_AUTHORIZATION": "PASS",
+    "NO_CROSS_PROJECT_LEAKAGE": "PASS",
+    "OLLAMA_CERTIFICATION": "PASS_FOR_READ_ONLY_DIAGNOSTIC",
+    "HERMES_DISCOVERY": "PASS",
+    "HERMES_READ_ONLY_CERTIFICATION": "PASS",
+    "HERMES_BOUNDED_WRITE_CERTIFICATION": "EXPLICITLY_DEFERRED_SEPARATE_AUTHORITY_REQUIRED"
+  },
+  "ollama_health": {
+    "provider_id": "ollama",
+    "healthy": true,
+    "models": [
+      "deepseek-v4-flash:cloud",
+      "gemma4:latest",
+      "glm-5.2:cloud",
+      "llama3.2:3b",
+      "qwen2.5:3b",
+      "kimi-k2.7-code:cloud"
+    ],
+    "capabilities": [
+      "generate",
+      "structured_output",
+      "health",
+      "list_models"
+    ],
+    "latency_ms": 32.72,
+    "locality": "LOCAL_ENDPOINT",
+    "privacy": "LOCAL_BY_ENDPOINT_POLICY"
+  },
+  "ollama_selected_model": "qwen2.5:3b",
+  "ollama_checks": {
+    "arabic": {
+      "pass": true,
+      "latency_ms": 1414.26,
+      "response_excerpt": "الاختبار المحلي نجاحاً مpredictedًا."
+    },
+    "english": {
+      "pass": true,
+      "latency_ms": 714.69,
+      "response_excerpt": "LOCAL_PROVIDER_OK"
+    },
+    "structured_json": {
+      "pass": true,
+      "latency_ms": 2714.56,
+      "response_excerpt": "{\n    \"status\": \"PASS\",\n    \"scope\": \"READ_ONLY_DIAGNOSTIC\"\n}"
+    },
+    "code_json": {
+      "pass": true,
+      "latency_ms": 1826.63,
+      "response_excerpt": "{\n  \"language\": \"Python\",\n  \"complexity\": 1\n}"
+    }
+  },
+  "hermes_health": {
+    "provider_id": "HERMES_AGENT",
+    "discovered": true,
+    "healthy": true,
+    "version_output": "Hermes Agent v0.20.5 (2026.8.19) آ· upstream d10ef89e آ· local f4df86fe (+20 carried commits)\nInstall directory: C:\\Users\\DELL\\AppData\\Local\\hermes\\hermes-agent\nInstall method: git\nPython: 3.11.16\nOpenAI SDK: 2.24.0\nUpdate available: 1141 commits behind â€” run 'hermes update'",
+    "certification": "DISCOVERED_NOT_YET_READ_ONLY_CERTIFIED",
+    "filesystem_policy": "DENY_UNTIL_CERTIFIED",
+    "network_policy": "DENY_UNTIL_CERTIFIED"
+  },
+  "hermes_read_only_evidence": {
+    "certification": "PASS",
+    "provider": "custom",
+    "endpoint": "http://127.0.0.1:11434/v1",
+    "model": "llama3.2:3b",
+    "model_context_length": 131072,
+    "reasoning_policy": "none",
+    "tool_surface": "vision_only",
+    "max_turns": 1,
+    "process_exit": 0,
+    "expected_response": true,
+    "tool_calls_zero": true,
+    "runtime_failure": false,
+    "head_unchanged": true,
+    "git_status_unchanged": true,
+    "git_diff_unchanged": true,
+    "project_files_unchanged": true,
+    "no_project_file_mutation": true,
+    "no_git_mutation": true,
+    "bounded_write_tested": false,
+    "bounded_write_status": "EXPLICITLY_DEFERRED_SEPARATE_AUTHORITY_REQUIRED",
+    "evidence_basis": "CONTROLLED_FINAL_COMBINED_READ_ONLY_GATE",
+    "recorded_utc": "2026-08-31T19:05:54.4531014Z"
+  },
+  "hermes_read_only_evidence_path": "C:\\Users\\DELL\\StudioProjects\\palwakf_agenticAi_system\\evidence\\mega_batch_a\\HERMES_READ_ONLY_CERTIFICATION.json",
+  "final_result": "PASS"
+}
