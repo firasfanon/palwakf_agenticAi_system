@@ -66,6 +66,7 @@ class AuthorizationEnvelope(BaseModel):
     allowed_task_classes: list[str]
     allowed_provider_ids: list[ProviderId]
     allowed_model_providers: list[str] = Field(default_factory=lambda: ["none", "ollama"])
+    allowed_tools: list[str] = Field(default_factory=list)
     allowed_filesystem_roots: list[str] = Field(default_factory=list)
     allowed_path_patterns: list[str] = Field(default_factory=lambda: ["**"])
     read_only: bool = True
@@ -115,6 +116,7 @@ class RunRequest(BaseModel):
     model_id: str | None = None
     skill_ids: list[str] = Field(default_factory=list)
     tools: list[str] = Field(default_factory=list)
+    required_output_sentinel: str | None = None
     authorization: AuthorizationEnvelope
     environment: ExecutionEnvironment
 
