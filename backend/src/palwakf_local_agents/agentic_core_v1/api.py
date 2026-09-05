@@ -8,6 +8,7 @@ from pydantic import BaseModel
 
 from .contracts import RunRequest
 from .external_contracts import WorkspaceStatePackage
+from .four_system_l4 import mount_four_system_l4_agentic
 from .intersystem_v1 import (
     AgenticIntegrationPilotResultV1,
     WorkspaceAuthorityPackageV1,
@@ -33,6 +34,12 @@ def mount_agentic_core_v1(app: FastAPI, *, project_root: Path, source_commit_sha
     ollama = OllamaProvider()
     native = NativeProvider()
     hermes = HermesProvider()
+    mount_four_system_l4_agentic(
+        app,
+        project_root=project_root,
+        source_commit_sha=source_commit_sha,
+        learning=learning,
+    )
 
     @app.get("/api/v1/agentic/health")
     def health() -> dict:
