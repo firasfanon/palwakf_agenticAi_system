@@ -56,6 +56,7 @@ def make_request() -> RunRequest:
         model_id="llama3.2:3b",
         skill_ids=[],
         tools=["read_file"],
+        required_output_sentinel="READ_ONLY_OK",
         authorization=AuthorizationEnvelope(
             authorization_id="AUTH-HERMES-ADAPTER-001",
             issuer="HUMAN_EXPLICIT",
@@ -445,7 +446,7 @@ def test_hermes_execution_passes_resolved_git_bash_into_child_env(monkeypatch):
         write_tool_state(Path(env["HERMES_HOME"]), "read_file")
         return SimpleNamespace(
             returncode=0,
-            stdout="PALWAKF_HERMES_READ_SMOKE_OK",
+            stdout="READ_ONLY_OK",
             stderr="",
         )
 
@@ -465,3 +466,69 @@ def test_hermes_execution_passes_resolved_git_bash_into_child_env(monkeypatch):
         result["evidence"][0]["git_bash_path"]
         == r"C:\PALWAKF_TEST\Git\bin\bash.exe"
     )
+
+
+
+def test_hermes_semantic_sentinel_missing_fails_closed(monkeypatch):
+    provider = HermesProvider()
+    monkeypatch.setattr(provider, "_executable", lambda: "hermes")
+    monkeypatch.setattr(
+        provider,
+        "_assert_certified_profile",
+        lambda exe: "Hermes Agent v0.20.5 local f4df86fe",
+    )
+    monkeypatch.setattr(
+        provider,
+        "_resolve_git_bash_path",
+        lambda: r"C:\PALWAKF_TEST\Git\bin\bash.exe",
+    )
+
+    def fake_run(command, *, cwd, env, capture_output, text, timeout, check):
+        write_tool_state(Path(env["HERMES_HOME"]), "read_file")
+        return SimpleNamespace(returncode=0, stdout="OBJECTIVE_FAILED", stderr="")
+
+    monkeypatch.setattr(
+        "palwakf_local_agents.agentic_core_v1.providers.subprocess.run",
+        fake_run,
+    )
+    result = provider.execute_read_only(project_root=root(), request=make_request())
+
+    assert result["successful"] is False
+    assert result["objective_success"] is False
+    assert result["semantic_verification_method"] == "OUTPUT_SENTINEL_EXACT_LINE"
+    assert any(
+        error["code"] == "HERMES_OBJECTIVE_SENTINEL_NOT_OBSERVED"
+        for error in result["errors"]
+    )
+
+
+def test_hermes_semantic_sentinel_exact_line_is_required(monkeypatch):
+    provider = HermesProvider()
+    monkeypatch.setattr(provider, "_executable", lambda: "hermes")
+    monkeypatch.setattr(
+        provider,
+        "_assert_certified_profile",
+        lambda exe: "Hermes Agent v0.20.5 local f4df86fe",
+    )
+    monkeypatch.setattr(
+        provider,
+        "_resolve_git_bash_path",
+        lambda: r"C:\PALWAKF_TEST\Git\bin\bash.exe",
+    )
+
+    def fake_run(command, *, cwd, env, capture_output, text, timeout, check):
+        write_tool_state(Path(env["HERMES_HOME"]), "read_file")
+        return SimpleNamespace(
+            returncode=0,
+            stdout="The expected token is READ_ONLY_OK but the objective failed.",
+            stderr="",
+        )
+
+    monkeypatch.setattr(
+        "palwakf_local_agents.agentic_core_v1.providers.subprocess.run",
+        fake_run,
+    )
+    result = provider.execute_read_only(project_root=root(), request=make_request())
+
+    assert result["successful"] is False
+    assert result["objective_success"] is False

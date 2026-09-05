@@ -462,6 +462,11 @@ class HermesProvider(ExecutionProvider):
         )
         files, bytes_seen = _authorized_files(project_root, request)
         timeout = request.environment.resource_budget.timeout_seconds
+        sentinel = (request.required_output_sentinel or "").strip()
+        if not sentinel:
+            raise RuntimeError("HERMES_SEMANTIC_SUCCESS_SENTINEL_REQUIRED")
+        if len(sentinel) > 128 or "\n" in sentinel or "\r" in sentinel:
+            raise RuntimeError("HERMES_SEMANTIC_SUCCESS_SENTINEL_INVALID")
 
         temp_root = Path(tempfile.mkdtemp(prefix="palwakf-hermes-adapter-"))
         result: dict[str, Any] | None = None
@@ -519,7 +524,10 @@ class HermesProvider(ExecutionProvider):
                 "Do not call write_file, patch, terminal, execute_code, web, browser, "
                 "git mutation, package installation, or any network tool. "
                 "Do not create, modify, rename, or delete files. "
-                f"Objective: {request.objective}"
+                f"Objective: {request.objective}. "
+                "Only after the objective succeeds, output the exact success sentinel "
+                f"on its own line: {sentinel}. "
+                "Never output the success sentinel when the objective fails."
             )
             env = self._sanitized_environment(
                 hermes_home=hermes_home,
@@ -565,12 +573,15 @@ class HermesProvider(ExecutionProvider):
             unexpected_tools = sorted(set(tool_names) - {"read_file"})
             read_file_required = "read_file" in request.tools
             read_file_observed = "read_file" in tool_names
+            stdout_lines = {line.strip() for line in stdout.splitlines() if line.strip()}
+            objective_success = sentinel in stdout_lines
             successful = (
                 return_code == 0
                 and not timed_out
                 and not changed
                 and not unexpected_tools
                 and (not read_file_required or read_file_observed)
+                and objective_success
             )
             errors: list[dict[str, Any]] = []
             if timed_out:
@@ -583,6 +594,8 @@ class HermesProvider(ExecutionProvider):
                 errors.append({"code": "HERMES_READ_ONLY_TOOL_POLICY_VIOLATION", "tools": unexpected_tools})
             if read_file_required and not read_file_observed:
                 errors.append({"code": "HERMES_REQUIRED_READ_FILE_NOT_OBSERVED"})
+            if not objective_success:
+                errors.append({"code": "HERMES_OBJECTIVE_SENTINEL_NOT_OBSERVED"})
 
             result = {
                 "provider_id": self.provider_id.value,
@@ -614,6 +627,8 @@ class HermesProvider(ExecutionProvider):
                 "tool_names": tool_names,
                 "unexpected_tools": unexpected_tools,
                 "read_file_observed": read_file_observed,
+                "objective_success": objective_success,
+                "semantic_verification_method": "OUTPUT_SENTINEL_EXACT_LINE",
                 "evidence": [{
                     "type": "HERMES_ADAPTER_EXECUTION_SUMMARY",
                     "return_code": return_code,
@@ -627,6 +642,9 @@ class HermesProvider(ExecutionProvider):
                     "file_tool_workspace_cwd": str(snapshot_root),
                     "git_bash_bridge": "PRESENT" if git_bash_path else "NOT_APPLICABLE",
                     "git_bash_path": git_bash_path,
+                    "objective_success": objective_success,
+                    "semantic_verification_method": "OUTPUT_SENTINEL_EXACT_LINE",
+                    "sentinel_sha256": hashlib.sha256(sentinel.encode("utf-8")).hexdigest(),
                 }],
             }
         finally:

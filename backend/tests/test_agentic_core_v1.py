@@ -124,6 +124,8 @@ class FakeHermesProvider(ExecutionProvider):
             "errors": [],
             "changed_files": [],
             "snapshot_changed_files": [],
+            "objective_success": True,
+            "semantic_verification_method": "OUTPUT_SENTINEL_EXACT_LINE",
             "evidence": [{"type": "HERMES_ADAPTER_EXECUTION_SUMMARY", "return_code": 0}],
         }
 
@@ -134,6 +136,7 @@ def make_hermes_request() -> RunRequest:
     req.provider_mode = "READ_ONLY_DIAGNOSTIC"
     req.model_provider = "ollama"
     req.model_id = "llama3.2:3b"
+    req.required_output_sentinel = "READ_ONLY_OK"
     req.tools = ["read_file"]
     req.environment.tool_policy = ["read_file"]
     req.authorization.allowed_provider_ids = [ProviderId.HERMES]
@@ -255,3 +258,73 @@ def test_hermes_certification_only_allows_read_file(monkeypatch):
     ):
         runtime.execute(req)
     assert fake.calls == 0
+
+
+
+def test_native_request_tool_must_be_in_agent_declared_bindings():
+    req = make_request()
+    req.tools = ["read_file"]
+    req.environment.tool_policy = ["read_file"]
+    req.authorization.allowed_tools = ["read_file"]
+    with pytest.raises(AuthorityError, match="AGENT_TOOL_NOT_ADMITTED"):
+        AgenticRuntime(root(), BASE).execute(req)
+
+
+def test_hermes_certification_requires_semantic_sentinel(monkeypatch):
+    fake = FakeHermesProvider()
+    req = make_hermes_request()
+    req.required_output_sentinel = None
+    monkeypatch.setenv(
+        "PALWAKF_HERMES_CERTIFICATION_AUTHORIZATION_ID",
+        req.authorization.authorization_id,
+    )
+    runtime = AgenticRuntime(
+        root(),
+        BASE,
+        execution_providers={ProviderId.HERMES: fake, ProviderId.NATIVE: NativeProvider()},
+    )
+    with pytest.raises(
+        AuthorityError,
+        match="HERMES_CERTIFICATION_SEMANTIC_SENTINEL_REQUIRED",
+    ):
+        runtime.execute(req)
+    assert fake.calls == 0
+
+
+def test_runtime_rejects_provider_structural_pass_without_objective_success(monkeypatch):
+    fake = FakeHermesProvider()
+    req = make_hermes_request()
+    monkeypatch.setenv(
+        "PALWAKF_HERMES_CERTIFICATION_AUTHORIZATION_ID",
+        req.authorization.authorization_id,
+    )
+
+    def structural_only(*, project_root, request):
+        fake.calls += 1
+        return {
+            "provider_id": ProviderId.HERMES.value,
+            "successful": True,
+            "action_type": "HERMES_READ_ONLY_EXECUTION",
+            "return_code": 0,
+            "timed_out": False,
+            "changed_files": [],
+            "snapshot_changed_files": [],
+            "tool_names": ["read_file"],
+            "unexpected_tools": [],
+            "read_file_observed": True,
+            "errors": [],
+            "evidence": [],
+        }
+
+    fake.execute_read_only = structural_only
+    receipt = AgenticRuntime(
+        root(),
+        BASE,
+        execution_providers={ProviderId.HERMES: fake, ProviderId.NATIVE: NativeProvider()},
+    ).execute(req)
+
+    assert receipt.final_result == "FAIL_CLOSED"
+    assert any(
+        error["code"] == "HERMES_OBJECTIVE_SUCCESS_NOT_VERIFIED"
+        for error in receipt.errors
+    )

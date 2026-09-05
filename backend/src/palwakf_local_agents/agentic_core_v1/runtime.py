@@ -108,6 +108,7 @@ class AgenticRuntime:
             raise AuthorityError("SKILL_SCOPE_EXPANSION_DENIED")
         if request.provider_id not in agent.execution_provider_policy:
             raise AuthorityError("AGENT_PROVIDER_NOT_ALLOWED")
+        agent_admitted_tools = set(agent.tool_bindings)
 
         worktree = Path(env.worktree).resolve()
         if worktree != self.project_root:
@@ -138,11 +139,18 @@ class AgenticRuntime:
                 raise AuthorityError("HERMES_CERTIFICATION_TOOL_POLICY_MUST_BE_READ_FILE_ONLY")
             if auth.allowed_tools != ["read_file"]:
                 raise AuthorityError("HERMES_CERTIFICATION_AUTHORIZED_TOOLS_MUST_BE_READ_FILE_ONLY")
+            sentinel = (request.required_output_sentinel or "").strip()
+            if not sentinel:
+                raise AuthorityError("HERMES_CERTIFICATION_SEMANTIC_SENTINEL_REQUIRED")
+            agent_admitted_tools = {"read_file"}
+
+        if not set(request.tools).issubset(agent_admitted_tools):
+            raise AuthorityError("AGENT_TOOL_NOT_ADMITTED")
 
         return agent
 
     def execute(self, request: RunRequest) -> RunReceipt:
-        self._validate(request)
+        selected_agent = self._validate(request)
         provider = self.execution_providers.get(request.provider_id)
         if provider is None:
             raise AuthorityError("EXECUTION_PROVIDER_NOT_REGISTERED")
@@ -164,11 +172,17 @@ class AgenticRuntime:
             }
 
         successful = bool(provider_result.get("successful"))
+        if request.provider_id == ProviderId.HERMES and provider_result.get("objective_success") is not True:
+            successful = False
+            provider_result.setdefault("errors", []).append({
+                "code": "HERMES_OBJECTIVE_SUCCESS_NOT_VERIFIED"
+            })
+
         action: dict[str, Any] = {
             "type": provider_result.get("action_type", "EXECUTION_PROVIDER_RESULT"),
             "provider_id": request.provider_id.value,
         }
-        for key in ("files", "bytes", "latency_ms", "return_code", "timed_out", "snapshot_changed_files", "tool_names", "unexpected_tools", "read_file_observed"):
+        for key in ("files", "bytes", "latency_ms", "return_code", "timed_out", "snapshot_changed_files", "tool_names", "unexpected_tools", "read_file_observed", "objective_success", "semantic_verification_method"):
             if key in provider_result:
                 action[key] = provider_result[key]
 
@@ -181,6 +195,7 @@ class AgenticRuntime:
                 if request.provider_id == ProviderId.HERMES
                 else "run_bounded_read_only_diagnostic"
             ),
+            "verify_objective_success",
             "emit_receipt",
         ]
 
@@ -190,6 +205,9 @@ class AgenticRuntime:
                 "hermes_operational_write_admission": "CLOSED_SEPARATE_GATE_REQUIRED",
                 "source_workspace_mode": "DISPOSABLE_SNAPSHOT",
                 "hermes_execution_admission": "CERTIFICATION_ONLY_NON_OPERATIONAL",
+                "agent_tool_admission": "CERTIFICATION_ONLY_RUN_BOUND_OVERLAY",
+                "agent_declared_tool_bindings": selected_agent.tool_bindings,
+                "certification_admitted_tools": ["read_file"],
             })
             if provider_result.get("stdout"):
                 observations.append({"hermes_stdout": provider_result["stdout"]})

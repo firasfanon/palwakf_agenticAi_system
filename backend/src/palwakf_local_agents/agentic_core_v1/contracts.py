@@ -116,6 +116,7 @@ class RunRequest(BaseModel):
     model_id: str | None = None
     skill_ids: list[str] = Field(default_factory=list)
     tools: list[str] = Field(default_factory=list)
+    required_output_sentinel: str | None = None
     authorization: AuthorizationEnvelope
     environment: ExecutionEnvironment
 
