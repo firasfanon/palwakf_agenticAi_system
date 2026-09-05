@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+import subprocess
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -31,6 +33,26 @@ from palwakf_local_agents.controlled_software_development_pipeline_v1 import ins
 from palwakf_local_agents.governed_coding_model_provider_v1 import install_governed_coding_model_provider_v1
 
 
+def _resolve_agentic_source_commit_sha(project_root: Path) -> str:
+    explicit = (os.getenv("PALWAKF_AGENTIC_SOURCE_COMMIT_SHA") or "").strip()
+    if explicit:
+        return explicit
+    try:
+        process = subprocess.run(
+            ["git", "-C", str(project_root), "rev-parse", "HEAD"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
+        )
+        candidate = process.stdout.strip()
+        if process.returncode == 0 and len(candidate) == 40:
+            return candidate
+    except Exception:
+        pass
+    return "UNKNOWN_SOURCE_SHA_FAIL_CLOSED"
+
+
 def create_app(project_root: Path | None = None) -> FastAPI:
     app = FastAPI(title="PalWakf Local Agent Console", version="0.1.0", docs_url="/docs", redoc_url=None)
     install_quality_planner_binding(app)
@@ -46,7 +68,11 @@ def create_app(project_root: Path | None = None) -> FastAPI:
     mount_project_reader(app, project_root=resolved_project_root)
     mount_backend_frontend_alignment(app, project_root=resolved_project_root)
     mount_operational_core_v1(app, project_root=resolved_project_root)
-    mount_agentic_core_v1(app, project_root=resolved_project_root, source_commit_sha="8c1280413ecc6d45a9991dcb059279be14c330e3")
+    mount_agentic_core_v1(
+        app,
+        project_root=resolved_project_root,
+        source_commit_sha=_resolve_agentic_source_commit_sha(resolved_project_root),
+    )
 
     react_console_dist = resolved_project_root / "frontend" / "dist"
     react_console_index = react_console_dist / "index.html"

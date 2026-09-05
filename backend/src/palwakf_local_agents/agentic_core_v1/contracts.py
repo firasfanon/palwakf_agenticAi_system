@@ -66,6 +66,7 @@ class AuthorizationEnvelope(BaseModel):
     allowed_task_classes: list[str]
     allowed_provider_ids: list[ProviderId]
     allowed_model_providers: list[str] = Field(default_factory=lambda: ["none", "ollama"])
+    allowed_tools: list[str] = Field(default_factory=list)
     allowed_filesystem_roots: list[str] = Field(default_factory=list)
     allowed_path_patterns: list[str] = Field(default_factory=lambda: ["**"])
     read_only: bool = True
