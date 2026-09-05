@@ -205,7 +205,62 @@ class HermesProvider(ExecutionProvider):
         return output[:1000]
 
     @staticmethod
-    def _sanitized_environment(*, hermes_home: Path, snapshot_root: Path) -> dict[str, str]:
+    def _resolve_git_bash_path() -> str | None:
+        """Resolve Hermes' Windows Git Bash dependency before env isolation.
+
+        The adapter intentionally replaces LOCALAPPDATA/HOME for the child process.
+        On native Windows, Hermes discovers its installer-managed Git Bash through
+        the host LOCALAPPDATA (or HERMES_GIT_BASH_PATH). Resolve that dependency
+        before isolation and pass only the executable path into the sanitized env.
+        """
+        if os.name != "nt":
+            return None
+
+        candidates: list[Path] = []
+        custom = os.environ.get("HERMES_GIT_BASH_PATH")
+        if custom:
+            candidates.append(Path(custom))
+
+        local_appdata = os.environ.get("LOCALAPPDATA")
+        if local_appdata:
+            root = Path(local_appdata)
+            candidates.extend([
+                root / "hermes" / "git" / "bin" / "bash.exe",
+                root / "hermes" / "git" / "usr" / "bin" / "bash.exe",
+                root / "Programs" / "Git" / "bin" / "bash.exe",
+            ])
+
+        program_files = os.environ.get("ProgramFiles")
+        if program_files:
+            candidates.append(Path(program_files) / "Git" / "bin" / "bash.exe")
+        program_files_x86 = os.environ.get("ProgramFiles(x86)")
+        if program_files_x86:
+            candidates.append(Path(program_files_x86) / "Git" / "bin" / "bash.exe")
+
+        for candidate in candidates:
+            try:
+                if candidate.is_file():
+                    return str(candidate.resolve())
+            except OSError:
+                continue
+
+        found = shutil.which("bash")
+        if found:
+            candidate = Path(found)
+            try:
+                if candidate.is_file():
+                    return str(candidate.resolve())
+            except OSError:
+                pass
+        return None
+
+    @staticmethod
+    def _sanitized_environment(
+        *,
+        hermes_home: Path,
+        snapshot_root: Path,
+        git_bash_path: str | None = None,
+    ) -> dict[str, str]:
         safe_passthrough = (
             "PATH",
             "PATHEXT",
@@ -237,6 +292,8 @@ class HermesProvider(ExecutionProvider):
             "LOCALAPPDATA": str(localappdata),
             "PYTHONIOENCODING": "utf-8",
         })
+        if git_bash_path:
+            env["HERMES_GIT_BASH_PATH"] = git_bash_path
         drive, tail = os.path.splitdrive(str(hermes_home))
         if drive:
             env["HOMEDRIVE"] = drive
@@ -396,6 +453,9 @@ class HermesProvider(ExecutionProvider):
         if not exe:
             raise RuntimeError("HERMES_COMMAND_NOT_DISCOVERED")
         certified_version = self._assert_certified_profile(exe)
+        git_bash_path = self._resolve_git_bash_path()
+        if os.name == "nt" and not git_bash_path:
+            raise RuntimeError("HERMES_GIT_BASH_NOT_DISCOVERED_IN_HOST_ENVIRONMENT")
 
         ollama_endpoint = self._assert_loopback_ollama(
             os.getenv("PALWAKF_OLLAMA_ENDPOINT") or "http://127.0.0.1:11434"
@@ -464,6 +524,7 @@ class HermesProvider(ExecutionProvider):
             env = self._sanitized_environment(
                 hermes_home=hermes_home,
                 snapshot_root=snapshot_root,
+                git_bash_path=git_bash_path,
             )
 
             command = [
@@ -544,6 +605,8 @@ class HermesProvider(ExecutionProvider):
                     "certified_hermes_profile": certified_version,
                     "provider_process_cwd": str(hermes_home),
                     "file_tool_workspace_cwd": str(snapshot_root),
+                    "git_bash_bridge": "PRESENT" if git_bash_path else "NOT_APPLICABLE",
+                    "git_bash_path": git_bash_path,
                 }],
                 "errors": errors,
                 "changed_files": [],
@@ -562,6 +625,8 @@ class HermesProvider(ExecutionProvider):
                     "environment_keys": sorted(env.keys()),
                     "provider_process_cwd": str(hermes_home),
                     "file_tool_workspace_cwd": str(snapshot_root),
+                    "git_bash_bridge": "PRESENT" if git_bash_path else "NOT_APPLICABLE",
+                    "git_bash_path": git_bash_path,
                 }],
             }
         finally:

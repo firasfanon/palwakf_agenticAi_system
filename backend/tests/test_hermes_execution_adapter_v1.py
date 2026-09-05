@@ -406,3 +406,62 @@ def test_provider_process_runtime_residue_is_not_snapshot_mutation(monkeypatch):
         error["code"] == "HERMES_READ_ONLY_SNAPSHOT_MUTATION_DETECTED"
         for error in result["errors"]
     )
+
+
+
+def test_hermes_sanitized_environment_preserves_explicit_git_bash_bridge(tmp_path):
+    hermes_home = tmp_path / "hermes-home"
+    snapshot = tmp_path / "workspace"
+    hermes_home.mkdir()
+    snapshot.mkdir()
+
+    env = HermesProvider._sanitized_environment(
+        hermes_home=hermes_home,
+        snapshot_root=snapshot,
+        git_bash_path=r"C:\PALWAKF_TEST\Git\bin\bash.exe",
+    )
+
+    assert env["HERMES_GIT_BASH_PATH"] == r"C:\PALWAKF_TEST\Git\bin\bash.exe"
+    assert env["LOCALAPPDATA"] != str(Path(r"C:\Users\DELL\AppData\Local"))
+
+
+def test_hermes_execution_passes_resolved_git_bash_into_child_env(monkeypatch):
+    provider = HermesProvider()
+    monkeypatch.setattr(provider, "_executable", lambda: "hermes")
+    monkeypatch.setattr(
+        provider,
+        "_assert_certified_profile",
+        lambda exe: "Hermes Agent v0.20.5 local f4df86fe",
+    )
+    monkeypatch.setattr(
+        provider,
+        "_resolve_git_bash_path",
+        lambda: r"C:\PALWAKF_TEST\Git\bin\bash.exe",
+    )
+    observed = {}
+
+    def fake_run(command, *, cwd, env, capture_output, text, timeout, check):
+        observed["env"] = dict(env)
+        write_tool_state(Path(env["HERMES_HOME"]), "read_file")
+        return SimpleNamespace(
+            returncode=0,
+            stdout="PALWAKF_HERMES_READ_SMOKE_OK",
+            stderr="",
+        )
+
+    monkeypatch.setattr(
+        "palwakf_local_agents.agentic_core_v1.providers.subprocess.run",
+        fake_run,
+    )
+    result = provider.execute_read_only(project_root=root(), request=make_request())
+
+    assert result["successful"] is True
+    assert (
+        observed["env"]["HERMES_GIT_BASH_PATH"]
+        == r"C:\PALWAKF_TEST\Git\bin\bash.exe"
+    )
+    assert result["observations"][0]["git_bash_bridge"] == "PRESENT"
+    assert (
+        result["evidence"][0]["git_bash_path"]
+        == r"C:\PALWAKF_TEST\Git\bin\bash.exe"
+    )
