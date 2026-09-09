@@ -28,18 +28,32 @@ class AgenticRuntime:
         project_root: Path,
         source_commit_sha: str,
         execution_providers: dict[ProviderId, ExecutionProvider] | None = None,
+        *,
+        target_project_root: Path | None = None,
+        target_expected_head: str | None = None,
     ):
+        # Runtime source identity remains independent from the project being
+        # operated on. Agent registry/projection is resolved from this source.
         self.project_root = project_root.resolve()
         self.source_commit_sha = source_commit_sha
+
+        # The execution target may be another governed project. Same-project
+        # operation remains the backward-compatible default.
+        self.target_project_root = (target_project_root or project_root).resolve()
+        self.target_expected_head = target_expected_head or source_commit_sha
+
         self.receipts: dict[str, RunReceipt] = {}
         self.execution_providers = execution_providers or {
             ProviderId.NATIVE: NativeProvider(),
             ProviderId.HERMES: HermesProvider(),
         }
-        self.evidence_root = Path(os.getenv(
-            "PALWAKF_AGENTIC_EVIDENCE_ROOT",
-            str(Path(tempfile.gettempdir()) / "palwakf_agentic_ai_evidence"),
-        ))
+
+        self.evidence_root = Path(
+            os.getenv(
+                "PALWAKF_AGENTIC_EVIDENCE_ROOT",
+                str(Path(tempfile.gettempdir()) / "palwakf_agentic_ai_evidence"),
+            )
+        )
         self.evidence_root.mkdir(parents=True, exist_ok=True)
 
     def _validate(self, request: RunRequest):
@@ -72,6 +86,7 @@ class AgenticRuntime:
             raise AuthorityError("WRITE_REQUIRES_SEPARATE_AUTHORITY")
         if auth.allow_network_write or env.network_policy.write:
             raise AuthorityError("NETWORK_WRITE_DENIED")
+
         if env.filesystem_policy.allowed_patterns != auth.allowed_path_patterns:
             raise AuthorityError("FILESYSTEM_PATTERN_AUTHORITY_MISMATCH")
         if not env.filesystem_policy.allowed_patterns:
@@ -85,16 +100,28 @@ class AgenticRuntime:
             os.path.normcase(str(Path(root).resolve()))
             for root in env.filesystem_policy.allowed_roots
         )
+
         if not auth_roots or not env_roots:
             raise AuthorityError("FILESYSTEM_ROOT_REQUIRED")
         if auth_roots != env_roots:
             raise AuthorityError("FILESYSTEM_ROOT_AUTHORITY_MISMATCH")
-        # base_sha is the historical task base; expected_head is the currently
-        # authorized remote/worktree head and must match the runtime source.
-        if env.expected_head != self.source_commit_sha:
+
+        # base_sha remains historical task provenance. expected_head belongs to
+        # the independently governed execution target, not necessarily to the
+        # Agentic runtime source repository.
+        if env.expected_head != self.target_expected_head:
             raise AuthorityError("SOURCE_SHA_MISMATCH")
 
-        agents = {a.agent_id: a for a in build_projection(self.project_root, self.source_commit_sha)}
+        # Agents and their declared capabilities remain sourced from the
+        # Agentic runtime itself.
+        agents = {
+            agent.agent_id: agent
+            for agent in build_projection(
+                self.project_root,
+                self.source_commit_sha,
+            )
+        }
+
         agent = agents.get(request.agent_id)
         if agent is None:
             raise AuthorityError("AGENT_NOT_REGISTERED")
@@ -108,21 +135,32 @@ class AgenticRuntime:
             raise AuthorityError("SKILL_SCOPE_EXPANSION_DENIED")
         if request.provider_id not in agent.execution_provider_policy:
             raise AuthorityError("AGENT_PROVIDER_NOT_ALLOWED")
+
         agent_admitted_tools = set(agent.tool_bindings)
 
+        # Worktree and authority roots belong to the execution target.
         worktree = Path(env.worktree).resolve()
-        if worktree != self.project_root:
+        if worktree != self.target_project_root:
             raise AuthorityError("WORKTREE_MISMATCH")
+
         for root in auth.allowed_filesystem_roots:
-            rp = Path(root).resolve()
-            if rp != self.project_root and not _is_within(rp, self.project_root):
+            resolved_root = Path(root).resolve()
+            if (
+                resolved_root != self.target_project_root
+                and not _is_within(
+                    resolved_root,
+                    self.target_project_root,
+                )
+            ):
                 raise AuthorityError("AUTHORIZED_ROOT_OUTSIDE_PROJECT")
 
         if request.provider_id == ProviderId.HERMES:
             if request.provider_mode != "READ_ONLY_DIAGNOSTIC":
                 raise AuthorityError("HERMES_ADAPTER_MODE_NOT_ADMITTED")
+
             if request.model_provider != "ollama" or not request.model_id:
                 raise AuthorityError("HERMES_ADAPTER_REQUIRES_OLLAMA_MODEL")
+
             if env.network_policy.read:
                 raise AuthorityError("HERMES_TOOL_NETWORK_READ_DENIED")
 
@@ -130,18 +168,32 @@ class AgenticRuntime:
                 "PALWAKF_HERMES_CERTIFICATION_AUTHORIZATION_ID",
                 "",
             )
+
             if (
                 auth.issuer != "HUMAN_EXPLICIT"
                 or certification_authorization_id != auth.authorization_id
             ):
                 raise AuthorityError("HERMES_OPERATIONAL_ADMISSION_CLOSED")
-            if request.tools != ["read_file"] or env.tool_policy != ["read_file"]:
-                raise AuthorityError("HERMES_CERTIFICATION_TOOL_POLICY_MUST_BE_READ_FILE_ONLY")
+
+            if (
+                request.tools != ["read_file"]
+                or env.tool_policy != ["read_file"]
+            ):
+                raise AuthorityError(
+                    "HERMES_CERTIFICATION_TOOL_POLICY_MUST_BE_READ_FILE_ONLY"
+                )
+
             if auth.allowed_tools != ["read_file"]:
-                raise AuthorityError("HERMES_CERTIFICATION_AUTHORIZED_TOOLS_MUST_BE_READ_FILE_ONLY")
+                raise AuthorityError(
+                    "HERMES_CERTIFICATION_AUTHORIZED_TOOLS_MUST_BE_READ_FILE_ONLY"
+                )
+
             sentinel = (request.required_output_sentinel or "").strip()
             if not sentinel:
-                raise AuthorityError("HERMES_CERTIFICATION_SEMANTIC_SENTINEL_REQUIRED")
+                raise AuthorityError(
+                    "HERMES_CERTIFICATION_SEMANTIC_SENTINEL_REQUIRED"
+                )
+
             agent_admitted_tools = {"read_file"}
 
         if not set(request.tools).issubset(agent_admitted_tools):
@@ -151,13 +203,15 @@ class AgenticRuntime:
 
     def execute(self, request: RunRequest) -> RunReceipt:
         selected_agent = self._validate(request)
+
         provider = self.execution_providers.get(request.provider_id)
         if provider is None:
             raise AuthorityError("EXECUTION_PROVIDER_NOT_REGISTERED")
 
         try:
+            # Provider execution is bound to the governed target project.
             provider_result = provider.execute_read_only(
-                project_root=self.project_root,
+                project_root=self.target_project_root,
                 request=request,
             )
         except Exception as error:
@@ -166,23 +220,50 @@ class AgenticRuntime:
                 "successful": False,
                 "action_type": "EXECUTION_PROVIDER_FAILURE",
                 "observations": [{"objective": request.objective}],
-                "errors": [{"code": str(error), "type": type(error).__name__}],
+                "errors": [
+                    {
+                        "code": str(error),
+                        "type": type(error).__name__,
+                    }
+                ],
                 "changed_files": [],
                 "evidence": [],
             }
 
         successful = bool(provider_result.get("successful"))
-        if request.provider_id == ProviderId.HERMES and provider_result.get("objective_success") is not True:
+
+        if (
+            request.provider_id == ProviderId.HERMES
+            and provider_result.get("objective_success") is not True
+        ):
             successful = False
-            provider_result.setdefault("errors", []).append({
-                "code": "HERMES_OBJECTIVE_SUCCESS_NOT_VERIFIED"
-            })
+            provider_result.setdefault("errors", []).append(
+                {
+                    "code": "HERMES_OBJECTIVE_SUCCESS_NOT_VERIFIED"
+                }
+            )
 
         action: dict[str, Any] = {
-            "type": provider_result.get("action_type", "EXECUTION_PROVIDER_RESULT"),
+            "type": provider_result.get(
+                "action_type",
+                "EXECUTION_PROVIDER_RESULT",
+            ),
             "provider_id": request.provider_id.value,
         }
-        for key in ("files", "bytes", "latency_ms", "return_code", "timed_out", "snapshot_changed_files", "tool_names", "unexpected_tools", "read_file_observed", "objective_success", "semantic_verification_method"):
+
+        for key in (
+            "files",
+            "bytes",
+            "latency_ms",
+            "return_code",
+            "timed_out",
+            "snapshot_changed_files",
+            "tool_names",
+            "unexpected_tools",
+            "read_file_observed",
+            "objective_success",
+            "semantic_verification_method",
+        ):
             if key in provider_result:
                 action[key] = provider_result[key]
 
@@ -199,20 +280,43 @@ class AgenticRuntime:
             "emit_receipt",
         ]
 
-        observations = list(provider_result.get("observations") or [])
+        observations = list(
+            provider_result.get("observations") or []
+        )
+
         if request.provider_id == ProviderId.HERMES:
-            observations.append({
-                "hermes_operational_write_admission": "CLOSED_SEPARATE_GATE_REQUIRED",
-                "source_workspace_mode": "DISPOSABLE_SNAPSHOT",
-                "hermes_execution_admission": "CERTIFICATION_ONLY_NON_OPERATIONAL",
-                "agent_tool_admission": "CERTIFICATION_ONLY_RUN_BOUND_OVERLAY",
-                "agent_declared_tool_bindings": selected_agent.tool_bindings,
-                "certification_admitted_tools": ["read_file"],
-            })
+            observations.append(
+                {
+                    "hermes_operational_write_admission":
+                        "CLOSED_SEPARATE_GATE_REQUIRED",
+                    "source_workspace_mode":
+                        "DISPOSABLE_SNAPSHOT",
+                    "hermes_execution_admission":
+                        "CERTIFICATION_ONLY_NON_OPERATIONAL",
+                    "agent_tool_admission":
+                        "CERTIFICATION_ONLY_RUN_BOUND_OVERLAY",
+                    "agent_declared_tool_bindings":
+                        selected_agent.tool_bindings,
+                    "certification_admitted_tools":
+                        ["read_file"],
+                }
+            )
+
             if provider_result.get("stdout"):
-                observations.append({"hermes_stdout": provider_result["stdout"]})
+                observations.append(
+                    {
+                        "hermes_stdout":
+                            provider_result["stdout"]
+                    }
+                )
+
             if provider_result.get("stderr"):
-                observations.append({"hermes_stderr": provider_result["stderr"]})
+                observations.append(
+                    {
+                        "hermes_stderr":
+                            provider_result["stderr"]
+                    }
+                )
 
         receipt = RunReceipt(
             project_id=request.project_id,
@@ -229,20 +333,44 @@ class AgenticRuntime:
             environment=request.environment.model_dump(),
             base_sha=request.environment.base_sha,
             before_head=request.environment.expected_head,
-            authorized_scope=request.authorization.model_dump(mode="json"),
+            authorized_scope=request.authorization.model_dump(
+                mode="json"
+            ),
             plan=plan,
             actions=[action],
             observations=observations,
-            changed_files=list(provider_result.get("changed_files") or []),
+            changed_files=list(
+                provider_result.get("changed_files") or []
+            ),
             tests=[],
             errors=list(provider_result.get("errors") or []),
             retries=0,
             evidence=list(provider_result.get("evidence") or []),
-            final_result="PASS" if successful else "FAIL_CLOSED",
+            final_result=(
+                "PASS"
+                if successful
+                else "FAIL_CLOSED"
+            ),
             next_action="EXTERNAL_REVIEW_REQUIRED",
         )
+
         self.receipts[receipt.run_id] = receipt
-        p = self.evidence_root / f"{receipt.run_id}.json"
-        receipt.evidence.append({"type": "RUN_RECEIPT_JSON", "path": str(p)})
-        p.write_text(receipt.model_dump_json(indent=2), encoding="utf-8")
+
+        receipt_path = (
+            self.evidence_root /
+            f"{receipt.run_id}.json"
+        )
+
+        receipt.evidence.append(
+            {
+                "type": "RUN_RECEIPT_JSON",
+                "path": str(receipt_path),
+            }
+        )
+
+        receipt_path.write_text(
+            receipt.model_dump_json(indent=2),
+            encoding="utf-8",
+        )
+
         return receipt

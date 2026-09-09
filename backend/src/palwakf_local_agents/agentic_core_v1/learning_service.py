@@ -11,8 +11,20 @@ from .runtime import AgenticRuntime
 
 
 class AgenticLearningService:
-    def __init__(self, *, project_root: Path, source_commit_sha: str):
-        self.runtime = AgenticRuntime(project_root, source_commit_sha)
+    def __init__(
+        self,
+        *,
+        project_root: Path,
+        source_commit_sha: str,
+        target_project_root: Path | None = None,
+        target_expected_head: str | None = None,
+    ):
+        self.runtime = AgenticRuntime(
+            project_root,
+            source_commit_sha,
+            target_project_root=target_project_root,
+            target_expected_head=target_expected_head,
+        )
         self.store = ExperienceStore()
         self.evaluator = EvaluationEngine()
         self.learner = LearningEngine()
