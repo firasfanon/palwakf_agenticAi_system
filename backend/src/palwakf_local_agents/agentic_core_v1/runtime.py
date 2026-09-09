@@ -22,9 +22,18 @@ def _is_within(path: Path, root: Path) -> bool:
 
 
 class AgenticRuntime:
-    def __init__(self, project_root: Path, source_commit_sha: str):
+    def __init__(
+        self,
+        project_root: Path,
+        source_commit_sha: str,
+        *,
+        target_project_root: Path | None = None,
+        target_expected_head: str | None = None,
+    ):
         self.project_root = project_root.resolve()
         self.source_commit_sha = source_commit_sha
+        self.target_project_root = (target_project_root or project_root).resolve()
+        self.target_expected_head = target_expected_head or source_commit_sha
         self.receipts: dict[str, RunReceipt] = {}
         self.evidence_root = Path(os.getenv(
             "PALWAKF_AGENTIC_EVIDENCE_ROOT",
@@ -56,9 +65,9 @@ class AgenticRuntime:
             raise AuthorityError("FILESYSTEM_PATTERN_AUTHORITY_MISMATCH")
         if not env.filesystem_policy.allowed_patterns:
             raise AuthorityError("FILESYSTEM_PATTERN_REQUIRED")
-        # base_sha is the historical task base; expected_head is the currently
-        # authorized remote/worktree head and must match the runtime source.
-        if env.expected_head != self.source_commit_sha:
+        # base_sha is the historical task base. expected_head belongs to the
+        # independently bound target project, not to the Agentic runtime source.
+        if env.expected_head != self.target_expected_head:
             raise AuthorityError("SOURCE_SHA_MISMATCH")
 
         agents = {a.agent_id: a for a in build_projection(self.project_root, self.source_commit_sha)}
@@ -75,11 +84,11 @@ class AgenticRuntime:
             raise AuthorityError("SKILL_SCOPE_EXPANSION_DENIED")
 
         worktree = Path(env.worktree).resolve()
-        if worktree != self.project_root:
+        if worktree != self.target_project_root:
             raise AuthorityError("WORKTREE_MISMATCH")
         for root in auth.allowed_filesystem_roots:
             rp = Path(root).resolve()
-            if rp != self.project_root and not _is_within(rp, self.project_root):
+            if rp != self.target_project_root and not _is_within(rp, self.target_project_root):
                 raise AuthorityError("AUTHORIZED_ROOT_OUTSIDE_PROJECT")
         return agent
 
@@ -92,7 +101,7 @@ class AgenticRuntime:
         manifest = []
         bytes_seen = 0
         patterns = request.environment.filesystem_policy.allowed_patterns
-        for path in self.project_root.rglob("*"):
+        for path in self.target_project_root.rglob("*"):
             if len(manifest) >= budget.max_files:
                 break
             if (
@@ -101,7 +110,7 @@ class AgenticRuntime:
                 or not path.is_file()
             ):
                 continue
-            relative = path.relative_to(self.project_root).as_posix()
+            relative = path.relative_to(self.target_project_root).as_posix()
             if not any(fnmatch.fnmatchcase(relative, pattern) for pattern in patterns):
                 continue
             size = path.stat().st_size
