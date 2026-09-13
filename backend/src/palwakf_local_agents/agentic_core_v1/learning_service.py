@@ -8,6 +8,7 @@ from .external_contracts import ExternalContractAdapter, WorkspaceStatePackage
 from .learning import EvaluationEngine, ExperienceRecord, ExperienceStore, LearningEngine
 from .orchestration import MultiAgentOrchestrator
 from .runtime import AgenticRuntime
+from .pre_l5_enforcement import PreL5ExecutionGuard
 
 
 class AgenticLearningService:
@@ -18,6 +19,7 @@ class AgenticLearningService:
         source_commit_sha: str,
         target_project_root: Path | None = None,
         target_expected_head: str | None = None,
+        pre_l5_guard: PreL5ExecutionGuard | None = None,
     ):
         self.runtime = AgenticRuntime(
             project_root,
@@ -25,6 +27,7 @@ class AgenticLearningService:
             target_project_root=target_project_root,
             target_expected_head=target_expected_head,
         )
+        self.pre_l5_guard = pre_l5_guard
         self.store = ExperienceStore()
         self.evaluator = EvaluationEngine()
         self.learner = LearningEngine()
@@ -34,7 +37,15 @@ class AgenticLearningService:
     def execute_and_learn(self, *, package: WorkspaceStatePackage, request: RunRequest) -> dict[str, Any]:
         self.external.validate_workspace_package(package)
         self.external.validate_run_binding(package=package, request=request)
+
+        if self.pre_l5_guard is not None:
+            self.pre_l5_guard.validate_before(request)
+
         receipt = self.runtime.execute(request)
+
+        if self.pre_l5_guard is not None:
+            self.pre_l5_guard.validate_after(receipt)
+
         experience = ExperienceRecord(project_id=receipt.project_id, task_id=receipt.task_id, run_id=receipt.run_id, agent_id=receipt.agent_id, role_id=receipt.role_id, objective=request.objective, observation={"final_result": receipt.final_result, "changed_files": list(receipt.changed_files), "errors": list(receipt.errors)}, result=receipt.final_result, evidence_refs=list(receipt.evidence))
         experience_path = self.store.add_experience(experience)
         evaluation = self.evaluator.evaluate(receipt)
@@ -42,6 +53,13 @@ class AgenticLearningService:
         candidates = self.learner.derive(receipt=receipt, evaluation=evaluation, authorization=package.authorization)
         candidate_paths = [self.store.add_candidate(candidate) for candidate in candidates]
         mind_review = self.learner.build_mind_review(project_id=package.project_id, candidates=candidates)
+
+        if self.pre_l5_guard is not None:
+            self.pre_l5_guard.validate_learning_outputs(
+                candidates=candidates,
+                mind_review=mind_review,
+            )
+
         mind_submission = self.external.mind_submission(package=package, candidates=candidates)
         return {
             "receipt": receipt.model_dump(mode="json"),

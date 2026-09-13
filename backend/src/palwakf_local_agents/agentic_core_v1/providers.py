@@ -176,6 +176,12 @@ class NativeProvider(ExecutionProvider):
             "observations": [{"manifest_sample": manifest[:50], "objective": request.objective}],
             "errors": [],
             "changed_files": [],
+            "process_success": True,
+            "policy_success": True,
+            "tool_execution_success": True,
+            "objective_success": True,
+            "postcondition_success": True,
+            "tool_call_observed": bool(request.tools),
             "evidence": [],
         }
 
@@ -575,13 +581,27 @@ class HermesProvider(ExecutionProvider):
             read_file_observed = "read_file" in tool_names
             stdout_lines = {line.strip() for line in stdout.splitlines() if line.strip()}
             objective_success = sentinel in stdout_lines
-            successful = (
+            process_success = (
                 return_code == 0
                 and not timed_out
-                and not changed
+            )
+            policy_success = (
+                not changed
                 and not unexpected_tools
-                and (not read_file_required or read_file_observed)
-                and objective_success
+            )
+            tool_execution_success = (
+                not read_file_required
+                or read_file_observed
+            )
+            postcondition_success = not changed
+            successful = all(
+                (
+                    process_success,
+                    policy_success,
+                    tool_execution_success,
+                    objective_success,
+                    postcondition_success,
+                )
             )
             errors: list[dict[str, Any]] = []
             if timed_out:
@@ -627,7 +647,12 @@ class HermesProvider(ExecutionProvider):
                 "tool_names": tool_names,
                 "unexpected_tools": unexpected_tools,
                 "read_file_observed": read_file_observed,
+                "process_success": process_success,
+                "policy_success": policy_success,
+                "tool_execution_success": tool_execution_success,
                 "objective_success": objective_success,
+                "postcondition_success": postcondition_success,
+                "tool_call_observed": bool(tool_names),
                 "semantic_verification_method": "OUTPUT_SENTINEL_EXACT_LINE",
                 "evidence": [{
                     "type": "HERMES_ADAPTER_EXECUTION_SUMMARY",
@@ -659,12 +684,26 @@ class HermesProvider(ExecutionProvider):
         result["evidence"][0]["ephemeral_cleanup_attempts"] = cleanup_attempts
 
         if not cleanup_ok:
-            result["successful"] = False
             result["errors"].append({
                 "code": "HERMES_EPHEMERAL_CLEANUP_FAILED",
                 "detail": cleanup_error,
                 "path": str(temp_root),
             })
             result["evidence"][0]["cleanup_failure_path"] = str(temp_root)
+
+        result["postcondition_success"] = bool(
+            result.get("postcondition_success")
+        ) and cleanup_ok
+
+        result["successful"] = all(
+            bool(result.get(key))
+            for key in (
+                "process_success",
+                "policy_success",
+                "tool_execution_success",
+                "objective_success",
+                "postcondition_success",
+            )
+        )
 
         return result

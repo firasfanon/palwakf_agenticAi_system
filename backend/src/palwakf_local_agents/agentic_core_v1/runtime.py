@@ -230,7 +230,26 @@ class AgenticRuntime:
                 "evidence": [],
             }
 
-        successful = bool(provider_result.get("successful"))
+        five_part_keys = (
+            "process_success",
+            "policy_success",
+            "tool_execution_success",
+            "objective_success",
+            "postcondition_success",
+        )
+
+        if all(
+            key in provider_result
+            for key in five_part_keys
+        ):
+            successful = all(
+                bool(provider_result[key])
+                for key in five_part_keys
+            )
+        else:
+            successful = bool(
+                provider_result.get("successful")
+            )
 
         if (
             request.provider_id == ProviderId.HERMES
@@ -261,7 +280,13 @@ class AgenticRuntime:
             "tool_names",
             "unexpected_tools",
             "read_file_observed",
+            "process_success",
+            "policy_success",
+            "tool_execution_success",
             "objective_success",
+            "postcondition_success",
+            "tool_call_observed",
+            "ephemeral_cleanup",
             "semantic_verification_method",
         ):
             if key in provider_result:

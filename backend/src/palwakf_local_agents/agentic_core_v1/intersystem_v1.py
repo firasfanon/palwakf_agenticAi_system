@@ -194,6 +194,7 @@ def execute_integration_pilot(
             source_commit_sha=source_commit_sha,
             target_project_root=target_root,
             target_expected_head=verified_target_head,
+            pre_l5_guard=learning.pre_l5_guard,
         )
 
     result = active_learning.execute_and_learn(package=state, request=request)
