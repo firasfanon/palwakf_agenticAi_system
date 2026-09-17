@@ -28,9 +28,14 @@ def source_root() -> Path:
 
 def digest(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
-def make_request(target: Path, *, path: str = "src/demo.txt", content: str = "after\n") -> RunRequest:
+
+
+def make_request(
+    target: Path, *, path: str = "src/demo.txt", content: str = "after\n"
+) -> RunRequest:
     agent = next(
-        item for item in build_projection(source_root(), SOURCE_SHA)
+        item
+        for item in build_projection(source_root(), SOURCE_SHA)
         if item.agent_id == "coding_builder_agentic_v1"
     )
     target_file = target / Path(path)
@@ -52,7 +57,8 @@ def make_request(target: Path, *, path: str = "src/demo.txt", content: str = "af
         objective="Apply one bounded source mutation.",
         provider_id=ProviderId.NATIVE,
         provider_mode="BOUNDED_WRITE",
-        model_provider="none",        skill_ids=["patch_plan_generation"],
+        model_provider="none",
+        skill_ids=["patch_plan_generation"],
         tools=["bounded_file_write"],
         file_mutations=[mutation],
         authorization=AuthorizationEnvelope(
@@ -81,7 +87,8 @@ def make_request(target: Path, *, path: str = "src/demo.txt", content: str = "af
                 mode="BOUNDED_WRITE",
                 allowed_roots=[str(target)],
                 allowed_patterns=["src/**"],
-            ),            network_policy=NetworkPolicy(read=False, write=False),
+            ),
+            network_policy=NetworkPolicy(read=False, write=False),
             tool_policy=["bounded_file_write"],
         ),
     )
@@ -104,7 +111,8 @@ def prepare_target(tmp_path: Path) -> Path:
 
 def test_projection_requires_external_admission_for_coding_builder() -> None:
     agent = next(
-        item for item in build_projection(source_root(), SOURCE_SHA)
+        item
+        for item in build_projection(source_root(), SOURCE_SHA)
         if item.agent_id == "coding_builder_agentic_v1"
     )
     assert agent.required_admission_reference == ADMISSION
@@ -143,6 +151,7 @@ def test_scope_escape_is_fail_closed(tmp_path: Path) -> None:
     assert receipt.changed_files == []
     assert not (tmp_path / "escape.txt").exists()
 
+
 def test_preflight_failure_does_not_partially_mutate(tmp_path: Path) -> None:
     target = prepare_target(tmp_path)
     first = target / "src/first.txt"
@@ -171,7 +180,8 @@ def test_non_builder_agent_cannot_use_bounded_write(tmp_path: Path) -> None:
     target = prepare_target(tmp_path)
     request = make_request(target)
     tester = next(
-        item for item in build_projection(source_root(), SOURCE_SHA)
+        item
+        for item in build_projection(source_root(), SOURCE_SHA)
         if item.agent_id == "tester_agentic_v1"
     )
     request.agent_id = tester.agent_id
