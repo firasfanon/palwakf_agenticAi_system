@@ -155,7 +155,8 @@ roles:
   output_mode: controlled_contract_and_human_review
 - role_id: qa_security_reviewer
   title_ar: مراجع الجودة والأمن
-  status: disabled_pending_admission
+  status: workspace_admission_required_v1
+  admission_gate_id: PREL5-025
   autonomy_ceiling: L1_PLAN_ONLY
   allowed_skills:
   - qa_security_review
@@ -164,7 +165,7 @@ roles:
   - data_classification_review
   - test_plan_generation
   allowed_tools:
-  - none_until_runner_admission
+  - deterministic_qa_security_review
   prohibited_actions:
   - platform_mutation
   - database_access

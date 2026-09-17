@@ -18,6 +18,7 @@ from urllib.parse import urlparse
 import yaml
 
 from .contracts import ProviderId, RunRequest
+from .qa_security_review import run_independent_review
 
 
 class ModelProvider(ABC):
@@ -96,6 +97,9 @@ class ExecutionProvider(ABC):
 
     @abstractmethod
     def execute_read_only(self, *, project_root: Path, request: RunRequest) -> dict[str, Any]: ...
+
+    def execute_independent_review(self, *, project_root: Path, request: RunRequest) -> dict[str, Any]:
+        raise RuntimeError("INDEPENDENT_REVIEW_NOT_SUPPORTED_BY_PROVIDER")
 
     def execute_bounded_write(self, *, project_root: Path, request: RunRequest) -> dict[str, Any]:
         raise RuntimeError("BOUNDED_WRITE_NOT_SUPPORTED_BY_PROVIDER")
@@ -243,6 +247,9 @@ class NativeProvider(ExecutionProvider):
             "evidence": [],
         }
 
+
+    def execute_independent_review(self, *, project_root: Path, request: RunRequest) -> dict[str, Any]:
+        return run_independent_review(project_root=project_root, request=request)
 
     def execute_bounded_write(self, *, project_root: Path, request: RunRequest) -> dict[str, Any]:
         project_root = project_root.resolve()

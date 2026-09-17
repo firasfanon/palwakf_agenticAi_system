@@ -45,6 +45,23 @@ class BoundedFileMutation(BaseModel):
         return self
 
 
+class ReviewEvidenceRecord(BaseModel):
+    evidence_id: str = Field(min_length=1, max_length=200)
+    evidence_type: str = Field(min_length=1, max_length=100)
+    status: Literal["PASS", "BASELINE_IDENTICAL", "FAIL"]
+    source_head_sha: str = Field(pattern=r"^[0-9a-f]{40}$")
+    detail_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+
+class IndependentReviewSpec(BaseModel):
+    base_sha: str = Field(pattern=r"^[0-9a-f]{40}$")
+    head_sha: str = Field(pattern=r"^[0-9a-f]{40}$")
+    expected_changed_files: list[str] = Field(min_length=1)
+    allowed_path_patterns: list[str] = Field(min_length=1)
+    required_evidence_types: list[str] = Field(min_length=1)
+    evidence: list[ReviewEvidenceRecord] = Field(min_length=1)
+
+
 class ResourceBudget(BaseModel):
     timeout_seconds: int = Field(default=60, ge=1, le=3600)
     max_files: int = Field(default=500, ge=1, le=10000)
@@ -137,6 +154,7 @@ class RunRequest(BaseModel):
     tools: list[str] = Field(default_factory=list)
     required_output_sentinel: str | None = None
     file_mutations: list[BoundedFileMutation] = Field(default_factory=list, max_length=64)
+    review_spec: IndependentReviewSpec | None = None
     authorization: AuthorizationEnvelope
     environment: ExecutionEnvironment
 

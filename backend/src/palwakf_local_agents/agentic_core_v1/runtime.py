@@ -242,6 +242,29 @@ class AgenticRuntime:
         if not set(request.tools).issubset(agent_admitted_tools):
             raise AuthorityError("AGENT_TOOL_NOT_ADMITTED")
 
+        review_requested = request.task_class == "INDEPENDENT_QA_SECURITY_REVIEW"
+        if review_requested:
+            if request.agent_id != "qa_security_reviewer_agentic_v1" or request.role_id != "qa_security_reviewer":
+                raise AuthorityError("INDEPENDENT_REVIEW_QA_AGENT_ONLY")
+            if request.provider_id != ProviderId.NATIVE:
+                raise AuthorityError("INDEPENDENT_REVIEW_NATIVE_ONLY")
+            if request.model_provider != "none" or request.model_id is not None:
+                raise AuthorityError("INDEPENDENT_REVIEW_MODEL_INFERENCE_DENIED")
+            if not auth.read_only or env.filesystem_policy.mode != "READ_ONLY":
+                raise AuthorityError("INDEPENDENT_REVIEW_READ_ONLY_REQUIRED")
+            if auth.allow_network_read or auth.allow_network_write or env.network_policy.read or env.network_policy.write:
+                raise AuthorityError("INDEPENDENT_REVIEW_NETWORK_DENIED")
+            if env.db_authority != "NONE":
+                raise AuthorityError("INDEPENDENT_REVIEW_DATABASE_DENIED")
+            if request.tools != ["deterministic_qa_security_review"]:
+                raise AuthorityError("INDEPENDENT_REVIEW_TOOL_POLICY_INVALID")
+            if auth.agent_admission_reference != agent.required_admission_reference:
+                raise AuthorityError("INDEPENDENT_REVIEW_ADMISSION_REFERENCE_MISMATCH")
+            if request.review_spec is None:
+                raise AuthorityError("INDEPENDENT_REVIEW_SPEC_REQUIRED")
+            if request.review_spec.base_sha != env.base_sha or request.review_spec.head_sha != env.expected_head:
+                raise AuthorityError("INDEPENDENT_REVIEW_SOURCE_BINDING_MISMATCH")
+
         return agent
 
     def execute(self, request: RunRequest) -> RunReceipt:
@@ -258,17 +281,22 @@ class AgenticRuntime:
                 and not request.authorization.read_only
                 and request.provider_mode == "BOUNDED_WRITE"
             )
-            provider_result = (
-                provider.execute_bounded_write(
+            review_requested = request.task_class == "INDEPENDENT_QA_SECURITY_REVIEW"
+            if review_requested:
+                provider_result = provider.execute_independent_review(
                     project_root=self.target_project_root,
                     request=request,
                 )
-                if write_requested
-                else provider.execute_read_only(
+            elif write_requested:
+                provider_result = provider.execute_bounded_write(
                     project_root=self.target_project_root,
                     request=request,
                 )
-            )
+            else:
+                provider_result = provider.execute_read_only(
+                    project_root=self.target_project_root,
+                    request=request,
+                )
         except Exception as error:
             provider_result = {
                 "provider_id": request.provider_id.value,
@@ -354,6 +382,10 @@ class AgenticRuntime:
             "tool_call_observed",
             "ephemeral_cleanup",
             "semantic_verification_method",
+            "reviewed_files",
+            "patch_sha256",
+            "review_dimensions",
+            "findings",
         ):
             if key in provider_result:
                 action[key] = provider_result[key]
@@ -363,12 +395,16 @@ class AgenticRuntime:
             "resolve_agent",
             "resolve_provider",
             (
-                "execute_native_bounded_file_mutation"
-                if write_requested
+                "execute_independent_qa_security_review"
+                if review_requested
                 else (
-                    "execute_via_hermes_adapter_read_only"
-                    if request.provider_id == ProviderId.HERMES
-                    else "run_bounded_read_only_diagnostic"
+                    "execute_native_bounded_file_mutation"
+                    if write_requested
+                    else (
+                        "execute_via_hermes_adapter_read_only"
+                        if request.provider_id == ProviderId.HERMES
+                        else "run_bounded_read_only_diagnostic"
+                    )
                 )
             ),
             "verify_objective_success",

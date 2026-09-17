@@ -35,6 +35,7 @@ ROLE_TASK_CLASSES.update({
     "coordinator": ["READ_ONLY_DIAGNOSTIC", "TASK_PLANNING"],
     "sovereignty_reviewer": ["READ_ONLY_DIAGNOSTIC", "POLICY_REVIEW"],
     "knowledge_researcher": ["READ_ONLY_DIAGNOSTIC", "EVIDENCE_REVIEW"],
+    "qa_security_reviewer": ["READ_ONLY_DIAGNOSTIC", "INDEPENDENT_QA_SECURITY_REVIEW"],
     "tester": ["READ_ONLY_DIAGNOSTIC", "TEST_TRIAGE"],
     "coding_builder": [
         "READ_ONLY_DIAGNOSTIC",

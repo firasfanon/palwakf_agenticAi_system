@@ -4,10 +4,17 @@
 `qa_security_reviewer`
 
 ## Status
-`disabled_pending_admission`
+`workspace_admission_required_v1`
 
 ## Autonomy ceiling
 `L1_PLAN_ONLY`
+
+## Admission gate
+`PREL5-025`
+
+## Admitted runtime tool
+- `deterministic_qa_security_review` — read-only exact Git range/scope/security/regression/evidence review.
+- Semgrep/Gitleaks remain external controlled-scanner contracts and are not implicitly admitted by this role.
 
 ## Mission
 ينشئ مراجعات وخطط اختبارات إيجابية وسلبية وصلاحيات؛ لا يعلن قبولًا نهائيًا بلا أدلة.
