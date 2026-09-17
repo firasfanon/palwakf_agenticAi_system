@@ -19,6 +19,7 @@ import yaml
 
 from .contracts import ProviderId, RunRequest
 from .qa_security_review import run_independent_review
+from .test_execution import run_controlled_tests
 
 
 class ModelProvider(ABC):
@@ -100,6 +101,9 @@ class ExecutionProvider(ABC):
 
     def execute_independent_review(self, *, project_root: Path, request: RunRequest) -> dict[str, Any]:
         raise RuntimeError("INDEPENDENT_REVIEW_NOT_SUPPORTED_BY_PROVIDER")
+
+    def execute_controlled_tests(self, *, project_root: Path, request: RunRequest) -> dict[str, Any]:
+        raise RuntimeError("CONTROLLED_TEST_EXECUTION_NOT_SUPPORTED_BY_PROVIDER")
 
     def execute_bounded_write(self, *, project_root: Path, request: RunRequest) -> dict[str, Any]:
         raise RuntimeError("BOUNDED_WRITE_NOT_SUPPORTED_BY_PROVIDER")
@@ -250,6 +254,9 @@ class NativeProvider(ExecutionProvider):
 
     def execute_independent_review(self, *, project_root: Path, request: RunRequest) -> dict[str, Any]:
         return run_independent_review(project_root=project_root, request=request)
+
+    def execute_controlled_tests(self, *, project_root: Path, request: RunRequest) -> dict[str, Any]:
+        return run_controlled_tests(project_root=project_root, request=request)
 
     def execute_bounded_write(self, *, project_root: Path, request: RunRequest) -> dict[str, Any]:
         project_root = project_root.resolve()

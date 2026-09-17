@@ -62,6 +62,14 @@ class IndependentReviewSpec(BaseModel):
     evidence: list[ReviewEvidenceRecord] = Field(min_length=1)
 
 
+class ControlledTestSpec(BaseModel):
+    plan_id: str = Field(min_length=1, max_length=200)
+    workspace_kind: Literal["DISPOSABLE_COPY"] = "DISPOSABLE_COPY"
+    selectors: list[str] = Field(min_length=1, max_length=64)
+    expected_exit_code: int = 0
+    timeout_seconds: int = Field(default=120, ge=5, le=600)
+
+
 class ResourceBudget(BaseModel):
     timeout_seconds: int = Field(default=60, ge=1, le=3600)
     max_files: int = Field(default=500, ge=1, le=10000)
@@ -155,6 +163,7 @@ class RunRequest(BaseModel):
     required_output_sentinel: str | None = None
     file_mutations: list[BoundedFileMutation] = Field(default_factory=list, max_length=64)
     review_spec: IndependentReviewSpec | None = None
+    test_spec: ControlledTestSpec | None = None
     authorization: AuthorizationEnvelope
     environment: ExecutionEnvironment
 

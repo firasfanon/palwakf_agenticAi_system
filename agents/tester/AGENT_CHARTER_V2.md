@@ -4,7 +4,13 @@
 `tester`
 
 ## Status
-`disabled_pending_admission`
+`workspace_admission_required_v1`
+
+## Admission gate
+`PREL5-026`
+
+## Admitted runtime tool
+- `controlled_pytest_execution` — Python/pytest only on a Workspace-provided disposable copy; fixed argv, no shell, execution evidence required.
 
 ## Autonomy ceiling
 `L1_PLAN_ONLY`

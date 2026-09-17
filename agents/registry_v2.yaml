@@ -177,14 +177,15 @@ roles:
   output_mode: controlled_contract_and_human_review
 - role_id: tester
   title_ar: مخطط الاختبارات
-  status: disabled_pending_admission
+  status: workspace_admission_required_v1
+  admission_gate_id: PREL5-026
   autonomy_ceiling: L1_PLAN_ONLY
   allowed_skills:
   - test_plan_generation
   - qa_security_review
   - evidence_assessment
   allowed_tools:
-  - none_until_runner_admission
+  - controlled_pytest_execution
   prohibited_actions:
   - platform_mutation
   - database_access

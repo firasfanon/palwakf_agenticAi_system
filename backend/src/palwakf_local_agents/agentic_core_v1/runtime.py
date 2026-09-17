@@ -265,6 +265,27 @@ class AgenticRuntime:
             if request.review_spec.base_sha != env.base_sha or request.review_spec.head_sha != env.expected_head:
                 raise AuthorityError("INDEPENDENT_REVIEW_SOURCE_BINDING_MISMATCH")
 
+        test_requested = request.task_class == "CONTROLLED_TEST_EXECUTION"
+        if test_requested:
+            if request.agent_id != "tester_agentic_v1" or request.role_id != "tester":
+                raise AuthorityError("CONTROLLED_TEST_TESTER_ONLY")
+            if request.provider_id != ProviderId.NATIVE:
+                raise AuthorityError("CONTROLLED_TEST_NATIVE_ONLY")
+            if request.model_provider != "none" or request.model_id is not None:
+                raise AuthorityError("CONTROLLED_TEST_MODEL_INFERENCE_DENIED")
+            if not auth.read_only or env.filesystem_policy.mode != "READ_ONLY":
+                raise AuthorityError("CONTROLLED_TEST_READ_ONLY_AUTHORITY_REQUIRED")
+            if auth.allow_network_read or auth.allow_network_write or env.network_policy.read or env.network_policy.write:
+                raise AuthorityError("CONTROLLED_TEST_NETWORK_AUTHORITY_DENIED")
+            if env.db_authority != "NONE":
+                raise AuthorityError("CONTROLLED_TEST_DATABASE_DENIED")
+            if request.tools != ["controlled_pytest_execution"]:
+                raise AuthorityError("CONTROLLED_TEST_TOOL_POLICY_INVALID")
+            if auth.agent_admission_reference != agent.required_admission_reference:
+                raise AuthorityError("CONTROLLED_TEST_ADMISSION_REFERENCE_MISMATCH")
+            if request.test_spec is None:
+                raise AuthorityError("CONTROLLED_TEST_SPEC_REQUIRED")
+
         return agent
 
     def execute(self, request: RunRequest) -> RunReceipt:
@@ -282,8 +303,14 @@ class AgenticRuntime:
                 and request.provider_mode == "BOUNDED_WRITE"
             )
             review_requested = request.task_class == "INDEPENDENT_QA_SECURITY_REVIEW"
+            test_requested = request.task_class == "CONTROLLED_TEST_EXECUTION"
             if review_requested:
                 provider_result = provider.execute_independent_review(
+                    project_root=self.target_project_root,
+                    request=request,
+                )
+            elif test_requested:
+                provider_result = provider.execute_controlled_tests(
                     project_root=self.target_project_root,
                     request=request,
                 )
@@ -386,6 +413,7 @@ class AgenticRuntime:
             "patch_sha256",
             "review_dimensions",
             "findings",
+            "test_plan",
         ):
             if key in provider_result:
                 action[key] = provider_result[key]
@@ -398,12 +426,16 @@ class AgenticRuntime:
                 "execute_independent_qa_security_review"
                 if review_requested
                 else (
+                    "execute_controlled_pytest"
+                    if test_requested
+                    else (
                     "execute_native_bounded_file_mutation"
                     if write_requested
                     else (
                         "execute_via_hermes_adapter_read_only"
                         if request.provider_id == ProviderId.HERMES
                         else "run_bounded_read_only_diagnostic"
+                    )
                     )
                 )
             ),
@@ -473,7 +505,7 @@ class AgenticRuntime:
             changed_files=list(
                 provider_result.get("changed_files") or []
             ),
-            tests=[],
+            tests=list(provider_result.get("tests") or []),
             errors=list(provider_result.get("errors") or []),
             retries=0,
             evidence=list(provider_result.get("evidence") or []),
