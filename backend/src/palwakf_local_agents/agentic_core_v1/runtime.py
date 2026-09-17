@@ -82,10 +82,41 @@ class AgenticRuntime:
         if not set(request.tools).issubset(set(auth.allowed_tools)):
             raise AuthorityError("TOOL_NOT_AUTHORIZED")
 
-        if not auth.read_only or env.filesystem_policy.mode != "READ_ONLY":
-            raise AuthorityError("WRITE_REQUIRES_SEPARATE_AUTHORITY")
-        if auth.allow_network_write or env.network_policy.write:
-            raise AuthorityError("NETWORK_WRITE_DENIED")
+        write_requested = (
+            env.filesystem_policy.mode == "BOUNDED_WRITE"
+            or not auth.read_only
+            or request.provider_mode == "BOUNDED_WRITE"
+            or bool(request.file_mutations)
+        )
+        if write_requested:
+            if request.provider_id != ProviderId.NATIVE:
+                raise AuthorityError("BOUNDED_WRITE_NATIVE_ONLY")
+            if (
+                request.provider_mode != "BOUNDED_WRITE"
+                or env.filesystem_policy.mode != "BOUNDED_WRITE"
+                or auth.read_only
+            ):
+                raise AuthorityError("BOUNDED_WRITE_AUTHORITY_MODE_MISMATCH")
+            if (
+                auth.allow_network_read
+                or auth.allow_network_write
+                or env.network_policy.read
+                or env.network_policy.write
+            ):
+                raise AuthorityError("BOUNDED_WRITE_NETWORK_DENIED")
+            if env.db_authority != "NONE":
+                raise AuthorityError("BOUNDED_WRITE_DATABASE_DENIED")
+            if not request.file_mutations:
+                raise AuthorityError("BOUNDED_WRITE_MUTATION_REQUIRED")
+        else:
+            if not auth.read_only or env.filesystem_policy.mode != "READ_ONLY":
+                raise AuthorityError("READ_ONLY_AUTHORITY_MODE_MISMATCH")
+            if request.provider_mode != "READ_ONLY_DIAGNOSTIC":
+                raise AuthorityError("READ_ONLY_PROVIDER_MODE_REQUIRED")
+            if request.file_mutations:
+                raise AuthorityError("READ_ONLY_MUTATION_PAYLOAD_FORBIDDEN")
+            if auth.allow_network_write or env.network_policy.write:
+                raise AuthorityError("NETWORK_WRITE_DENIED")
 
         if env.filesystem_policy.allowed_patterns != auth.allowed_path_patterns:
             raise AuthorityError("FILESYSTEM_PATTERN_AUTHORITY_MISMATCH")
@@ -135,6 +166,18 @@ class AgenticRuntime:
             raise AuthorityError("SKILL_SCOPE_EXPANSION_DENIED")
         if request.provider_id not in agent.execution_provider_policy:
             raise AuthorityError("AGENT_PROVIDER_NOT_ALLOWED")
+
+        if write_requested:
+            if request.agent_id != "coding_builder_agentic_v1" or request.role_id != "coding_builder":
+                raise AuthorityError("BOUNDED_WRITE_CODING_BUILDER_ONLY")
+            if request.task_class != "BOUNDED_SOURCE_MUTATION":
+                raise AuthorityError("BOUNDED_WRITE_TASK_CLASS_REQUIRED")
+            if not agent.required_admission_reference:
+                raise AuthorityError("BOUNDED_WRITE_AGENT_ADMISSION_GATE_MISSING")
+            if auth.agent_admission_reference != agent.required_admission_reference:
+                raise AuthorityError("BOUNDED_WRITE_AGENT_ADMISSION_REFERENCE_MISMATCH")
+            if request.tools != ["bounded_file_write"]:
+                raise AuthorityError("BOUNDED_WRITE_TOOL_POLICY_INVALID")
 
         agent_admitted_tools = set(agent.tool_bindings)
 
@@ -210,9 +253,21 @@ class AgenticRuntime:
 
         try:
             # Provider execution is bound to the governed target project.
-            provider_result = provider.execute_read_only(
-                project_root=self.target_project_root,
-                request=request,
+            write_requested = (
+                request.environment.filesystem_policy.mode == "BOUNDED_WRITE"
+                and not request.authorization.read_only
+                and request.provider_mode == "BOUNDED_WRITE"
+            )
+            provider_result = (
+                provider.execute_bounded_write(
+                    project_root=self.target_project_root,
+                    request=request,
+                )
+                if write_requested
+                else provider.execute_read_only(
+                    project_root=self.target_project_root,
+                    request=request,
+                )
             )
         except Exception as error:
             provider_result = {
@@ -262,6 +317,17 @@ class AgenticRuntime:
                 }
             )
 
+        if write_requested:
+            requested_paths = sorted(mutation.path.replace("\\", "/") for mutation in request.file_mutations)
+            actual_paths = sorted(provider_result.get("changed_files") or [])
+            if actual_paths != requested_paths:
+                successful = False
+                provider_result.setdefault("errors", []).append({
+                    "code": "BOUNDED_WRITE_CHANGED_FILES_NOT_EXACT",
+                    "requested": requested_paths,
+                    "actual": actual_paths,
+                })
+
         action: dict[str, Any] = {
             "type": provider_result.get(
                 "action_type",
@@ -297,9 +363,13 @@ class AgenticRuntime:
             "resolve_agent",
             "resolve_provider",
             (
-                "execute_via_hermes_adapter_read_only"
-                if request.provider_id == ProviderId.HERMES
-                else "run_bounded_read_only_diagnostic"
+                "execute_native_bounded_file_mutation"
+                if write_requested
+                else (
+                    "execute_via_hermes_adapter_read_only"
+                    if request.provider_id == ProviderId.HERMES
+                    else "run_bounded_read_only_diagnostic"
+                )
             ),
             "verify_objective_success",
             "emit_receipt",

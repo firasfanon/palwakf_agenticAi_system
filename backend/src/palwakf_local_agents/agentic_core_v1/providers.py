@@ -11,7 +11,7 @@ import tempfile
 import time
 import urllib.request
 from abc import ABC, abstractmethod
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 from urllib.parse import urlparse
 
@@ -97,6 +97,9 @@ class ExecutionProvider(ABC):
     @abstractmethod
     def execute_read_only(self, *, project_root: Path, request: RunRequest) -> dict[str, Any]: ...
 
+    def execute_bounded_write(self, *, project_root: Path, request: RunRequest) -> dict[str, Any]:
+        raise RuntimeError("BOUNDED_WRITE_NOT_SUPPORTED_BY_PROVIDER")
+
 
 def _authorized_files(project_root: Path, request: RunRequest) -> tuple[list[tuple[Path, str, int]], int]:
     budget = request.environment.resource_budget
@@ -148,6 +151,61 @@ def _authorized_files(project_root: Path, request: RunRequest) -> tuple[list[tup
     return files, bytes_seen
 
 
+def _bounded_mutation_target(project_root: Path, request: RunRequest, raw_path: str) -> tuple[Path, str]:
+    project_root = project_root.resolve()
+    normalized = raw_path.replace("\\", "/")
+    pure = PurePosixPath(normalized)
+    parts = pure.parts
+    if (
+        not parts
+        or pure.is_absolute()
+        or normalized.startswith("/")
+        or (len(normalized) >= 2 and normalized[1] == ":")
+        or any(part in {"", ".", "..", ".git"} for part in parts)
+    ):
+        raise RuntimeError("BOUNDED_WRITE_PATH_INVALID")
+
+    cursor = project_root
+    for part in parts[:-1]:
+        cursor = cursor / part
+        if cursor.exists() and cursor.is_symlink():
+            raise RuntimeError("BOUNDED_WRITE_SYMLINK_PATH_DENIED")
+    target = project_root.joinpath(*parts)
+    if target.is_symlink():
+        raise RuntimeError("BOUNDED_WRITE_SYMLINK_TARGET_DENIED")
+    if not target.parent.is_dir():
+        raise RuntimeError("BOUNDED_WRITE_PARENT_MUST_EXIST")
+
+    parent = target.parent.resolve()
+    try:
+        parent.relative_to(project_root)
+    except ValueError as error:
+        raise RuntimeError("BOUNDED_WRITE_PATH_ESCAPE") from error
+
+    roots = [Path(value).resolve() for value in request.environment.filesystem_policy.allowed_roots]
+    within_root = False
+    for allowed_root in roots:
+        try:
+            target_parent = parent.relative_to(allowed_root)
+            del target_parent
+            within_root = True
+            break
+        except ValueError:
+            continue
+    if not within_root:
+        raise RuntimeError("BOUNDED_WRITE_ROOT_DENIED")
+
+    relative = PurePosixPath(*parts).as_posix()
+    patterns = request.environment.filesystem_policy.allowed_patterns
+    if not any(fnmatch.fnmatchcase(relative, pattern) for pattern in patterns):
+        raise RuntimeError("BOUNDED_WRITE_SCOPE_DENIED")
+    return target, relative
+
+
+def _sha256_bytes(value: bytes) -> str:
+    return hashlib.sha256(value).hexdigest()
+
+
 class NativeProvider(ExecutionProvider):
     provider_id = ProviderId.NATIVE
 
@@ -156,12 +214,12 @@ class NativeProvider(ExecutionProvider):
             "provider_id": self.provider_id.value,
             "discovered": True,
             "healthy": True,
-            "modes": ["READ_ONLY_DIAGNOSTIC"],
-            "filesystem_policy": "READ_ONLY_BY_DEFAULT",
+            "modes": ["READ_ONLY_DIAGNOSTIC", "BOUNDED_WRITE"],
+            "filesystem_policy": "READ_ONLY_DEFAULT_BOUNDED_WRITE_BY_EXTERNAL_ADMISSION",
             "network_policy": "DENY_BY_DEFAULT",
             "cancel_supported": True,
             "timeout_supported": True,
-            "operational_write_admission": "CLOSED_SEPARATE_GATE_REQUIRED",
+            "operational_write_admission": "EXTERNAL_ADMISSION_REFERENCE_REQUIRED",
         }
 
     def execute_read_only(self, *, project_root: Path, request: RunRequest) -> dict[str, Any]:
@@ -183,6 +241,140 @@ class NativeProvider(ExecutionProvider):
             "postcondition_success": True,
             "tool_call_observed": bool(request.tools),
             "evidence": [],
+        }
+
+
+    def execute_bounded_write(self, *, project_root: Path, request: RunRequest) -> dict[str, Any]:
+        project_root = project_root.resolve()
+        if Path(request.environment.worktree).resolve() != project_root:
+            raise RuntimeError("NATIVE_BOUNDED_WRITE_WORKTREE_MISMATCH")
+        if request.agent_id != "coding_builder_agentic_v1" or request.role_id != "coding_builder":
+            raise RuntimeError("NATIVE_BOUNDED_WRITE_CODING_BUILDER_ONLY")
+        if request.task_class != "BOUNDED_SOURCE_MUTATION":
+            raise RuntimeError("NATIVE_BOUNDED_WRITE_TASK_CLASS_REQUIRED")
+        if request.authorization.agent_admission_reference != "PREL5-024":
+            raise RuntimeError("NATIVE_BOUNDED_WRITE_ADMISSION_REFERENCE_REQUIRED")
+        if request.tools != ["bounded_file_write"] or request.environment.tool_policy != ["bounded_file_write"]:
+            raise RuntimeError("NATIVE_BOUNDED_WRITE_TOOL_POLICY_INVALID")
+        auth_roots = sorted(str(Path(value).resolve()) for value in request.authorization.allowed_filesystem_roots)
+        env_roots = sorted(str(Path(value).resolve()) for value in request.environment.filesystem_policy.allowed_roots)
+        if not auth_roots or auth_roots != env_roots:
+            raise RuntimeError("NATIVE_BOUNDED_WRITE_ROOT_AUTHORITY_MISMATCH")
+        if request.authorization.allowed_path_patterns != request.environment.filesystem_policy.allowed_patterns:
+            raise RuntimeError("NATIVE_BOUNDED_WRITE_PATTERN_AUTHORITY_MISMATCH")
+        if request.provider_mode != "BOUNDED_WRITE":
+            raise RuntimeError("NATIVE_BOUNDED_WRITE_MODE_REQUIRED")
+        if request.environment.filesystem_policy.mode != "BOUNDED_WRITE":
+            raise RuntimeError("NATIVE_BOUNDED_WRITE_FILESYSTEM_MODE_REQUIRED")
+        if request.authorization.read_only:
+            raise RuntimeError("NATIVE_BOUNDED_WRITE_AUTHORITY_REQUIRED")
+        if request.environment.network_policy.read or request.environment.network_policy.write:
+            raise RuntimeError("NATIVE_BOUNDED_WRITE_NETWORK_DENIED")
+        if request.environment.db_authority != "NONE":
+            raise RuntimeError("NATIVE_BOUNDED_WRITE_DATABASE_DENIED")
+        if not request.file_mutations:
+            raise RuntimeError("NATIVE_BOUNDED_WRITE_MUTATION_REQUIRED")
+
+        budget = request.environment.resource_budget
+        if len(request.file_mutations) > budget.max_files:
+            raise RuntimeError("NATIVE_BOUNDED_WRITE_FILE_BUDGET_EXCEEDED")
+
+        prepared: list[tuple[Path, str, bytes | None, bytes, str]] = []
+        total_bytes = 0
+        seen: set[str] = set()
+        for mutation in request.file_mutations:
+            target, relative = _bounded_mutation_target(project_root, request, mutation.path)
+            if relative in seen:
+                raise RuntimeError("NATIVE_BOUNDED_WRITE_DUPLICATE_PATH")
+            seen.add(relative)
+            if target.exists() and not target.is_file():
+                raise RuntimeError("NATIVE_BOUNDED_WRITE_TARGET_NOT_FILE")
+            before = target.read_bytes() if target.exists() else None
+            before_hash = _sha256_bytes(before) if before is not None else "ABSENT"
+            if before_hash != mutation.expected_before_sha256:
+                raise RuntimeError("NATIVE_BOUNDED_WRITE_EXPECTED_BEFORE_MISMATCH")
+            content = mutation.content.encode("utf-8")
+            if _sha256_bytes(content) != mutation.content_sha256:
+                raise RuntimeError("NATIVE_BOUNDED_WRITE_CONTENT_HASH_MISMATCH")
+            if before == content:
+                raise RuntimeError("NATIVE_BOUNDED_WRITE_NOOP_FORBIDDEN")
+            total_bytes += len(content)
+            if total_bytes > budget.max_bytes:
+                raise RuntimeError("NATIVE_BOUNDED_WRITE_BYTE_BUDGET_EXCEEDED")
+            prepared.append((target, relative, before, content, mutation.content_sha256))
+
+        temp_paths: list[Path] = []
+        try:
+            for target, _, _, content, _ in prepared:
+                with tempfile.NamedTemporaryFile(
+                    mode="wb",
+                    delete=False,
+                    dir=target.parent,
+                    prefix=f".{target.name}.palwakf-",
+                    suffix=".tmp",
+                ) as handle:
+                    handle.write(content)
+                    handle.flush()
+                    os.fsync(handle.fileno())
+                    temp_path = Path(handle.name)
+                temp_paths.append(temp_path)
+                os.replace(temp_path, target)
+                temp_paths.remove(temp_path)
+
+            changed: list[str] = []
+            for target, relative, before, _, expected_after in prepared:
+                after = target.read_bytes()
+                if _sha256_bytes(after) != expected_after:
+                    raise RuntimeError("NATIVE_BOUNDED_WRITE_POSTCONDITION_HASH_MISMATCH")
+                if before != after:
+                    changed.append(relative)
+            expected_changed = sorted(relative for _, relative, before, content, _ in prepared if before != content)
+            if sorted(changed) != expected_changed:
+                raise RuntimeError("NATIVE_BOUNDED_WRITE_CHANGED_FILES_MISMATCH")
+        except Exception:
+            for temp_path in temp_paths:
+                try:
+                    temp_path.unlink(missing_ok=True)
+                except OSError:
+                    pass
+            for target, _, before, _, _ in prepared:
+                if before is None:
+                    target.unlink(missing_ok=True)
+                else:
+                    target.write_bytes(before)
+            raise
+
+        return {
+            "provider_id": self.provider_id.value,
+            "successful": True,
+            "action_type": "NATIVE_BOUNDED_FILE_MUTATION",
+            "files": len(prepared),
+            "bytes": total_bytes,
+            "observations": [{
+                "objective": request.objective,
+                "authorized_mutation_paths": sorted(seen),
+                "git_mutation": "NONE",
+                "network": "DENIED",
+                "database": "DENIED",
+                "self_authorization": "FORBIDDEN",
+            }],
+            "errors": [],
+            "changed_files": sorted(changed),
+            "process_success": True,
+            "policy_success": True,
+            "tool_execution_success": True,
+            "objective_success": True,
+            "postcondition_success": True,
+            "tool_call_observed": True,
+            "evidence": [{
+                "type": "NATIVE_BOUNDED_WRITE_RECEIPT",
+                "requested_paths": sorted(seen),
+                "changed_files": sorted(changed),
+                "preflight_before_first_write": "PASS",
+                "content_hash_verification": "PASS",
+                "rollback_on_failure": "ENFORCED",
+                "git_mutation": "NONE",
+            }],
         }
 
 

@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import hashlib
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Literal
 from uuid import uuid4
-from datetime import datetime, timezone
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -26,6 +27,22 @@ class FilesystemPolicy(BaseModel):
 class NetworkPolicy(BaseModel):
     read: bool = False
     write: bool = False
+
+
+class BoundedFileMutation(BaseModel):
+    path: str = Field(min_length=1, max_length=500)
+    content: str = Field(max_length=2_000_000)
+    content_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    expected_before_sha256: str = Field(
+        pattern=r"^(?:ABSENT|[0-9a-f]{64})$"
+    )
+
+    @model_validator(mode="after")
+    def verify_content_hash(self):
+        actual = hashlib.sha256(self.content.encode("utf-8")).hexdigest()
+        if actual != self.content_sha256:
+            raise ValueError("BOUNDED_MUTATION_CONTENT_HASH_MISMATCH")
+        return self
 
 
 class ResourceBudget(BaseModel):
@@ -72,6 +89,7 @@ class AuthorizationEnvelope(BaseModel):
     read_only: bool = True
     allow_network_read: bool = False
     allow_network_write: bool = False
+    agent_admission_reference: str | None = None
 
     @model_validator(mode="after")
     def fail_closed(self):
@@ -100,6 +118,7 @@ class UnifiedAgent(BaseModel):
     source_commit_sha: str
     allowed_task_classes: list[str]
     runnable: bool
+    required_admission_reference: str | None = None
 
 
 class RunRequest(BaseModel):
@@ -117,6 +136,7 @@ class RunRequest(BaseModel):
     skill_ids: list[str] = Field(default_factory=list)
     tools: list[str] = Field(default_factory=list)
     required_output_sentinel: str | None = None
+    file_mutations: list[BoundedFileMutation] = Field(default_factory=list, max_length=64)
     authorization: AuthorizationEnvelope
     environment: ExecutionEnvironment
 

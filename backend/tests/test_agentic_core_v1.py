@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import pytest
-
 from palwakf_local_agents.agentic_core_v1.contracts import (
     AuthorizationEnvelope,
     ExecutionEnvironment,
@@ -10,7 +9,10 @@ from palwakf_local_agents.agentic_core_v1.contracts import (
     ProviderId,
     RunRequest,
 )
-from palwakf_local_agents.agentic_core_v1.providers import ExecutionProvider, NativeProvider
+from palwakf_local_agents.agentic_core_v1.providers import (
+    ExecutionProvider,
+    NativeProvider,
+)
 from palwakf_local_agents.agentic_core_v1.registry_projection import build_projection
 from palwakf_local_agents.agentic_core_v1.runtime import AgenticRuntime, AuthorityError
 
@@ -27,11 +29,12 @@ def test_projection_has_14_mapped_agents():
     assert all(a.runnable for a in agents)
 
 
-def test_native_provider_is_read_only():
+def test_native_provider_defaults_read_only_and_exposes_external_admission_write_mode():
     h = NativeProvider().health()
     assert h["healthy"] is True
-    assert h["filesystem_policy"] == "READ_ONLY_BY_DEFAULT"
-    assert h["operational_write_admission"] == "CLOSED_SEPARATE_GATE_REQUIRED"
+    assert h["filesystem_policy"] == "READ_ONLY_DEFAULT_BOUNDED_WRITE_BY_EXTERNAL_ADMISSION"
+    assert h["operational_write_admission"] == "EXTERNAL_ADMISSION_REFERENCE_REQUIRED"
+    assert h["modes"] == ["READ_ONLY_DIAGNOSTIC", "BOUNDED_WRITE"]
 
 
 def make_request(project_id="PALWAKF_LOCAL_AGENTS"):
@@ -180,7 +183,7 @@ def test_hermes_bounded_write_is_rejected_before_provider_execution():
         BASE,
         execution_providers={ProviderId.HERMES: fake, ProviderId.NATIVE: NativeProvider()},
     )
-    with pytest.raises(AuthorityError, match="WRITE_REQUIRES_SEPARATE_AUTHORITY"):
+    with pytest.raises(AuthorityError, match="BOUNDED_WRITE_NATIVE_ONLY"):
         runtime.execute(req)
     assert fake.calls == 0
 

@@ -195,15 +195,17 @@ roles:
   output_mode: controlled_contract_and_human_review
 - role_id: coding_builder
   title_ar: مخطط التغيير البرمجي
-  status: disabled_pending_admission
-  autonomy_ceiling: L1_PLAN_ONLY
+  status: workspace_admission_required_v1
+  admission_gate_id: PREL5-024
+  autonomy_ceiling: L2_PATCH_ALLOWED
   allowed_skills:
   - repository_static_trace
   - architecture_analysis
   - patch_plan_generation
   - evidence_assessment
   allowed_tools:
-  - none_until_runner_admission
+  - repository_manifest_read
+  - bounded_file_write
   prohibited_actions:
   - platform_mutation
   - database_access
@@ -212,7 +214,7 @@ roles:
   - deployment
   - secrets_access
   - self_promotion
-  output_mode: controlled_contract_and_human_review
+  output_mode: controlled_bounded_patch_and_external_review
 - role_id: frontend_engineer
   title_ar: مهندس الواجهة الأمامية
   status: disabled_pending_admission
