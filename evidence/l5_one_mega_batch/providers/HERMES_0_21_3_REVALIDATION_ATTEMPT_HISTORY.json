@@ -1,0 +1,33 @@
+{
+  "schema": "palwakf.agentic.l5.hermes.revalidation.history.v1",
+  "attempts": [
+    {
+      "attempt": 1,
+      "result": "FAIL_CLOSED_PRE_INFERENCE_ROUTING_DEFECT",
+      "process_exit": 0,
+      "observed_output": "HTTP 401: Missing Authentication header",
+      "model_semantic_failure_proven": false,
+      "model_inference_proven": false,
+      "source_mutation": false,
+      "real_user_config_mutation": false,
+      "root_cause": "Hermes 0.21.3 bare custom provider resolves CUSTOM_BASE_URL, not OPENAI_BASE_URL; missing CUSTOM_BASE_URL permitted default-route fallback.",
+      "automatic_rerun_before_root_cause": false
+    },
+    {
+      "attempt": 2,
+      "result": "PASS_READ_ONLY_REVALIDATION",
+      "provider": "custom",
+      "endpoint": "http://127.0.0.1:11434/v1",
+      "safe_mode": true,
+      "tool_surface": "vision_only",
+      "external_egress": "PROXY_DENY_ALLOW_LOOPBACK_ONLY",
+      "semantic_exact_match": true,
+      "process_exit": 0,
+      "source_mutation": false,
+      "real_user_config_mutation": false,
+      "bounded_write": "FORBIDDEN_NOT_TESTED",
+      "runtime_admission": "NOT_GRANTED_BY_REVALIDATION"
+    }
+  ],
+  "lesson": "HERMES_BARE_CUSTOM_REQUIRES_CUSTOM_BASE_URL_V1"
+}

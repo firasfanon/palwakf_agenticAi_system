@@ -3,9 +3,18 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
-from palwakf_local_agents.agentic_core_v1.contracts import AuthorizationEnvelope, ExecutionEnvironment, FilesystemPolicy, NetworkPolicy, ProviderId, RunRequest
-from palwakf_local_agents.agentic_core_v1.external_contracts import ExternalContractAdapter, WorkspaceStatePackage
+from palwakf_local_agents.agentic_core_v1.contracts import (
+    AuthorizationEnvelope,
+    ExecutionEnvironment,
+    FilesystemPolicy,
+    NetworkPolicy,
+    ProviderId,
+    RunRequest,
+)
+from palwakf_local_agents.agentic_core_v1.external_contracts import (
+    ExternalContractAdapter,
+    WorkspaceStatePackage,
+)
 from palwakf_local_agents.agentic_core_v1.learning_service import AgenticLearningService
 from palwakf_local_agents.agentic_core_v1.orchestration import MultiAgentOrchestrator
 from palwakf_local_agents.agentic_core_v1.registry_projection import build_projection

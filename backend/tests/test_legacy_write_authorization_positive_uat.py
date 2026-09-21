@@ -4,7 +4,6 @@ import hashlib
 from pathlib import Path
 
 from fastapi.testclient import TestClient
-
 from palwakf_local_agents import store as legacy_store
 from palwakf_local_agents.app import create_app
 

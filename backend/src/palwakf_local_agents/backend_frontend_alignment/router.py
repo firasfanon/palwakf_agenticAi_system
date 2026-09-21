@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from hashlib import sha256
 from pathlib import Path
 from typing import Any, Literal
@@ -128,7 +128,7 @@ class PreparedTaskDraft(BaseModel):
 
 
 def _now() -> str:
-    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    return datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
 
 def _assistant(agent_id: str) -> dict[str, Any] | None:
@@ -209,7 +209,7 @@ def build_router(*, project_root: Path) -> APIRouter:
     def prepare_task_draft(payload: TaskDraftPrepareRequest) -> PreparedTaskDraft:
         agent = _assistant(payload.assistant_id)
         allowed_tools = list(agent.get("approved_tools", [])) if agent else []
-        stable = "|".join([payload.workspace_id, payload.assistant_id, payload.title, payload.objective])
+        stable = f"{payload.workspace_id}|{payload.assistant_id}|{payload.title}|{payload.objective}"
         draft_id = "draft_" + sha256(stable.encode("utf-8")).hexdigest()[:16]
         return PreparedTaskDraft(
             draft_id=draft_id,

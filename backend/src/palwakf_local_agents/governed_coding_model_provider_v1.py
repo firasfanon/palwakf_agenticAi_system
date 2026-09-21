@@ -16,15 +16,18 @@ import urllib.parse
 import urllib.request
 import uuid
 import zipfile
-from datetime import datetime, timezone
+from collections.abc import Callable
+from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
-from typing import Any, Callable, Literal
+from typing import Any, Literal
 
 from fastapi import APIRouter, FastAPI, HTTPException, Query
 from pydantic import BaseModel, Field
 
+from palwakf_local_agents import (
+    quality_accepted_tools_goal_planner_binding_v1 as planner,
+)
 from palwakf_local_agents.operational_core_v1.codebase_index import CodebaseIndexer
-from palwakf_local_agents import quality_accepted_tools_goal_planner_binding_v1 as planner
 
 CONTRACT_ID = "GOVERNED_CODING_MODEL_PROVIDER_AND_CANDIDATE_GENERATION_V1"
 API_PREFIX = "/api/v1/operational-core/coding-model"
@@ -141,7 +144,7 @@ def _model_response_json_schema() -> dict[str, Any]:
     else:
         legacy_factory = getattr(ModelResponse, "schema", None)
         if not callable(legacy_factory):
-            raise RuntimeError("MODEL_RESPONSE_JSON_SCHEMA_UNAVAILABLE")
+            raise TypeError("MODEL_RESPONSE_JSON_SCHEMA_UNAVAILABLE")
         schema = legacy_factory()
     if not isinstance(schema, dict) or schema.get("type") != "object":
         raise RuntimeError("MODEL_RESPONSE_JSON_SCHEMA_INVALID")
@@ -176,7 +179,7 @@ def _ollama_grammar_compatible_schema(
 
     projected = project(schema)
     if not isinstance(projected, dict):
-        raise RuntimeError("OLLAMA_GRAMMAR_SCHEMA_INVALID")
+        raise TypeError("OLLAMA_GRAMMAR_SCHEMA_INVALID")
     if projected.get("type") != "object":
         raise RuntimeError("OLLAMA_GRAMMAR_SCHEMA_ROOT_NOT_OBJECT")
     properties = projected.get("properties")
@@ -195,7 +198,7 @@ def _sanitized_provider_http_error_detail(
     provider_error_class = "PROVIDER_HTTP_ERROR"
     try:
         raw = exc.read(32_768)
-    except Exception:
+    except OSError:
         raw = b""
 
     message = ""
@@ -207,7 +210,7 @@ def _sanitized_provider_http_error_detail(
                 candidate = payload.get("error")
                 if isinstance(candidate, str):
                     message = candidate.lower()
-        except Exception:
+        except json.JSONDecodeError:
             message = ""
 
     if (
@@ -259,8 +262,11 @@ def _sanitized_structured_output_issues(exc: Exception) -> list[dict[str, Any]]:
             include_input=False,
         )
     except TypeError:
-        raw_issues = extractor()
-    except Exception:
+        try:
+            raw_issues = extractor()
+        except (TypeError, ValueError, AttributeError):
+            return []
+    except (ValueError, AttributeError):
         return []
 
     issues: list[dict[str, Any]] = []
@@ -280,7 +286,7 @@ def _sanitized_structured_output_issues(exc: Exception) -> list[dict[str, Any]]:
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def _sha256_bytes(value: bytes) -> str:
@@ -831,7 +837,7 @@ class GovernedCodingModelService:
             lines = text.splitlines(keepends=True)
             insert_at = 0
             for index, line in enumerate(lines):
-                if line.startswith("from ") or line.startswith("import ") or not line.strip() or line.startswith("from __future__"):
+                if line.startswith(("from ", "import ", "from __future__")) or not line.strip():
                     insert_at = index + 1
                     continue
                 break
@@ -1023,6 +1029,7 @@ class GovernedCodingModelService:
                 text=True,
                 timeout=90,
                 shell=False,
+                check=False,
             )
             source_after = {
                 "backend_package": _manifest_digest(source_package),

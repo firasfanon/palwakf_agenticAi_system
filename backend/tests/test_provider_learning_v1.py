@@ -1,9 +1,10 @@
 from types import SimpleNamespace
 
 import pytest
-
 from palwakf_local_agents.agentic_core_v1.learning_service import AgenticLearningService
-from palwakf_local_agents.agentic_core_v1.provider_learning import collect_provider_learning
+from palwakf_local_agents.agentic_core_v1.provider_learning import (
+    collect_provider_learning,
+)
 
 
 class _FakeOllama:

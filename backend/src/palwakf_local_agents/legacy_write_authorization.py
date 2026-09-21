@@ -15,7 +15,6 @@ from palwakf_local_agents.governed_capability_foundation.authz import (
 )
 from palwakf_local_agents.workspace_core.policy import validate_identifier
 
-
 LEGACY_WRITE_AUTHORIZATION_CONTRACT = "LEGACY_WRITE_AUTHORIZATION_CLOSURE_V1"
 CLIENT_SCOPE_HEADER = "X-Palwakf-Client-Id"
 

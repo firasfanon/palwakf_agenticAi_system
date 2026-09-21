@@ -1,19 +1,25 @@
 from __future__ import annotations
-import json, os, sys
+
+import json
+import os
+import sys
+from datetime import UTC, datetime
 from pathlib import Path
-from datetime import datetime, timezone
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend" / "src"))
 
-from palwakf_local_agents.agentic_core_v1.providers import OllamaProvider, HermesProvider
+from palwakf_local_agents.agentic_core_v1.providers import (
+    HermesProvider,
+    OllamaProvider,
+)
 from palwakf_local_agents.agentic_core_v1.registry_projection import build_projection
 
 BASE = "8c1280413ecc6d45a9991dcb059279be14c330e3"
 OUT = ROOT / "evidence" / "mega_batch_a"
 OUT.mkdir(parents=True, exist_ok=True)
 
-report = {"timestamp": datetime.now(timezone.utc).isoformat(), "base_sha": BASE, "gates": {}}
+report = {"timestamp": datetime.now(UTC).isoformat(), "base_sha": BASE, "gates": {}}
 agents = build_projection(ROOT, BASE)
 report["gates"]["UNIFIED_AGENT_MODEL"] = "PASS" if len(agents) == 14 else "FAIL"
 report["gates"]["ROLE_RUNTIME_SKILL_TASK_MAPPING"] = "PASS" if all(a.runnable for a in agents) else "FAIL"
@@ -40,7 +46,7 @@ if oh.get("healthy") and oh.get("models"):
             if json_mode:
                 json.loads(r["response"])
             checks[key] = {"pass": True, "latency_ms": r["latency_ms"], "response_excerpt": r["response"][:300]}
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 -- certification boundary records arbitrary provider failures
             checks[key] = {"pass": False, "error": f"{type(e).__name__}: {e}"}
 report["ollama_checks"] = checks
 ollama_pass = bool(checks) and all(x["pass"] for x in checks.values())
@@ -55,7 +61,7 @@ hermes_evidence = {}
 
 try:
     hermes_evidence = json.loads(hermes_evidence_path.read_text(encoding="utf-8"))
-except Exception as exc:
+except Exception as exc:  # noqa: BLE001 -- evidence boundary must fail closed on any malformed/missing receipt
     hermes_evidence = {
         "certification": "FAIL",
         "evidence_error": f"{type(exc).__name__}: {exc}",

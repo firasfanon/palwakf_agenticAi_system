@@ -5,7 +5,7 @@ import json
 import sqlite3
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -14,7 +14,12 @@ from fastapi import HTTPException
 from palwakf_local_agents.workspace_core.policy import validate_identifier
 from palwakf_local_agents.workspace_core.store import WorkspaceCoreStore
 
-from .contracts import EvidenceCreate, GovernedTaskCreate, ReviewRequest, TransitionRequest
+from .contracts import (
+    EvidenceCreate,
+    GovernedTaskCreate,
+    ReviewRequest,
+    TransitionRequest,
+)
 
 SCHEMA_VERSION = "GOVERNED_OPERATIONS_WORKSPACE_SCOPING_V1"
 _TASK_PREFIX = "GWS-"
@@ -33,7 +38,7 @@ _DISPLAY_STATUS = {
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def _json(value: Any) -> str:

@@ -1,0 +1,101 @@
+{
+  "schema": "palwakf.agentic.l5.provider_certification.v1",
+  "provider": "ollama",
+  "provider_version": "0.34.2",
+  "hardware": {
+    "machine": "DESKTOP-S5A0JSB",
+    "cpu": "Intel64 Family 6 Model 60 Stepping 3, GenuineIntel",
+    "gpu_devices": [
+      "NVIDIA GeForce GTX 1050"
+    ],
+    "gpu_memory_mb": [
+      2048
+    ],
+    "system_memory_mb": 16288
+  },
+  "hardware_fingerprint": "38b71461efb259e7bcf5d5b25929000b2b0c8cfc1ffc8776c15b93d585ab14c0",
+  "gpu_inventory": [
+    {
+      "name": "NVIDIA GeForce GTX 1050",
+      "memory_mb": 2048,
+      "driver": "582.66"
+    }
+  ],
+  "workload": {
+    "task_class": "READ_ONLY_DIAGNOSTIC",
+    "workload_class": "REPOSITORY_EVIDENCE_MEDIUM",
+    "prompt_tokens_estimate": 900,
+    "min_context_length": 8192,
+    "requires_structured_output": true,
+    "requires_tools": false,
+    "max_latency_ms": 45000,
+    "total_deadline_ms": 90000
+  },
+  "workload_fingerprint": "18d18f345f6aa662ca9751bf7a608fa4e7ac6e6aeb1be81e626e89582f18892c",
+  "cloud_benchmark": "NOT_AUTHORIZED_NOT_EXECUTED",
+  "broken_alias": {
+    "model": "palwakf-llama3.2-3b-64k:local",
+    "eligible": false,
+    "show": "FAIL_CLOSED",
+    "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  "attempts": [
+    {
+      "model": "llama3.2:3b",
+      "show": "PASS",
+      "capabilities": [
+        "completion",
+        "tools"
+      ],
+      "result": {
+        "provider_id": "ollama",
+        "provider_version": "0.34.2",
+        "model": "llama3.2:3b",
+        "hardware_fingerprint": "38b71461efb259e7bcf5d5b25929000b2b0c8cfc1ffc8776c15b93d585ab14c0",
+        "workload_fingerprint": "18d18f345f6aa662ca9751bf7a608fa4e7ac6e6aeb1be81e626e89582f18892c",
+        "success": true,
+        "latency_ms": 10699.83,
+        "context_length": 131072,
+        "structured_output": true,
+        "tools": true,
+        "prompt_eval_count": 1240,
+        "prompt_tokens_per_second": 288.405,
+        "eval_count": 41,
+        "tokens_per_second": 6.474,
+        "failure_reason": null
+      },
+      "response_excerpt": "{\n  \"status\": \"PASS\",\n  \"scope\": \"READ_ONLY_DIAGNOSTIC\",\n  \"evidence_quality\": \"BOUNDED\",\n  \"authority_expanded\": false\n}"
+    }
+  ],
+  "capability_evidence": [
+    {
+      "provider_id": "ollama",
+      "provider_version": "0.34.2",
+      "model": "llama3.2:3b",
+      "hardware_fingerprint": "38b71461efb259e7bcf5d5b25929000b2b0c8cfc1ffc8776c15b93d585ab14c0",
+      "workload_fingerprint": "18d18f345f6aa662ca9751bf7a608fa4e7ac6e6aeb1be81e626e89582f18892c",
+      "success": true,
+      "latency_ms": 10699.83,
+      "context_length": 131072,
+      "structured_output": true,
+      "tools": true,
+      "prompt_eval_count": 1240,
+      "prompt_tokens_per_second": 288.405,
+      "eval_count": 41,
+      "tokens_per_second": 6.474,
+      "failure_reason": null
+    }
+  ],
+  "route_decision": {
+    "provider_id": "ollama",
+    "provider_version": "0.34.2",
+    "model": "llama3.2:3b",
+    "hardware_fingerprint": "38b71461efb259e7bcf5d5b25929000b2b0c8cfc1ffc8776c15b93d585ab14c0",
+    "workload_fingerprint": "18d18f345f6aa662ca9751bf7a608fa4e7ac6e6aeb1be81e626e89582f18892c",
+    "evidence_index": 0,
+    "authority_expanded": false
+  },
+  "final_result": "PASS",
+  "runtime_admission_authority": "NOT_GRANTED_BY_CERTIFICATION",
+  "authority_expanded": false
+}

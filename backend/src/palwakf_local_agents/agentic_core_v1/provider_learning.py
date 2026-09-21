@@ -52,7 +52,7 @@ def collect_provider_learning(
         try:
             observation = provider.health()
             probe_completed = True
-        except Exception as error:
+        except Exception as error:  # noqa: BLE001 -- provider adapter boundary records arbitrary health failures as evidence
             observation = {
                 "provider_id": provider_id,
                 "healthy": False,

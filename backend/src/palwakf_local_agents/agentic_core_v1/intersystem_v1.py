@@ -102,12 +102,16 @@ def execute_integration_pilot(
     package: WorkspaceAuthorityPackageV1,
     project_root: Path,
     source_commit_sha: str,
+    target_project_root: Path | None = None,
+    target_expected_head: str | None = None,
 ) -> AgenticIntegrationPilotResultV1:
     if not package.task_branch.startswith("task/"):
         raise ValueError("INTERSYSTEM_TASK_BRANCH_REQUIRED")
     if package.allow_network_write:
         raise ValueError("INTERSYSTEM_NETWORK_WRITE_FORBIDDEN")
-    if package.expected_head.lower() != source_commit_sha.lower():
+    target_root = (target_project_root or project_root).resolve()
+    verified_target_head = target_expected_head or source_commit_sha
+    if package.expected_head.lower() != verified_target_head.lower():
         raise ValueError("INTERSYSTEM_EXPECTED_HEAD_SOURCE_MISMATCH")
 
     agents = sorted(
@@ -131,7 +135,7 @@ def execute_integration_pilot(
         allowed_task_classes=[task_class],
         allowed_provider_ids=[provider],
         allowed_model_providers=[package.requested_model_provider],
-        allowed_filesystem_roots=[str(project_root)],
+        allowed_filesystem_roots=[str(target_root)],
         allowed_path_patterns=list(package.scope_patterns),
         read_only=True,
         allow_network_read=package.allow_network_read,
@@ -143,10 +147,10 @@ def execute_integration_pilot(
         task_branch=package.task_branch,
         base_sha=package.base_sha,
         expected_head=package.expected_head,
-        worktree=str(project_root),
+        worktree=str(target_root),
         filesystem_policy=FilesystemPolicy(
             mode="READ_ONLY",
-            allowed_roots=[str(project_root)],
+            allowed_roots=[str(target_root)],
             allowed_patterns=list(package.scope_patterns),
         ),
         network_policy=NetworkPolicy(
@@ -183,10 +187,19 @@ def execute_integration_pilot(
         environment=environment,
     )
 
-    result = learning.execute_and_learn(package=state, request=request)
+    active_learning = learning
+    if target_root != project_root.resolve() or verified_target_head.lower() != source_commit_sha.lower():
+        active_learning = AgenticLearningService(
+            project_root=project_root,
+            source_commit_sha=source_commit_sha,
+            target_project_root=target_root,
+            target_expected_head=verified_target_head,
+        )
+
+    result = active_learning.execute_and_learn(package=state, request=request)
     receipt = result["receipt"]
     provider_learning = collect_provider_learning(
-        learning=learning,
+        learning=active_learning,
         package=package,
         execution_receipt=receipt,
     )

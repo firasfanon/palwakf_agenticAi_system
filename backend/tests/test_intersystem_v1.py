@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import pytest
-
 from palwakf_local_agents.agentic_core_v1.intersystem_v1 import (
     WorkspaceAuthorityPackageV1,
     execute_integration_pilot,

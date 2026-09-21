@@ -4,18 +4,17 @@ import hashlib
 import json
 import sqlite3
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from .policy import load_policy_pack, package_policy_root, validate_identifier
 
-
 WORKSPACE_SCHEMA_VERSION = "MULTI_WORKSPACE_CORE_POLICY_PACKS_V1"
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def _json(value: Any) -> str:

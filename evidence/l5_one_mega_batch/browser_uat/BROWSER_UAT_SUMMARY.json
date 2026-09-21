@@ -1,0 +1,34 @@
+{
+    "schema":  "palwakf.agentic.l5.browser_uat.v1",
+    "url":  "http://127.0.0.1:8015/agent-console/",
+    "browser":  "Microsoft Edge headless",
+    "desktop":  {
+                    "mode":  "desktop",
+                    "dom_bytes":  18737,
+                    "screenshot_bytes":  447156,
+                    "html_arabic":  true,
+                    "root_nonempty":  true,
+                    "workspace_title":  true,
+                    "safe_operation":  true,
+                    "execution_blocked":  true,
+                    "app_error_overlay":  false,
+                    "edge_task_manager_diagnostic":  true,
+                    "network_or_load_failure":  false
+                },
+    "narrow":  {
+                   "mode":  "narrow",
+                   "dom_bytes":  18737,
+                   "screenshot_bytes":  135119,
+                   "html_arabic":  true,
+                   "root_nonempty":  true,
+                   "workspace_title":  true,
+                   "safe_operation":  true,
+                   "execution_blocked":  true,
+                   "app_error_overlay":  false,
+                   "edge_task_manager_diagnostic":  true,
+                   "network_or_load_failure":  false
+               },
+    "application_result":  "PASS",
+    "edge_diagnostic_classification":  "BROWSER_ENGINE_TASK_MANAGER_DIAGNOSTIC_NOT_APPLICATION_FAILURE",
+    "encoding":  "UTF-8_EXPLICIT"
+}

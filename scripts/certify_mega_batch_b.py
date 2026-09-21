@@ -4,11 +4,23 @@ import json
 import os
 from pathlib import Path
 
-from palwakf_local_agents.agentic_core_v1.contracts import AuthorizationEnvelope, ExecutionEnvironment, FilesystemPolicy, NetworkPolicy, ProviderId, RunRequest
-from palwakf_local_agents.agentic_core_v1.external_contracts import WorkspaceStatePackage
+from palwakf_local_agents.agentic_core_v1.contracts import (
+    AuthorizationEnvelope,
+    ExecutionEnvironment,
+    FilesystemPolicy,
+    NetworkPolicy,
+    ProviderId,
+    RunRequest,
+)
+from palwakf_local_agents.agentic_core_v1.external_contracts import (
+    WorkspaceStatePackage,
+)
 from palwakf_local_agents.agentic_core_v1.learning_service import AgenticLearningService
 from palwakf_local_agents.agentic_core_v1.orchestration import MultiAgentOrchestrator
-from palwakf_local_agents.agentic_core_v1.providers import HermesProvider, OllamaProvider
+from palwakf_local_agents.agentic_core_v1.providers import (
+    HermesProvider,
+    OllamaProvider,
+)
 from palwakf_local_agents.agentic_core_v1.registry_projection import build_projection
 
 BASE_SHA = "1807b450f17904d17cfbe418ded7d61ee5029b56"

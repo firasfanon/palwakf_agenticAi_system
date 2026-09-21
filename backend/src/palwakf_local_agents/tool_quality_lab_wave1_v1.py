@@ -10,7 +10,7 @@ import tempfile
 import threading
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -61,7 +61,7 @@ class QuarantineRequest(BaseModel):
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def _ensure_runtime() -> None:
@@ -754,8 +754,8 @@ def _quarantine_tool(tool_id: str, reason: str, run_id: str | None) -> dict[str,
                 record["suspension_reason"] = reason
                 record["allowed_operations"] = ["presence_probe_only"]
                 wave1._save_state(state)
-        except Exception:
-            pass
+        except Exception as error:  # noqa: BLE001 -- quarantine must remain fail-safe across optional wave1 adapters
+            quarantine["wave1_state_update_error"] = f"{type(error).__name__}: {error}"
     return quarantine
 
 

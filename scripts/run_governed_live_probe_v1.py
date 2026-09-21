@@ -10,7 +10,6 @@ import datetime as dt
 import hashlib
 import ipaddress
 import json
-import os
 import pathlib
 import re
 import socket
@@ -53,7 +52,7 @@ SOURCE_SINGLE_FILES = (
     "frontend/vite.config.ts",
 )
 EXCLUDED_DIRS = {"__pycache__", "node_modules", "dist", "build", ".git", ".idea", ".venv", "venv"}
-REDACT_RE = re.compile(r"api.?key|secret|password|bearer|credential", re.I)
+REDACT_RE = re.compile(r"api.?key|secret|password|bearer|credential", re.IGNORECASE)
 
 
 class BlockRedirect(urllib.request.HTTPRedirectHandler):
@@ -69,7 +68,7 @@ class Evidence:
 
     def event(self, name: str, status: str, **details: Any) -> None:
         row = {
-            "time_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+            "time_utc": dt.datetime.now(dt.UTC).isoformat(),
             "name": name,
             "status": status,
             **details,
@@ -287,7 +286,7 @@ def deep_find_settings(value: Any) -> dict[str, Any]:
         nonlocal best, best_score
         if isinstance(node, dict):
             keys = {normalize_key(str(k)) for k in node}
-            score = sum(k in keys for k in {"provider", "providermode", "mode", "baseurl", "model", "modelname", "timeoutseconds"})
+            score = sum(k in keys for k in ("provider", "providermode", "mode", "baseurl", "model", "modelname", "timeoutseconds"))
             if score > best_score:
                 best, best_score = node, score
             for v in node.values():
@@ -589,7 +588,7 @@ def verify_ollama_local_model(
         raise RuntimeError(f"OLLAMA_TAGS_FETCH_FAILED:{status}")
     rows = payload.get("models")
     if not isinstance(rows, list):
-        raise RuntimeError("OLLAMA_TAGS_MODELS_LIST_MISSING")
+        raise TypeError("OLLAMA_TAGS_MODELS_LIST_MISSING")
     inventory: list[dict[str, Any]] = []
     selected: dict[str, Any] | None = None
     for raw in rows:
@@ -710,7 +709,7 @@ def run(args: argparse.Namespace) -> int:
         print(f"PROJECT_ROOT_NOT_FOUND:{project_root}", file=sys.stderr)
         return 21
     output_base = pathlib.Path(args.output_root).resolve()
-    stamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    stamp = dt.datetime.now(dt.UTC).strftime("%Y%m%d_%H%M%S_%f")
     evidence = Evidence(output_base / f"LOCAL_AGENTS_GOVERNED_MODEL_TIMEOUT_RETRY_QWEN2_5_3B_V1_{stamp}")
     summary: dict[str, Any] = {
         "phase": "MEGA_BATCH_LOCAL_AGENTS_GOVERNED_MODEL_CANDIDATE_TIMEOUT_RETRY_QWEN2_5_3B_V1",
@@ -930,7 +929,7 @@ def run(args: argparse.Namespace) -> int:
             "candidate_state": "HUMAN_REVIEW_REQUIRED",
             "source_apply": "BLOCKED",
         })
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 -- top-level governed harness boundary must convert any failure to fail-closed evidence
         summary["error"] = f"{type(exc).__name__}:{exc}"
         summary["traceback"] = traceback.format_exc()
         summary["result"] = "FAIL_CLOSED"
@@ -970,7 +969,7 @@ def run(args: argparse.Namespace) -> int:
                     raise RuntimeError("SETTINGS_RESTORE_VERIFICATION_MISMATCH")
                 evidence.event("PROVIDER_SETTINGS_RESTORE", "PASS")
                 summary["provider_settings_restored"] = "PASS_VERIFIED"
-            except Exception as restore_exc:
+            except Exception as restore_exc:  # noqa: BLE001 -- restoration boundary must capture every failure
                 evidence.event("PROVIDER_SETTINGS_RESTORE", "FAIL", error=str(restore_exc))
                 summary["provider_settings_restored"] = "FAIL"
                 summary["result"] = "FAIL_CLOSED_RESTORE_FAILED"
@@ -985,7 +984,7 @@ def run(args: argparse.Namespace) -> int:
             summary["source_mutation"] = "FALSE" if source_unchanged else "DETECTED"
             if not source_unchanged:
                 summary["result"] = "FAIL_CLOSED_SOURCE_MUTATION_DETECTED"
-        except Exception as hash_exc:
+        except Exception as hash_exc:  # noqa: BLE001 -- postimage proof boundary must fail closed on any hashing error
             summary["source_mutation"] = "NOT_PROVEN"
             summary["result"] = "FAIL_CLOSED_SOURCE_POSTIMAGE_ERROR"
             summary["source_postimage_error"] = str(hash_exc)

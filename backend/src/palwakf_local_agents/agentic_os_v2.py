@@ -1,5 +1,4 @@
 """Agentic OS V2 constants. No model or tool execution."""
-from pathlib import Path
 
 AUTONOMY_LEVELS = (
     "L0_READ_ONLY",

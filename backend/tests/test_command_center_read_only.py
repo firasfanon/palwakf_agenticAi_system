@@ -7,7 +7,6 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
 from palwakf_local_agents.command_center.read_only_store import (
     LocalAgentsReadOnlyStore,
     ReadOnlyStoreError,

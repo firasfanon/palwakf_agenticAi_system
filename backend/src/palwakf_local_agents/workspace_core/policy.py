@@ -4,7 +4,6 @@ import json
 from pathlib import Path
 from typing import Any
 
-
 SAFE_ID_CHARS = set("abcdefghijklmnopqrstuvwxyz0123456789_-")
 
 

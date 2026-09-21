@@ -2,9 +2,13 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
+
 import yaml
 
-from palwakf_local_agents.local_agent_core.registry import list_agents as list_runtime_profiles
+from palwakf_local_agents.local_agent_core.registry import (
+    list_agents as list_runtime_profiles,
+)
+
 from .contracts import ProviderId, UnifiedAgent
 
 ROLE_TO_RUNTIME = {
@@ -43,7 +47,7 @@ def _load_roles(project_root: Path) -> list[dict[str, Any]]:
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
     roles = data.get("roles", [])
     if not isinstance(roles, list):
-        raise RuntimeError("INVALID_ROLE_REGISTRY")
+        raise TypeError("INVALID_ROLE_REGISTRY")
     return roles
 
 

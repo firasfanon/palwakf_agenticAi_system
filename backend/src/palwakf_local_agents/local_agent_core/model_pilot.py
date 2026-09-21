@@ -10,7 +10,6 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 from fastapi import HTTPException
 
-
 CONFIG_RELATIVE_PATH = Path("config") / "local_agent_model_pilot_v1.json"
 ALLOWED_BASE_URLS = {"http://127.0.0.1:11434", "http://localhost:11434"}
 ALLOWED_WORKSPACE_ID = "palwakf_government"

@@ -1,13 +1,17 @@
 from pathlib import Path
-import pytest
 
+import pytest
 from palwakf_local_agents.agentic_core_v1.contracts import (
-    AuthorizationEnvelope, ExecutionEnvironment, FilesystemPolicy,
-    NetworkPolicy, ProviderId, RunRequest
+    AuthorizationEnvelope,
+    ExecutionEnvironment,
+    FilesystemPolicy,
+    NetworkPolicy,
+    ProviderId,
+    RunRequest,
 )
+from palwakf_local_agents.agentic_core_v1.providers import NativeProvider
 from palwakf_local_agents.agentic_core_v1.registry_projection import build_projection
 from palwakf_local_agents.agentic_core_v1.runtime import AgenticRuntime, AuthorityError
-from palwakf_local_agents.agentic_core_v1.providers import NativeProvider
 
 BASE = "8c1280413ecc6d45a9991dcb059279be14c330e3"
 

@@ -4,7 +4,6 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
 from palwakf_local_agents.governed_operations import mount_governed_operations
 from palwakf_local_agents.workspace_core import mount_workspace_core
 

@@ -5,7 +5,7 @@ import json
 import sqlite3
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -16,16 +16,16 @@ from palwakf_local_agents.workspace_core.store import WorkspaceCoreStore
 
 from .contracts import AgentPreparationCreate, ModelPilotDraftCreate
 from .engine import prepare
+from .model_pilot import generate_local_draft, load_model_pilot_config, pilot_status
 from .policy import assess_model_pilot, assess_request, controls_for_workspace
 from .registry import get_agent, list_agents
-from .model_pilot import generate_local_draft, load_model_pilot_config, pilot_status
 
 SCHEMA_VERSION = "GOVERNED_LOCAL_AGENT_CORE_V1"
 MODEL_PILOT_SCHEMA_VERSION = "LOCAL_AGENT_CONTROLLED_MODEL_PILOT_V1"
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def _json(value: Any) -> str:

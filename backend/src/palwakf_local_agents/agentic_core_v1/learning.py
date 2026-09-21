@@ -99,6 +99,27 @@ class EvaluationEngine:
         ]
         return EvaluationReceipt(project_id=receipt.project_id, task_id=receipt.task_id, run_id=receipt.run_id, evaluator="PALWAKF_EVALUATION_ENGINE_V1", score=1.0 if passed else 0.0, passed=passed, reasons=reasons)
 
+def _classify_failure(
+    *,
+    receipt: RunReceipt,
+    evaluation: EvaluationReceipt,
+) -> dict[str, Any]:
+    # Conservative classification for external-review candidates only.
+    reasons = set(evaluation.reasons)
+    if "PROJECT_MUTATION_OBSERVED" in reasons or bool(receipt.changed_files):
+        return {
+            "classification": "POLICY_FAILURE",
+            "confidence": "HIGH",
+            "root_cause": "PROJECT_MUTATION_OBSERVED",
+            "preventive_gate_allowed": True,
+        }
+    return {
+        "classification": "UNKNOWN_FAILURE",
+        "confidence": "LOW",
+        "root_cause": "UNRESOLVED",
+        "preventive_gate_allowed": False,
+    }
+
 
 class LearningEngine:
     def derive(self, *, receipt: RunReceipt, evaluation: EvaluationReceipt, authorization: AuthorizationEnvelope) -> list[LearningCandidate]:
@@ -107,7 +128,59 @@ class LearningEngine:
         if receipt.task_id != authorization.task_id:
             raise ValueError("LEARNING_TASK_AUTHORITY_MISMATCH")
         if not evaluation.passed:
-            return []
+            failure = _classify_failure(receipt=receipt, evaluation=evaluation)
+            failure_evidence = [
+                *receipt.evidence,
+                {
+                    "type": "EVALUATION_RECEIPT",
+                    "evaluation_id": evaluation.evaluation_id,
+                    "passed": evaluation.passed,
+                    "score": evaluation.score,
+                    "reasons": list(evaluation.reasons),
+                },
+                {
+                    "type": "FAILURE_CLASSIFICATION",
+                    **failure,
+                },
+            ]
+            candidates = [
+                LearningCandidate(
+                    project_id=receipt.project_id,
+                    task_id=receipt.task_id,
+                    source_run_id=receipt.run_id,
+                    candidate_type="PROJECT_LESSON",
+                    statement=(
+                        "A governed run failed evaluation and produced an "
+                        "evidence-backed learning candidate for external review."
+                    ),
+                    rationale=(
+                        f"Failure classified as {failure['classification']} "
+                        f"with root_cause={failure['root_cause']} and "
+                        f"confidence={failure['confidence']}; promotion remains external."
+                    ),
+                    evidence_refs=failure_evidence,
+                )
+            ]
+            if failure["preventive_gate_allowed"]:
+                candidates.append(
+                    LearningCandidate(
+                        project_id=receipt.project_id,
+                        task_id=receipt.task_id,
+                        source_run_id=receipt.run_id,
+                        candidate_type="PREVENTIVE_GATE_CANDIDATE",
+                        statement=(
+                            "Prevent recurrence of governed runs that observe "
+                            "project mutation under a read-only expectation."
+                        ),
+                        rationale=(
+                            "High-confidence POLICY_FAILURE from "
+                            "PROJECT_MUTATION_OBSERVED. This is a candidate only; "
+                            "external review is required before any enforcement."
+                        ),
+                        evidence_refs=failure_evidence,
+                    )
+                )
+            return candidates
         return [LearningCandidate(project_id=receipt.project_id, task_id=receipt.task_id, source_run_id=receipt.run_id, candidate_type="PROJECT_LESSON", statement="A governed read-only run completed under external authority with zero project mutation and evidence-backed evaluation.", rationale="Derived from a PASS run and PASS evaluation; promotion remains external.", evidence_refs=list(receipt.evidence))]
 
     def build_mind_review(self, *, project_id: str, candidates: list[LearningCandidate]) -> MindReviewEnvelope:

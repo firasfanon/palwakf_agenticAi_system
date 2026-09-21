@@ -4,10 +4,9 @@ import ast
 import hashlib
 import re
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
-
+from typing import Any, ClassVar
 
 _ROUTE_METHODS = {"get", "post", "put", "patch", "delete", "options", "head"}
 _COMPONENT_RE = re.compile(r"(?:export\s+)?(?:default\s+)?function\s+([A-Z][A-Za-z0-9_]*)|(?:export\s+)?const\s+([A-Z][A-Za-z0-9_]*)\s*=", re.MULTILINE)
@@ -22,15 +21,15 @@ class CodebaseIndexer:
         "agents",
         "docs",
     )
-    allowed_extensions = {".py", ".ts", ".tsx", ".js", ".jsx", ".md", ".json", ".yaml", ".yml", ".toml"}
-    excluded_dirs = {".git", ".venv", "node_modules", "dist", "build", "__pycache__", "backups", "runtime_state"}
+    allowed_extensions: ClassVar[set[str]] = {".py", ".ts", ".tsx", ".js", ".jsx", ".md", ".json", ".yaml", ".yml", ".toml"}
+    excluded_dirs: ClassVar[set[str]] = {".git", ".venv", "node_modules", "dist", "build", "__pycache__", "backups", "runtime_state"}
 
     def __init__(self, project_root: Path) -> None:
         self.project_root = project_root.resolve()
 
     @staticmethod
     def _now() -> str:
-        return datetime.now(timezone.utc).isoformat()
+        return datetime.now(UTC).isoformat()
 
     def _iter_files(self):
         seen = 0
