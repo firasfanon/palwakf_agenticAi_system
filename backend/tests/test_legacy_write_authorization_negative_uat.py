@@ -8,10 +8,8 @@ from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
-
 from palwakf_local_agents import store as legacy_store
 from palwakf_local_agents.app import create_app
-
 
 ROOT = Path(__file__).resolve().parents[2]
 

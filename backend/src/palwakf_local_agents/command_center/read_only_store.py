@@ -4,9 +4,9 @@ import hashlib
 import json
 import re
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from .models import SAFETY_POSTURE
 
@@ -62,7 +62,7 @@ class LocalAgentsReadOnlyStore:
 
     @staticmethod
     def _timestamp(path: Path) -> str:
-        return datetime.fromtimestamp(path.stat().st_mtime, tz=timezone.utc).isoformat()
+        return datetime.fromtimestamp(path.stat().st_mtime, tz=UTC).isoformat()
 
     def _metadata(self, path: Path, kind: str) -> dict[str, Any]:
         return {

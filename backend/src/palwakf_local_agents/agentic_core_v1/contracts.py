@@ -1,15 +1,15 @@
 from __future__ import annotations
 
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any, Literal
 from uuid import uuid4
-from datetime import datetime, timezone
 
 from pydantic import BaseModel, Field, model_validator
 
 
 def utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 class ProviderId(str, Enum):
@@ -32,6 +32,7 @@ class ResourceBudget(BaseModel):
     timeout_seconds: int = Field(default=60, ge=1, le=3600)
     max_files: int = Field(default=500, ge=1, le=10000)
     max_bytes: int = Field(default=5_000_000, ge=1024, le=100_000_000)
+    max_retries: int = Field(default=0, ge=0, le=3)
 
 
 class ExecutionEnvironment(BaseModel):

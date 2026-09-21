@@ -5,7 +5,12 @@ from typing import Any
 
 from .contracts import RunRequest
 from .external_contracts import ExternalContractAdapter, WorkspaceStatePackage
-from .learning import EvaluationEngine, ExperienceRecord, ExperienceStore, LearningEngine
+from .learning import (
+    EvaluationEngine,
+    ExperienceRecord,
+    ExperienceStore,
+    LearningEngine,
+)
 from .orchestration import MultiAgentOrchestrator
 from .runtime import AgenticRuntime
 

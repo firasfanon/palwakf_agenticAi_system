@@ -4,7 +4,6 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-
 CoreAgentOperatingModel = Literal["CORE_AGENT_OPERATING_MODEL_V1"]
 AgentOutputAuthority = Literal["PROPOSAL_ONLY_NO_EXECUTION"]
 TaskBindingState = Literal["TASK_ID_BOUND", "TASK_ID_NOT_SUPPLIED_PREPARE_ONLY"]

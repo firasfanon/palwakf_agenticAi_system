@@ -5,7 +5,6 @@ from typing import Any
 
 from .codebase_index import CodebaseIndexer
 
-
 TOOL_REGISTRY: list[dict[str, Any]] = [
     {
         "tool_id": "project_summary",

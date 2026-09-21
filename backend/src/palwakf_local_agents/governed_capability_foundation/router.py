@@ -4,11 +4,24 @@ from pathlib import Path
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request
 
-from palwakf_local_agents.legacy_write_authorization import install_legacy_write_authorization_boundary
+from palwakf_local_agents.legacy_write_authorization import (
+    install_legacy_write_authorization_boundary,
+)
 from palwakf_local_agents.workspace_core.policy import validate_identifier
 
-from .authz import ActorPrincipal, LocalActorScopeRegistry, authenticated_actor, require_workspace_scope
-from .contracts import DeterministicToolRequest, PilotExecutionRequest, ProjectCreate, ReviewDecision, TaskCreate
+from .authz import (
+    ActorPrincipal,
+    LocalActorScopeRegistry,
+    authenticated_actor,
+    require_workspace_scope,
+)
+from .contracts import (
+    DeterministicToolRequest,
+    PilotExecutionRequest,
+    ProjectCreate,
+    ReviewDecision,
+    TaskCreate,
+)
 from .store import GovernedCapabilityFoundationStore
 
 

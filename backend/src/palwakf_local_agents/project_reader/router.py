@@ -1,16 +1,16 @@
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Iterable
 import hashlib
 import json
 import re
+from collections.abc import Iterable
+from pathlib import Path
 
 from fastapi import APIRouter, FastAPI, HTTPException, Query
 
 try:
     from palwakf_local_agents.workspace_core.policy import validate_identifier
-except Exception:  # pragma: no cover - defensive import fallback
+except ImportError:  # pragma: no cover - defensive import fallback
     def validate_identifier(value: str, _: str) -> str:
         if not value or not re.fullmatch(r"[A-Za-z0-9_.:-]{3,120}", value):
             raise ValueError("INVALID_IDENTIFIER")
@@ -100,7 +100,7 @@ def _extract_route_lines(path: Path, project_root: Path) -> list[dict]:
     for index, line in enumerate(text.splitlines(), start=1):
         stripped = line.strip()
         route_like = False
-        if path.suffix == ".py" and (stripped.startswith("@api.get") or stripped.startswith("@app.get") or stripped.startswith("@router.get") or "app.mount(" in stripped or "include_router" in stripped):
+        if path.suffix == ".py" and (stripped.startswith(("@api.get", "@app.get", "@router.get")) or "app.mount(" in stripped or "include_router" in stripped):
             route_like = True
         if path.name == "App.tsx" and ("path ===" in stripped or "agent-console" in stripped and "return <" in stripped):
             route_like = True
@@ -141,7 +141,7 @@ def _package_metadata(project_root: Path) -> dict:
                 "dependencies": sorted((raw.get("dependencies") or {}).keys()),
                 "dev_dependencies": sorted((raw.get("devDependencies") or {}).keys()),
             }
-        except Exception as error:  # pragma: no cover
+        except (OSError, UnicodeError, json.JSONDecodeError, TypeError) as error:  # pragma: no cover
             payload["frontend_package_json_error"] = str(error)
     return payload
 

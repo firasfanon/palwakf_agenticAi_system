@@ -6,11 +6,21 @@ from fastapi import APIRouter, Depends, FastAPI, Header, HTTPException, Query, R
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from palwakf_local_agents.governed_capability_foundation.authz import ActorPrincipal, authenticated_actor
-from palwakf_local_agents.legacy_write_authorization import install_legacy_write_authorization_boundary
+from palwakf_local_agents.governed_capability_foundation.authz import (
+    ActorPrincipal,
+    authenticated_actor,
+)
+from palwakf_local_agents.legacy_write_authorization import (
+    install_legacy_write_authorization_boundary,
+)
 from palwakf_local_agents.workspace_core.policy import validate_identifier
 
-from .contracts import EvidenceCreate, GovernedTaskCreate, ReviewRequest, TransitionRequest
+from .contracts import (
+    EvidenceCreate,
+    GovernedTaskCreate,
+    ReviewRequest,
+    TransitionRequest,
+)
 from .store import WorkspaceGovernedOperationsStore
 
 STATIC_ROOT = Path(__file__).resolve().parent / "static"

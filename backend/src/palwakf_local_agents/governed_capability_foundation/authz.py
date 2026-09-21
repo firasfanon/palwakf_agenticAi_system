@@ -10,7 +10,6 @@ from fastapi import HTTPException, Request
 
 from palwakf_local_agents.workspace_core.policy import validate_identifier
 
-
 ACTOR_SCOPE_REGISTRY_CONTRACT = "LOCAL_ACTOR_SCOPE_REGISTRY_V1"
 
 

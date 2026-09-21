@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import pytest
-
 from palwakf_local_agents.agentic_core_v1.contracts import (
     AuthorizationEnvelope,
     ProviderId,

@@ -5,18 +5,17 @@ import os
 import re
 import threading
 from copy import deepcopy
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
-
 
 STATE_SCHEMA = "palwakf.local_agents.operational_core.v1"
 _ALLOWED_RULE_ID = re.compile(r"^[a-z0-9][a-z0-9_.-]{1,79}$")
 
 
 def utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 DEFAULT_RULES: list[dict[str, Any]] = [

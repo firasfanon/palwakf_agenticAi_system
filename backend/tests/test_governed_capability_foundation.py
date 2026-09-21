@@ -2,8 +2,12 @@ from pathlib import Path
 
 import pytest
 from fastapi import HTTPException
-
-from palwakf_local_agents.governed_capability_foundation.authz import ActorPrincipal, LocalActorScopeRegistry, require_commercial_client_scope, require_workspace_scope
+from palwakf_local_agents.governed_capability_foundation.authz import (
+    ActorPrincipal,
+    LocalActorScopeRegistry,
+    require_commercial_client_scope,
+    require_workspace_scope,
+)
 from palwakf_local_agents.governed_capability_foundation.tools import deterministic_tool
 
 

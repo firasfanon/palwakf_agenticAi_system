@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from pydantic import ValidationError
-
 from palwakf_local_agents.local_agent_core.contracts import AgentPreparationCreate
 from palwakf_local_agents.local_agent_core.engine import prepare
 from palwakf_local_agents.local_agent_core.registry import list_agents
+from pydantic import ValidationError
 
 
 def test_agent_preparation_accepts_governed_task_id() -> None:

@@ -3,6 +3,7 @@ from palwakf_local_agents.agentic_os_v2 import (
     foundation_v2_is_execution_allowed,
 )
 
+
 def test_foundation_v2_execution_is_disabled():
     assert foundation_v2_is_execution_allowed() is False
 

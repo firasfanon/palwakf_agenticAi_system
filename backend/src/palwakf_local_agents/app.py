@@ -1,40 +1,102 @@
 from __future__ import annotations
 
+import os
+import re
+import subprocess
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from palwakf_local_agents.controlled_software_development_pipeline_v1 import (
+    install_controlled_software_development_pipeline_v1,
+)
+from palwakf_local_agents.first_human_authorized_read_only_operation_v1 import (
+    install_first_human_authorized_read_only_operation_v1,
+)
+from palwakf_local_agents.full_stack_operational_waves_3_to_8_v1 import (
+    router as full_stack_waves_3_8_v1_router,
+)
+from palwakf_local_agents.governed_coding_model_provider_v1 import (
+    install_governed_coding_model_provider_v1,
+)
+from palwakf_local_agents.open_source_capabilities_v1 import (
+    router as open_source_capabilities_v1_router,
+)
+from palwakf_local_agents.open_source_tools_operational_admission_wave1_v1 import (
+    router as open_source_tools_wave1_v1_router,
+)
+from palwakf_local_agents.quality_accepted_tools_goal_planner_binding_v1 import (
+    install_quality_planner_binding,
+)
+from palwakf_local_agents.quality_gated_external_scanners_wave2_v1 import (
+    router as external_scanners_wave2_v1_router,
+)
+from palwakf_local_agents.quality_gated_read_only_operations_wave1_v1 import (
+    router as operations_wave1_v1_router,
+)
+from palwakf_local_agents.tool_quality_lab_wave1_v1 import (
+    router as tool_quality_lab_wave1_v1_router,
+)
+
+from . import store
+from .agentic_core_v1 import mount_agentic_core_v1
+from .backend_frontend_alignment import mount_backend_frontend_alignment
+from .command_center import mount_command_center
+from .governed_capability_foundation import mount_governed_capability_foundation
+from .governed_operations import mount_governed_operations
+from .local_agent_core import mount_local_agent_core
 from .models import AgentSummary, HealthResponse, TaskCreate, TaskRecord, utc_now
+from .operational_core_v1 import mount_operational_core_v1
+from .project_reader import mount_project_reader
 from .registry import list_agents
 from .settings import settings
-from . import store
-from .command_center import mount_command_center
-from .governed_operations import mount_governed_operations
 from .workspace_core import mount_workspace_core
-from .local_agent_core import mount_local_agent_core
-from .governed_capability_foundation import mount_governed_capability_foundation
-from .project_reader import mount_project_reader
-from .backend_frontend_alignment import mount_backend_frontend_alignment
-from .operational_core_v1 import mount_operational_core_v1
-from .agentic_core_v1 import mount_agentic_core_v1
-from palwakf_local_agents.open_source_capabilities_v1 import router as open_source_capabilities_v1_router
-from palwakf_local_agents.open_source_tools_operational_admission_wave1_v1 import router as open_source_tools_wave1_v1_router
-from palwakf_local_agents.quality_gated_read_only_operations_wave1_v1 import router as operations_wave1_v1_router
-from palwakf_local_agents.quality_gated_external_scanners_wave2_v1 import router as external_scanners_wave2_v1_router
-from palwakf_local_agents.full_stack_operational_waves_3_to_8_v1 import router as full_stack_waves_3_8_v1_router
-from palwakf_local_agents.tool_quality_lab_wave1_v1 import router as tool_quality_lab_wave1_v1_router
-from palwakf_local_agents.quality_accepted_tools_goal_planner_binding_v1 import install_quality_planner_binding
-from palwakf_local_agents.first_human_authorized_read_only_operation_v1 import install_first_human_authorized_read_only_operation_v1
-from palwakf_local_agents.controlled_software_development_pipeline_v1 import install_controlled_software_development_pipeline_v1
-from palwakf_local_agents.governed_coding_model_provider_v1 import install_governed_coding_model_provider_v1
+
+_SHA40_RE = re.compile(r"^[0-9a-fA-F]{40}$")
+
+
+def _git_head(root: Path) -> str | None:
+    try:
+        completed = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "HEAD"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+    discovered = completed.stdout.strip()
+    if completed.returncode != 0 or not _SHA40_RE.fullmatch(discovered):
+        return None
+    return discovered.lower()
+
+
+def _resolve_source_commit_sha(project_root: Path) -> str:
+    configured = os.getenv("PALWAKF_SOURCE_COMMIT_SHA", "").strip()
+    if configured:
+        if not _SHA40_RE.fullmatch(configured):
+            raise RuntimeError("PALWAKF_SOURCE_COMMIT_SHA_INVALID")
+        return configured.lower()
+
+    source_repository_root = Path(__file__).resolve().parents[3]
+    candidate_roots = (project_root, source_repository_root)
+    for candidate in dict.fromkeys(root.resolve() for root in candidate_roots):
+        discovered = _git_head(candidate)
+        if discovered is not None:
+            return discovered
+
+    raise RuntimeError("SOURCE_COMMIT_SHA_UNRESOLVED")
 
 
 def create_app(project_root: Path | None = None) -> FastAPI:
     app = FastAPI(title="PalWakf Local Agent Console", version="0.1.0", docs_url="/docs", redoc_url=None)
     install_quality_planner_binding(app)
-    resolved_project_root = project_root or Path(__file__).resolve().parents[3]
+    resolved_project_root = (project_root or Path(__file__).resolve().parents[3]).resolve()
+    source_commit_sha = _resolve_source_commit_sha(resolved_project_root)
     install_governed_coding_model_provider_v1(app, project_root=resolved_project_root)
     install_controlled_software_development_pipeline_v1(app, project_root=resolved_project_root)
     install_first_human_authorized_read_only_operation_v1(app, project_root=resolved_project_root)
@@ -46,7 +108,11 @@ def create_app(project_root: Path | None = None) -> FastAPI:
     mount_project_reader(app, project_root=resolved_project_root)
     mount_backend_frontend_alignment(app, project_root=resolved_project_root)
     mount_operational_core_v1(app, project_root=resolved_project_root)
-    mount_agentic_core_v1(app, project_root=resolved_project_root, source_commit_sha="8c1280413ecc6d45a9991dcb059279be14c330e3")
+    mount_agentic_core_v1(
+        app,
+        project_root=resolved_project_root,
+        source_commit_sha=source_commit_sha,
+    )
 
     react_console_dist = resolved_project_root / "frontend" / "dist"
     react_console_index = react_console_dist / "index.html"
@@ -134,6 +200,9 @@ app.include_router(open_source_tools_wave1_v1_router)
 app.include_router(open_source_capabilities_v1_router)
 
 # >>> LOCAL_AGENTS_SOURCE_NATIVE_CANDIDATE_V1_SAFE_READ_MODEL_START
-from .safe_read_model_source_native_v1 import install_safe_read_model_middleware_source_native_v1 as _install_safe_read_model_middleware_source_native_v1
+from .safe_read_model_source_native_v1 import (
+    install_safe_read_model_middleware_source_native_v1 as _install_safe_read_model_middleware_source_native_v1,
+)
+
 _install_safe_read_model_middleware_source_native_v1(app)
 # <<< LOCAL_AGENTS_SOURCE_NATIVE_CANDIDATE_V1_SAFE_READ_MODEL_END

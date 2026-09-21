@@ -6,13 +6,12 @@ import os
 import re
 import threading
 from copy import deepcopy
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
 from .state_store import GovernedLocalStateStore
-
 
 INNOVATION_SCHEMA = "palwakf.local_agents.innovation_resilience_identity.v1"
 _TOKEN_RE = re.compile(r"[A-Za-z0-9_\u0600-\u06FF]+")
@@ -23,7 +22,7 @@ _STOP = {
 
 
 def utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def normalize(value: Any) -> str:
@@ -365,7 +364,7 @@ class InnovationResilienceManager:
             conflicts.append({"field": "brand_personality", "weight": round(brand * 3, 2), "reason": "high_overlap"})
         if visual >= 0.67:
             conflicts.append({"field": "visual_keywords", "weight": round(visual * 3, 2), "reason": "high_overlap"})
-        return int(round(min(score, 100))), conflicts
+        return round(min(score, 100)), conflicts
 
     def similarity_check(self, project_key: str, payload: dict[str, Any]) -> dict[str, Any]:
         self.initialize()

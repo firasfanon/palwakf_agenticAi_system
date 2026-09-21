@@ -4,9 +4,7 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-
 from palwakf_local_agents.operational_core_v1 import mount_operational_core_v1
-
 
 IDENTITY = {
     "project_name": "PalWakf Local Agents",

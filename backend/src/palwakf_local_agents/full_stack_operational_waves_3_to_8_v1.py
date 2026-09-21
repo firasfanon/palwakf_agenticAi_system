@@ -10,7 +10,7 @@ import tempfile
 import threading
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -137,7 +137,7 @@ class ImplementationReviewRequest(BaseModel):
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def _read_json(path: Path, default: Any) -> Any:
@@ -466,18 +466,18 @@ def _validate_plan(value: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
         if key not in value:
             raise ValueError(f"PLAN_SCHEMA_MISSING_{key}")
     if not isinstance(value["goal_summary"], str):
-        raise ValueError("PLAN_SCHEMA_GOAL_SUMMARY_INVALID")
+        raise TypeError("PLAN_SCHEMA_GOAL_SUMMARY_INVALID")
     for key in ["assumptions", "constraints", "risks", "validation_plan", "human_decisions_required"]:
         if not isinstance(value[key], list) or not all(isinstance(item, str) for item in value[key]):
             raise ValueError(f"PLAN_SCHEMA_{key.upper()}_INVALID")
     if not isinstance(value["recommended_steps"], list):
-        raise ValueError("PLAN_SCHEMA_RECOMMENDED_STEPS_INVALID")
+        raise TypeError("PLAN_SCHEMA_RECOMMENDED_STEPS_INVALID")
 
     warnings = []
     normalized_steps = []
     for index, step in enumerate(value["recommended_steps"], start=1):
         if not isinstance(step, dict):
-            raise ValueError("PLAN_STEP_NOT_OBJECT")
+            raise TypeError("PLAN_STEP_NOT_OBJECT")
         tools = step.get("recommended_tools", [])
         if not isinstance(tools, list) or not all(isinstance(tool, str) for tool in tools):
             raise ValueError("PLAN_STEP_TOOLS_INVALID")
@@ -623,7 +623,7 @@ def _validate_proposal(value: dict[str, Any], targets: dict[str, dict[str, Any]]
     seen = set()
     for item in changes:
         if not isinstance(item, dict):
-            raise ValueError("PROPOSAL_CHANGE_NOT_OBJECT")
+            raise TypeError("PROPOSAL_CHANGE_NOT_OBJECT")
         path = str(item.get("path") or "")
         if path not in targets:
             raise ValueError("PROPOSAL_PATH_NOT_AUTHORIZED")
@@ -632,7 +632,7 @@ def _validate_proposal(value: dict[str, Any], targets: dict[str, dict[str, Any]]
         seen.add(path)
         new_content = item.get("new_content")
         if not isinstance(new_content, str):
-            raise ValueError("PROPOSAL_NEW_CONTENT_INVALID")
+            raise TypeError("PROPOSAL_NEW_CONTENT_INVALID")
         total += len(new_content.encode("utf-8"))
         if total > MAX_PROPOSAL_BYTES:
             raise ValueError("PROPOSAL_TOO_LARGE")

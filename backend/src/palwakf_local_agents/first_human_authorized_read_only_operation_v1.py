@@ -6,15 +6,17 @@ import os
 import tempfile
 import threading
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, FastAPI, HTTPException, Query
 from pydantic import BaseModel, Field
 
+from palwakf_local_agents import (
+    quality_accepted_tools_goal_planner_binding_v1 as planner,
+)
 from palwakf_local_agents.operational_core_v1.codebase_index import CodebaseIndexer
-from palwakf_local_agents import quality_accepted_tools_goal_planner_binding_v1 as planner
 
 CONTRACT_ID = "FIRST_HUMAN_AUTHORIZED_READ_ONLY_OPERATION_V1"
 OPERATION_TYPE = "READ_ONLY_CODEBASE_INDEX_AND_STRUCTURE_REPORT"
@@ -36,7 +38,7 @@ class ExecuteRequest(BaseModel):
     detail_limit: int = Field(default=250, ge=20, le=500)
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 def _sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest().upper()

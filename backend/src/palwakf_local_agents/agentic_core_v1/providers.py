@@ -5,6 +5,7 @@ import os
 import shutil
 import subprocess
 import time
+import urllib.error
 import urllib.request
 from abc import ABC, abstractmethod
 from typing import Any
@@ -22,7 +23,15 @@ class ModelProvider(ABC):
     def list_models(self) -> list[str]: ...
 
     @abstractmethod
-    def generate(self, model: str, prompt: str, *, json_mode: bool = False, timeout: int = 60) -> dict[str, Any]: ...
+    def generate(
+        self,
+        model: str,
+        prompt: str,
+        *,
+        json_mode: bool = False,
+        format_schema: dict[str, Any] | None = None,
+        timeout: int = 60,
+    ) -> dict[str, Any]: ...
 
 
 class OllamaProvider(ModelProvider):
@@ -45,20 +54,28 @@ class OllamaProvider(ModelProvider):
     def list_models(self) -> list[str]:
         return [m["name"] for m in self._request("/api/tags").get("models", []) if m.get("name")]
 
+    def version(self) -> str:
+        return str(self._request("/api/version").get("version") or "")
+
+    def model_info(self, model: str) -> dict[str, Any]:
+        return self._request("/api/show", {"model": model}, timeout=20)
+
     def health(self) -> dict[str, Any]:
         started = time.perf_counter()
         try:
             models = self.list_models()
+            version = self.version()
             return {
                 "provider_id": self.provider_id,
                 "healthy": True,
+                "version": version,
                 "models": models,
                 "capabilities": ["generate", "structured_output", "health", "list_models"],
                 "latency_ms": round((time.perf_counter()-started)*1000, 2),
                 "locality": "LOCAL_ENDPOINT",
                 "privacy": "LOCAL_BY_ENDPOINT_POLICY",
             }
-        except Exception as error:
+        except (OSError, TimeoutError, urllib.error.URLError, json.JSONDecodeError) as error:
             return {
                 "provider_id": self.provider_id,
                 "healthy": False,
@@ -67,16 +84,36 @@ class OllamaProvider(ModelProvider):
                 "latency_ms": round((time.perf_counter()-started)*1000, 2),
             }
 
-    def generate(self, model: str, prompt: str, *, json_mode: bool = False, timeout: int = 60) -> dict[str, Any]:
+    def generate(
+        self,
+        model: str,
+        prompt: str,
+        *,
+        json_mode: bool = False,
+        format_schema: dict[str, Any] | None = None,
+        timeout: int = 60,
+    ) -> dict[str, Any]:
         payload: dict[str, Any] = {"model": model, "prompt": prompt, "stream": False}
-        if json_mode:
+        if format_schema is not None:
+            payload["format"] = format_schema
+        elif json_mode:
             payload["format"] = "json"
         started = time.perf_counter()
         result = self._request("/api/generate", payload, timeout)
+        latency_ms = round((time.perf_counter() - started) * 1000, 2)
+        prompt_count = int(result.get("prompt_eval_count") or 0)
+        prompt_duration = int(result.get("prompt_eval_duration") or 0)
+        eval_count = int(result.get("eval_count") or 0)
+        eval_duration = int(result.get("eval_duration") or 0)
         return {
             "model": result.get("model", model),
             "response": result.get("response", ""),
-            "latency_ms": round((time.perf_counter()-started)*1000, 2),
+            "latency_ms": latency_ms,
+            "prompt_eval_count": prompt_count,
+            "prompt_tokens_per_second": round(prompt_count / (prompt_duration / 1_000_000_000), 3) if prompt_duration else 0.0,
+            "eval_count": eval_count,
+            "tokens_per_second": round(eval_count / (eval_duration / 1_000_000_000), 3) if eval_duration else 0.0,
+            "done_reason": result.get("done_reason"),
         }
 
 
@@ -128,7 +165,7 @@ class HermesProvider(ExecutionProvider):
                 "filesystem_policy": "DENY_UNTIL_CERTIFIED",
                 "network_policy": "DENY_UNTIL_CERTIFIED",
             }
-        except Exception as error:
+        except (OSError, subprocess.SubprocessError) as error:
             return {
                 "provider_id": self.provider_id.value,
                 "discovered": True,

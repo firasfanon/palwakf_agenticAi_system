@@ -11,15 +11,16 @@ import tempfile
 import threading
 import uuid
 import zipfile
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
 from typing import Any, Literal
 
 from fastapi import APIRouter, FastAPI, HTTPException, Query
 from pydantic import BaseModel, Field
 
-from palwakf_local_agents.operational_core_v1.codebase_index import CodebaseIndexer
-from palwakf_local_agents import quality_accepted_tools_goal_planner_binding_v1 as planner
+from palwakf_local_agents import (
+    quality_accepted_tools_goal_planner_binding_v1 as planner,
+)
 
 CONTRACT_ID = "CONTROLLED_SOFTWARE_DEVELOPMENT_PIPELINE_V1"
 FIRST_CANDIDATE_PROFILE = "READ_ONLY_DEVELOPMENT_DIAGNOSTIC_ENDPOINT_V1"
@@ -47,7 +48,7 @@ class ReviewRequest(BaseModel):
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def _sha256_bytes(value: bytes) -> str:
@@ -256,7 +257,7 @@ class ControlledSoftwareDevelopmentPipelineService:
             lines = text.splitlines(keepends=True)
             insert_at = 0
             for index, line in enumerate(lines):
-                if line.startswith("from ") or line.startswith("import ") or not line.strip() or line.startswith("from __future__"):
+                if line.startswith(("from ", "import ", "from __future__")) or not line.strip():
                     insert_at = index + 1
                     continue
                 break
@@ -367,6 +368,7 @@ class ControlledSoftwareDevelopmentPipelineService:
                 text=True,
                 timeout=90,
                 shell=False,
+                check=False,
             )
 
             source_after = {

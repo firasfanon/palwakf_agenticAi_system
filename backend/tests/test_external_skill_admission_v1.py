@@ -29,26 +29,26 @@ def write_skill(tmp_path: Path, body: str = "Use read-only analysis.") -> Path:
 
 
 def admission(path: Path, **updates) -> ExternalSkillAdmission:
-    payload = dict(
-        skill_id="supabase-readonly",
-        name="supabase-readonly",
-        description="Review Supabase safely.",
-        source=ExternalSkillSource(
+    payload = {
+        "skill_id": "supabase-readonly",
+        "name": "supabase-readonly",
+        "description": "Review Supabase safely.",
+        "source": ExternalSkillSource(
             repository="supabase/agent-skills",
             commit_sha="a" * 40,
             path="skills/supabase/SKILL.md",
             content_sha256=sha256_file(path),
             license="MIT",
         ),
-        requested=ExternalSkillAuthorityRequest(actions=("read", "write")),
-        stage=ExternalSkillStage.project_proven,
-        provenance_verified=True,
-        security_findings=(),
-        eval_passed=True,
-        regression_passed=True,
-        mind_review_ref="mind:review",
-        workspace_decision_ref="workspace:decision",
-    )
+        "requested": ExternalSkillAuthorityRequest(actions=("read", "write")),
+        "stage": ExternalSkillStage.project_proven,
+        "provenance_verified": True,
+        "security_findings": (),
+        "eval_passed": True,
+        "regression_passed": True,
+        "mind_review_ref": "mind:review",
+        "workspace_decision_ref": "workspace:decision",
+    }
     payload.update(updates)
     return ExternalSkillAdmission(**payload)
 

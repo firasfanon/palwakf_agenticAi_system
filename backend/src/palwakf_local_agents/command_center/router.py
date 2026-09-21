@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from pathlib import Path
+
 from fastapi import APIRouter, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from .read_only_store import LocalAgentsReadOnlyStore, ReadOnlyStoreError
-
 
 MODULE_ROOT = Path(__file__).resolve().parent
 STATIC_ROOT = MODULE_ROOT / "static"
