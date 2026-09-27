@@ -1,0 +1,272 @@
+{
+  "schema": "palwakf.sovereignty_reviewer_read_only_execution_pilot.v1",
+  "observed_at": "2026-09-27T22:26:01.588395+00:00",
+  "workspace_execution_lease": {
+    "lease_id": "lease-sovereignty-reviewer-read-only-pilot-v1",
+    "created_at": "2026-09-27T22:25:02.061607Z",
+    "expires_at": "2026-09-27T23:55:02.061607Z",
+    "granted_scope": "READ_ONLY_EXECUTION",
+    "write_authority": "NONE",
+    "allowed_tools": [],
+    "allowed_agent_ids": [
+      "sovereignty_reviewer_agentic_v1"
+    ],
+    "allowed_provider_ids": [
+      "hermes-headless",
+      "ollama"
+    ],
+    "allowed_model_ids": [
+      "palwakf-llama3.2-3b-64k:ctx64k"
+    ],
+    "exact_base": "24fcec84b30f169e1877d479c2337d2a75416534",
+    "branch": "task/AGENTIC-AUTONOMOUS-LOCAL-AI-MEGA-BATCH-V1"
+  },
+  "controlled_agent_admission_v2": {
+    "schema": "palwakf.controlled_agent_admission.v2",
+    "admission_id": "admission-sovereignty-reviewer-read-only-pilot-v1",
+    "agent_id": "sovereignty_reviewer_agentic_v1",
+    "admission_status": "ADMITTED",
+    "admission_scope": "READ_ONLY_EXECUTION",
+    "created_at": "2026-09-27T22:25:02.834004Z",
+    "expires_at": "2026-09-27T23:25:02.834004Z",
+    "human_authority_reference": "CHATGPT_USER_AUTHORIZATION_20260928:SEPARATE_SOVEREIGNTY_REVIEWER_READ_ONLY_ADMISSION_PILOT_EXECUTION",
+    "self_authorized": false,
+    "lease_id": "lease-sovereignty-reviewer-read-only-pilot-v1",
+    "exact_base": "24fcec84b30f169e1877d479c2337d2a75416534",
+    "branch": "task/AGENTIC-AUTONOMOUS-LOCAL-AI-MEGA-BATCH-V1",
+    "allowed_capabilities": [
+      "agent.headless_api",
+      "model.inference",
+      "model.health",
+      "provider.health"
+    ],
+    "allowed_provider_ids": [
+      "hermes-headless",
+      "ollama"
+    ],
+    "allowed_model_ids": [
+      "palwakf-llama3.2-3b-64k:ctx64k"
+    ],
+    "allowed_tools": [],
+    "allowed_task_classes": [
+      "POLICY_REVIEW"
+    ],
+    "allowed_outputs": [
+      "sovereignty_review",
+      "risk_register",
+      "evidence_escalation"
+    ],
+    "mutation_ceiling": "READ_ONLY",
+    "write_authority": "NONE",
+    "source_write_allowed": false,
+    "opencode_source_write_allowed": false,
+    "playwright_admission_allowed": false,
+    "hermes_bounded_write_allowed": false,
+    "delegation_allowed": false,
+    "parallel_multi_agent_allowed": false,
+    "production_authority": false,
+    "shared_db_mutation_authority": false,
+    "evidence": [
+      "human-authorization",
+      "fresh-workspace-execution-lease-v2",
+      "ollama-api-show-context:131072",
+      "registry-role:sovereignty_reviewer:pilot_ready",
+      "pre-admission-route-blocked"
+    ]
+  },
+  "route_transition": {
+    "before_admission": {
+      "dispatch_allowed": false,
+      "blockers": [
+        "AGENT_NOT_ADMITTED"
+      ],
+      "agent_id": "sovereignty_reviewer_agentic_v1",
+      "execution_provider_id": "hermes-headless",
+      "model_provider_id": "ollama",
+      "model_id": "palwakf-llama3.2-3b-64k:ctx64k",
+      "tool_ids": [],
+      "provider_ids": [
+        "hermes-headless",
+        "ollama"
+      ],
+      "capability_ids": [
+        "agent.headless_api",
+        "model.inference"
+      ],
+      "mutation_class": "READ_ONLY",
+      "lease_id": "lease-sovereignty-reviewer-read-only-pilot-v1",
+      "no_authority_expansion": true
+    },
+    "after_admission": {
+      "dispatch_allowed": true,
+      "blockers": [],
+      "agent_id": "sovereignty_reviewer_agentic_v1",
+      "execution_provider_id": "hermes-headless",
+      "model_provider_id": "ollama",
+      "model_id": "palwakf-llama3.2-3b-64k:ctx64k",
+      "tool_ids": [],
+      "provider_ids": [
+        "hermes-headless",
+        "ollama"
+      ],
+      "capability_ids": [
+        "agent.headless_api",
+        "model.inference"
+      ],
+      "mutation_class": "READ_ONLY",
+      "lease_id": "lease-sovereignty-reviewer-read-only-pilot-v1",
+      "no_authority_expansion": true
+    }
+  },
+  "policy_review": {
+    "status": "PALWAKF_SOVEREIGNTY_REVIEWER_READ_ONLY_PILOT_OK",
+    "agent_id": "sovereignty_reviewer_agentic_v1",
+    "task_class": "POLICY_REVIEW",
+    "sovereignty_review": "PASS_NO_AUTHORITY_EXPANSION",
+    "risk_register": [
+      "TIME_BOUNDED_LEASE",
+      "MODEL_CONTEXT_GTE_64000_REQUIRED"
+    ],
+    "evidence_escalation": [],
+    "decision": "NO_MUTATION"
+  },
+  "execution": {
+    "agent_id": "sovereignty_reviewer_agentic_v1",
+    "task_class": "POLICY_REVIEW",
+    "execution_provider_id": "hermes-headless",
+    "model_provider_id": "ollama",
+    "model_id": "palwakf-llama3.2-3b-64k:ctx64k",
+    "declared_model_context": 131072,
+    "runtime_model_context": 64000,
+    "hermes_version": "Hermes Agent v0.21.4 (2026.9.21) · upstream 01217c5f\nInstall directory: C:\\Users\\DELL\\AppData\\Local\\hermes\\hermes-agent\nInstall method: git\nPython: 3.11.16\nOpenAI SDK: 2.24.0\nUpdate available: 4231 commits behind — run 'hermes update'",
+    "hermes_exit_code": 0,
+    "hermes_profile_mode": "TEMP_ISOLATED_HERMES_HOME",
+    "hermes_toolsets": [],
+    "hermes_output_sha256": "51ae8be627c7999e2c61975578c5eda1e258a954cf8932375aa116d97ad70e5a",
+    "hermes_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "usage": {
+      "estimated_cost_usd": 0.0,
+      "cost_status": "unknown",
+      "cost_source": "none",
+      "input_tokens": 1682,
+      "output_tokens": 113,
+      "cache_read_tokens": 0,
+      "cache_write_tokens": 0,
+      "reasoning_tokens": 0,
+      "total_tokens": 1795,
+      "api_calls": 1,
+      "model": "palwakf-llama3.2-3b-64k:ctx64k",
+      "provider": "custom",
+      "session_id": "20260928_012511_8d9cb5",
+      "completed": true,
+      "partial": false,
+      "interrupted": false,
+      "turn_exit_reason": "text_response(finish_reason=stop)",
+      "failed": false,
+      "service_tier": null,
+      "auxiliary": {
+        "api_calls": 1,
+        "input_tokens": 546,
+        "output_tokens": 24,
+        "cache_read_tokens": 16,
+        "cache_write_tokens": 0,
+        "reasoning_tokens": 0,
+        "estimated_cost_usd": 0,
+        "total_tokens": 570,
+        "by_task": {
+          "title_generation": {
+            "api_calls": 1,
+            "input_tokens": 546,
+            "output_tokens": 24,
+            "cache_read_tokens": 16,
+            "cache_write_tokens": 0,
+            "reasoning_tokens": 0,
+            "estimated_cost_usd": 0
+          }
+        }
+      },
+      "total_including_auxiliary": {
+        "estimated_cost_usd": 0.0,
+        "total_tokens": 2365,
+        "api_calls": 2
+      }
+    },
+    "decision": "NO_MUTATION"
+  },
+  "model_probe": {
+    "schema": "palwakf.sovereignty_reviewer_model_probe.v1",
+    "model": "palwakf-llama3.2-3b-64k:ctx64k",
+    "declared_context_length": 131072,
+    "capabilities": [
+      "completion",
+      "tools"
+    ],
+    "eligible": true,
+    "minimum_required": 64000,
+    "mutation_performed": false
+  },
+  "codebase_evidence": {
+    "summary": {
+      "file_count": 282,
+      "total_bytes": 1192628,
+      "symbol_count": 80,
+      "route_count": 80,
+      "component_count": 80,
+      "document_count": 80,
+      "by_extension": {
+        ".js": 4,
+        ".json": 33,
+        ".md": 137,
+        ".py": 78,
+        ".ts": 20,
+        ".tsx": 7,
+        ".yaml": 2,
+        ".yml": 1
+      },
+      "fingerprint": "A44481BEBAACCA1C80E4B0506131F32EC2D38E7ECF3D1A79046AF33BCFC20D8A"
+    },
+    "scope": [
+      "frontend/src",
+      "backend/src/palwakf_local_agents",
+      "agents",
+      "docs"
+    ],
+    "source_manifest_before_index": {
+      "file_count": 282,
+      "digest": "f9ea91295c383485a57c8bd647e220bdb4ccf3172497275a75538641b7aa3e18"
+    },
+    "source_manifest_after_index": {
+      "file_count": 282,
+      "digest": "f9ea91295c383485a57c8bd647e220bdb4ccf3172497275a75538641b7aa3e18"
+    },
+    "source_manifest_after_hermes": {
+      "file_count": 282,
+      "digest": "f9ea91295c383485a57c8bd647e220bdb4ccf3172497275a75538641b7aa3e18"
+    }
+  },
+  "governance_checks": {
+    "fresh_workspace_owned_time_bounded_lease": true,
+    "pre_admission_route_blocked": true,
+    "pre_admission_blocker": "AGENT_NOT_ADMITTED",
+    "human_authorized_admission_v2_only": true,
+    "post_admission_dispatch_allowed": true,
+    "task_class_policy_review_only": true,
+    "allowed_outputs_bounded": true,
+    "no_parallel_multi_agent": true,
+    "no_delegation": true,
+    "no_agent_self_authorization": true,
+    "read_only_only": true,
+    "no_agent_tools": true,
+    "no_opencode_source_write": true,
+    "no_playwright_admission": true,
+    "no_hermes_bounded_write": true,
+    "no_source_write": true,
+    "no_main_merge": true,
+    "no_baseline_promotion": true,
+    "no_production": true,
+    "no_shared_db_mutation": true,
+    "source_manifest_unchanged": true,
+    "workspace_lease_claim_validation": "PASS"
+  },
+  "single_next_action": "SEPARATE_POST_SOVEREIGNTY_REVIEWER_PILOT_MULTI_AGENT_AND_NEXT_ROLE_DECISION"
+}

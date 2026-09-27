@@ -1,0 +1,53 @@
+{
+  "schema": "palwakf.controlled_agent_admission.v2",
+  "admission_id": "admission-sovereignty-reviewer-read-only-pilot-v1",
+  "agent_id": "sovereignty_reviewer_agentic_v1",
+  "admission_status": "ADMITTED",
+  "admission_scope": "READ_ONLY_EXECUTION",
+  "created_at": "2026-09-27T22:25:02.834004Z",
+  "expires_at": "2026-09-27T23:25:02.834004Z",
+  "human_authority_reference": "CHATGPT_USER_AUTHORIZATION_20260928:SEPARATE_SOVEREIGNTY_REVIEWER_READ_ONLY_ADMISSION_PILOT_EXECUTION",
+  "self_authorized": false,
+  "lease_id": "lease-sovereignty-reviewer-read-only-pilot-v1",
+  "exact_base": "24fcec84b30f169e1877d479c2337d2a75416534",
+  "branch": "task/AGENTIC-AUTONOMOUS-LOCAL-AI-MEGA-BATCH-V1",
+  "allowed_capabilities": [
+    "agent.headless_api",
+    "model.inference",
+    "model.health",
+    "provider.health"
+  ],
+  "allowed_provider_ids": [
+    "hermes-headless",
+    "ollama"
+  ],
+  "allowed_model_ids": [
+    "palwakf-llama3.2-3b-64k:ctx64k"
+  ],
+  "allowed_tools": [],
+  "allowed_task_classes": [
+    "POLICY_REVIEW"
+  ],
+  "allowed_outputs": [
+    "sovereignty_review",
+    "risk_register",
+    "evidence_escalation"
+  ],
+  "mutation_ceiling": "READ_ONLY",
+  "write_authority": "NONE",
+  "source_write_allowed": false,
+  "opencode_source_write_allowed": false,
+  "playwright_admission_allowed": false,
+  "hermes_bounded_write_allowed": false,
+  "delegation_allowed": false,
+  "parallel_multi_agent_allowed": false,
+  "production_authority": false,
+  "shared_db_mutation_authority": false,
+  "evidence": [
+    "human-authorization",
+    "fresh-workspace-execution-lease-v2",
+    "ollama-api-show-context:131072",
+    "registry-role:sovereignty_reviewer:pilot_ready",
+    "pre-admission-route-blocked"
+  ]
+}
