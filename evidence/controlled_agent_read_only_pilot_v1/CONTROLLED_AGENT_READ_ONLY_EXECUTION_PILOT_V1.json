@@ -1,0 +1,559 @@
+{
+  "schema": "palwakf.controlled_agent_read_only_execution_pilot.v1",
+  "observed_at": "2026-09-27T22:10:27.726382+00:00",
+  "superseded_runtime_attempt": {
+    "model_id": "qwen2.5:3b",
+    "classification": "SUPERSEDED_RUNTIME_INCOMPATIBLE",
+    "reason": "OLLAMA_MODEL_CONTEXT_32768_BELOW_HERMES_MINIMUM_64000",
+    "superseded_lease_sha256": "d6b37cd0926d18be40daffe0be05d0975a285bf17d578bca31789fccd9ef5368",
+    "superseded_admission_sha256": "fe0d60c844152dbdee2c4a648698f91b65f893a0ecd39695811eca61cfd40ac9",
+    "source_mutation": false,
+    "commit": false,
+    "push": false
+  },
+  "model_selection": {
+    "selected_model": "palwakf-llama3.2-3b-64k:ctx64k",
+    "declared_context_length": 131072,
+    "runtime_context_length": 64000,
+    "selection_method": "LOCAL_OLLAMA_API_SHOW_EXISTING_MODELS_ONLY",
+    "model_creation": false,
+    "ollama_server_restart": false,
+    "probe": {
+      "schema": "palwakf.ollama_local_64k_model_probe.v1",
+      "all_models": [
+        {
+          "name": "nomic-embed-text:latest",
+          "show_ok": true,
+          "context_length": 2048,
+          "capabilities": [
+            "embedding"
+          ],
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "nomic-bert",
+            "families": [
+              "nomic-bert"
+            ],
+            "parameter_size": "137M",
+            "quantization_level": "F16"
+          }
+        },
+        {
+          "name": "deepseek-r1:latest",
+          "show_ok": true,
+          "context_length": 131072,
+          "capabilities": [
+            "tools",
+            "thinking",
+            "completion"
+          ],
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "qwen3",
+            "families": [
+              "qwen3"
+            ],
+            "parameter_size": "8.2B",
+            "quantization_level": "Q4_K_M"
+          }
+        },
+        {
+          "name": "palwakf-llama3.2-3b-64k:ctx64k",
+          "show_ok": true,
+          "context_length": 131072,
+          "capabilities": [
+            "completion",
+            "tools"
+          ],
+          "details": {
+            "parent_model": "llama3.2:3b",
+            "format": "gguf",
+            "family": "llama",
+            "families": [
+              "llama"
+            ],
+            "parameter_size": "3.2B",
+            "quantization_level": "Q4_K_M"
+          }
+        },
+        {
+          "name": "palwakf-llama3.2-3b-64k:local",
+          "show_ok": false,
+          "error": "HTTPError"
+        },
+        {
+          "name": "deepseek-v4-flash:cloud",
+          "show_ok": false,
+          "error": "HTTPError"
+        },
+        {
+          "name": "gemma4:latest",
+          "show_ok": true,
+          "context_length": 131072,
+          "capabilities": [
+            "completion",
+            "vision",
+            "audio",
+            "tools",
+            "thinking"
+          ],
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "gemma4",
+            "families": [
+              "gemma4"
+            ],
+            "parameter_size": "8.0B",
+            "quantization_level": "Q4_K_M"
+          }
+        },
+        {
+          "name": "glm-5.2:cloud",
+          "show_ok": true,
+          "context_length": 1048576,
+          "capabilities": [
+            "thinking",
+            "completion",
+            "tools"
+          ],
+          "details": {
+            "parent_model": "glm-5.2",
+            "format": "",
+            "family": "glm5.2",
+            "families": null,
+            "parameter_size": "756162687872",
+            "quantization_level": ""
+          }
+        },
+        {
+          "name": "llama3.2:3b",
+          "show_ok": true,
+          "context_length": 131072,
+          "capabilities": [
+            "completion",
+            "tools"
+          ],
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "llama",
+            "families": [
+              "llama"
+            ],
+            "parameter_size": "3.2B",
+            "quantization_level": "Q4_K_M"
+          }
+        },
+        {
+          "name": "qwen2.5:3b",
+          "show_ok": true,
+          "context_length": 32768,
+          "capabilities": [
+            "completion",
+            "tools"
+          ],
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "qwen2",
+            "families": [
+              "qwen2"
+            ],
+            "parameter_size": "3.1B",
+            "quantization_level": "Q4_K_M"
+          }
+        },
+        {
+          "name": "kimi-k2.7-code:cloud",
+          "show_ok": true,
+          "context_length": 262144,
+          "capabilities": [
+            "vision",
+            "thinking",
+            "completion",
+            "tools"
+          ],
+          "details": {
+            "parent_model": "kimi-k2.7-code",
+            "format": "",
+            "family": "kimi-k2",
+            "families": null,
+            "parameter_size": "1042000000000",
+            "quantization_level": "INT4"
+          }
+        }
+      ],
+      "eligible_models": [
+        {
+          "name": "palwakf-llama3.2-3b-64k:ctx64k",
+          "show_ok": true,
+          "context_length": 131072,
+          "capabilities": [
+            "completion",
+            "tools"
+          ],
+          "details": {
+            "parent_model": "llama3.2:3b",
+            "format": "gguf",
+            "family": "llama",
+            "families": [
+              "llama"
+            ],
+            "parameter_size": "3.2B",
+            "quantization_level": "Q4_K_M"
+          }
+        },
+        {
+          "name": "gemma4:latest",
+          "show_ok": true,
+          "context_length": 131072,
+          "capabilities": [
+            "completion",
+            "vision",
+            "audio",
+            "tools",
+            "thinking"
+          ],
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "gemma4",
+            "families": [
+              "gemma4"
+            ],
+            "parameter_size": "8.0B",
+            "quantization_level": "Q4_K_M"
+          }
+        },
+        {
+          "name": "deepseek-r1:latest",
+          "show_ok": true,
+          "context_length": 131072,
+          "capabilities": [
+            "tools",
+            "thinking",
+            "completion"
+          ],
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "qwen3",
+            "families": [
+              "qwen3"
+            ],
+            "parameter_size": "8.2B",
+            "quantization_level": "Q4_K_M"
+          }
+        },
+        {
+          "name": "llama3.2:3b",
+          "show_ok": true,
+          "context_length": 131072,
+          "capabilities": [
+            "completion",
+            "tools"
+          ],
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "llama",
+            "families": [
+              "llama"
+            ],
+            "parameter_size": "3.2B",
+            "quantization_level": "Q4_K_M"
+          }
+        },
+        {
+          "name": "glm-5.2:cloud",
+          "show_ok": true,
+          "context_length": 1048576,
+          "capabilities": [
+            "thinking",
+            "completion",
+            "tools"
+          ],
+          "details": {
+            "parent_model": "glm-5.2",
+            "format": "",
+            "family": "glm5.2",
+            "families": null,
+            "parameter_size": "756162687872",
+            "quantization_level": ""
+          }
+        },
+        {
+          "name": "kimi-k2.7-code:cloud",
+          "show_ok": true,
+          "context_length": 262144,
+          "capabilities": [
+            "vision",
+            "thinking",
+            "completion",
+            "tools"
+          ],
+          "details": {
+            "parent_model": "kimi-k2.7-code",
+            "format": "",
+            "family": "kimi-k2",
+            "families": null,
+            "parameter_size": "1042000000000",
+            "quantization_level": "INT4"
+          }
+        }
+      ],
+      "selected": {
+        "name": "palwakf-llama3.2-3b-64k:ctx64k",
+        "show_ok": true,
+        "context_length": 131072,
+        "capabilities": [
+          "completion",
+          "tools"
+        ],
+        "details": {
+          "parent_model": "llama3.2:3b",
+          "format": "gguf",
+          "family": "llama",
+          "families": [
+            "llama"
+          ],
+          "parameter_size": "3.2B",
+          "quantization_level": "Q4_K_M"
+        }
+      },
+      "mutation_performed": false
+    }
+  },
+  "workspace_execution_lease": {
+    "lease_id": "lease-controlled-agent-read-only-pilot-v1-model64k-r1",
+    "created_at": "2026-09-27T22:09:28.613477Z",
+    "expires_at": "2026-09-27T23:39:28.613477Z",
+    "granted_scope": "READ_ONLY_EXECUTION",
+    "write_authority": "NONE",
+    "allowed_tools": [],
+    "allowed_agent_ids": [
+      "coordinator_agentic_v1"
+    ],
+    "allowed_provider_ids": [
+      "hermes-headless",
+      "ollama"
+    ],
+    "allowed_model_ids": [
+      "palwakf-llama3.2-3b-64k:ctx64k"
+    ],
+    "exact_base": "9fafa7a0c2585d38e649f3bfcebe2121d4e0cf25",
+    "branch": "task/AGENTIC-AUTONOMOUS-LOCAL-AI-MEGA-BATCH-V1"
+  },
+  "controlled_agent_admission": {
+    "schema": "palwakf.controlled_agent_admission.v1",
+    "admission_id": "admission-coordinator-read-only-pilot-v1-model64k-r1",
+    "agent_id": "coordinator_agentic_v1",
+    "admission_status": "ADMITTED",
+    "admission_scope": "READ_ONLY_EXECUTION",
+    "created_at": "2026-09-27T22:09:29.326648Z",
+    "expires_at": "2026-09-27T23:09:29.326648Z",
+    "human_authority_reference": "CHATGPT_USER_AUTHORIZATION_20260928:SEPARATE_CONTROLLED_AGENT_ADMISSION_AND_READ_ONLY_EXECUTION_PILOT",
+    "self_authorized": false,
+    "lease_id": "lease-controlled-agent-read-only-pilot-v1-model64k-r1",
+    "exact_base": "9fafa7a0c2585d38e649f3bfcebe2121d4e0cf25",
+    "branch": "task/AGENTIC-AUTONOMOUS-LOCAL-AI-MEGA-BATCH-V1",
+    "allowed_capabilities": [
+      "agent.headless_api",
+      "model.inference",
+      "model.health",
+      "provider.health"
+    ],
+    "allowed_provider_ids": [
+      "hermes-headless",
+      "ollama"
+    ],
+    "allowed_model_ids": [
+      "palwakf-llama3.2-3b-64k:ctx64k"
+    ],
+    "allowed_tools": [],
+    "mutation_ceiling": "READ_ONLY",
+    "write_authority": "NONE",
+    "source_write_allowed": false,
+    "opencode_source_write_allowed": false,
+    "hermes_bounded_write_allowed": false,
+    "production_authority": false,
+    "shared_db_mutation_authority": false,
+    "evidence": [
+      "human-authorization",
+      "replacement-fresh-workspace-execution-lease",
+      "ollama-api-show-context:131072",
+      "superseded-admission-sha256:fe0d60c844152dbdee2c4a648698f91b65f893a0ecd39695811eca61cfd40ac9",
+      "pre-admission-route-blocked"
+    ]
+  },
+  "route_transition": {
+    "before_admission": {
+      "dispatch_allowed": false,
+      "blockers": [
+        "AGENT_NOT_ADMITTED"
+      ],
+      "agent_id": "coordinator_agentic_v1",
+      "execution_provider_id": "hermes-headless",
+      "model_provider_id": "ollama",
+      "model_id": "palwakf-llama3.2-3b-64k:ctx64k",
+      "tool_ids": [],
+      "provider_ids": [
+        "hermes-headless",
+        "ollama"
+      ],
+      "capability_ids": [
+        "agent.headless_api",
+        "model.inference"
+      ],
+      "mutation_class": "READ_ONLY",
+      "lease_id": "lease-controlled-agent-read-only-pilot-v1-model64k-r1",
+      "no_authority_expansion": true
+    },
+    "after_admission": {
+      "dispatch_allowed": true,
+      "blockers": [],
+      "agent_id": "coordinator_agentic_v1",
+      "execution_provider_id": "hermes-headless",
+      "model_provider_id": "ollama",
+      "model_id": "palwakf-llama3.2-3b-64k:ctx64k",
+      "tool_ids": [],
+      "provider_ids": [
+        "hermes-headless",
+        "ollama"
+      ],
+      "capability_ids": [
+        "agent.headless_api",
+        "model.inference"
+      ],
+      "mutation_class": "READ_ONLY",
+      "lease_id": "lease-controlled-agent-read-only-pilot-v1-model64k-r1",
+      "no_authority_expansion": true
+    }
+  },
+  "execution": {
+    "agent_id": "coordinator_agentic_v1",
+    "execution_provider_id": "hermes-headless",
+    "model_provider_id": "ollama",
+    "model_id": "palwakf-llama3.2-3b-64k:ctx64k",
+    "model_context_length": 64000,
+    "hermes_version": "Hermes Agent v0.21.4 (2026.9.21) · upstream 01217c5f\nInstall directory: C:\\Users\\DELL\\AppData\\Local\\hermes\\hermes-agent\nInstall method: git\nPython: 3.11.16\nOpenAI SDK: 2.24.0\nUpdate available: 4231 commits behind — run 'hermes update'",
+    "hermes_exit_code": 0,
+    "hermes_profile_mode": "TEMP_ISOLATED_HERMES_HOME",
+    "hermes_toolsets": [],
+    "hermes_output_sha256": "13d8799bd5f426ef8f2b0ce76b5148bdb5543383a117f5b539c0d30385c2d7eb",
+    "hermes_final_response": "```\n{\"status\": \"PALWAKF_COORDINATOR_READ_ONLY_PILOT_OK\", \"agent_id\": \"coordinator_agentic_v1\", \"scope\": \"READ_ONLY_EXECUTION\", \"codebase_fingerprint\": \"FD78B29960D54B0BB75B289AFA6030A61E54BB1BC2F391F443D6B7A41A501BEE\", \"decision\": \"NO_MUTATION\"}\n```",
+    "hermes_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "usage": {
+      "estimated_cost_usd": 0.0,
+      "cost_status": "unknown",
+      "cost_source": "none",
+      "input_tokens": 1521,
+      "output_tokens": 97,
+      "cache_read_tokens": 0,
+      "cache_write_tokens": 0,
+      "reasoning_tokens": 0,
+      "total_tokens": 1618,
+      "api_calls": 1,
+      "model": "palwakf-llama3.2-3b-64k:ctx64k",
+      "provider": "custom",
+      "session_id": "20260928_010937_dc0294",
+      "completed": true,
+      "partial": false,
+      "interrupted": false,
+      "turn_exit_reason": "text_response(finish_reason=stop)",
+      "failed": false,
+      "service_tier": null,
+      "auxiliary": {
+        "api_calls": 1,
+        "input_tokens": 533,
+        "output_tokens": 22,
+        "cache_read_tokens": 16,
+        "cache_write_tokens": 0,
+        "reasoning_tokens": 0,
+        "estimated_cost_usd": 0,
+        "total_tokens": 555,
+        "by_task": {
+          "title_generation": {
+            "api_calls": 1,
+            "input_tokens": 533,
+            "output_tokens": 22,
+            "cache_read_tokens": 16,
+            "cache_write_tokens": 0,
+            "reasoning_tokens": 0,
+            "estimated_cost_usd": 0
+          }
+        }
+      },
+      "total_including_auxiliary": {
+        "estimated_cost_usd": 0.0,
+        "total_tokens": 2173,
+        "api_calls": 2
+      }
+    },
+    "status_marker": "PALWAKF_COORDINATOR_READ_ONLY_PILOT_OK",
+    "decision": "NO_MUTATION"
+  },
+  "codebase_evidence": {
+    "summary": {
+      "file_count": 281,
+      "total_bytes": 1185193,
+      "symbol_count": 80,
+      "route_count": 80,
+      "component_count": 80,
+      "document_count": 80,
+      "by_extension": {
+        ".js": 4,
+        ".json": 33,
+        ".md": 137,
+        ".py": 77,
+        ".ts": 20,
+        ".tsx": 7,
+        ".yaml": 2,
+        ".yml": 1
+      },
+      "fingerprint": "FD78B29960D54B0BB75B289AFA6030A61E54BB1BC2F391F443D6B7A41A501BEE"
+    },
+    "scope": [
+      "frontend/src",
+      "backend/src/palwakf_local_agents",
+      "agents",
+      "docs"
+    ],
+    "source_manifest_before_index": {
+      "file_count": 281,
+      "digest": "4e6fda9fa0cf2ac251590f80c353640489594751c965d29d423cf849269c1b31"
+    },
+    "source_manifest_after_index": {
+      "file_count": 281,
+      "digest": "4e6fda9fa0cf2ac251590f80c353640489594751c965d29d423cf849269c1b31"
+    },
+    "source_manifest_after_hermes": {
+      "file_count": 281,
+      "digest": "4e6fda9fa0cf2ac251590f80c353640489594751c965d29d423cf849269c1b31"
+    }
+  },
+  "governance_checks": {
+    "fresh_workspace_owned_replacement_lease": true,
+    "pre_admission_route_blocked": true,
+    "pre_admission_blocker": "AGENT_NOT_ADMITTED",
+    "human_authorized_admission_only": true,
+    "post_admission_dispatch_allowed": true,
+    "no_agent_self_authorization": true,
+    "read_only_only": true,
+    "no_agent_tools": true,
+    "no_model_creation": true,
+    "no_ollama_server_restart": true,
+    "no_opencode_source_write": true,
+    "no_hermes_bounded_write": true,
+    "no_main_merge": true,
+    "no_baseline_promotion": true,
+    "no_production": true,
+    "no_shared_db_mutation": true,
+    "source_manifest_unchanged": true,
+    "workspace_lease_claim_validation": "PASS"
+  },
+  "single_next_action": "SEPARATE_POST_PILOT_CONTROLLED_AGENT_ADMISSION_EXPANSION_DECISION"
+}
