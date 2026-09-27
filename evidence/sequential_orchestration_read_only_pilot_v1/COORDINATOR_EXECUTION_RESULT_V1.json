@@ -1,0 +1,155 @@
+{
+  "schema": "palwakf.sequential_orchestration.coordinator_execution_result.v1",
+  "observed_at": "2026-09-27T23:37:02.688356Z",
+  "agent_id": "coordinator_agentic_v1",
+  "task_class": "TASK_PLANNING",
+  "output": {
+    "status": "PALWAKF_COORDINATOR_SEQUENTIAL_HANDOFF_OK",
+    "agent_id": "coordinator_agentic_v1",
+    "task_class": "TASK_PLANNING",
+    "output_type": "task_brief",
+    "handoff_intent": "REVIEW_AUTHORITY_BOUNDARIES_FOR_SEQUENTIAL_READ_ONLY_ORCHESTRATION",
+    "next_agent_id": "sovereignty_reviewer_agentic_v1",
+    "decision": "NO_MUTATION"
+  },
+  "raw_output_sha256": "48240d3148057a4c8c225c3c8166895f5128412398d42b4511a40804048d30ae",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "usage": {
+    "estimated_cost_usd": 0.0,
+    "cost_status": "unknown",
+    "cost_source": "none",
+    "input_tokens": 1380,
+    "output_tokens": 85,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "reasoning_tokens": 0,
+    "total_tokens": 1465,
+    "api_calls": 1,
+    "model": "palwakf-llama3.2-3b-64k:ctx64k",
+    "provider": "custom",
+    "session_id": "20260928_023623_a8ca96",
+    "completed": true,
+    "partial": false,
+    "interrupted": false,
+    "turn_exit_reason": "text_response(finish_reason=stop)",
+    "failed": false,
+    "service_tier": null,
+    "auxiliary": {
+      "api_calls": 1,
+      "input_tokens": 403,
+      "output_tokens": 22,
+      "cache_read_tokens": 16,
+      "cache_write_tokens": 0,
+      "reasoning_tokens": 0,
+      "estimated_cost_usd": 0,
+      "total_tokens": 425,
+      "by_task": {
+        "title_generation": {
+          "api_calls": 1,
+          "input_tokens": 403,
+          "output_tokens": 22,
+          "cache_read_tokens": 16,
+          "cache_write_tokens": 0,
+          "reasoning_tokens": 0,
+          "estimated_cost_usd": 0
+        }
+      }
+    },
+    "total_including_auxiliary": {
+      "estimated_cost_usd": 0.0,
+      "total_tokens": 1890,
+      "api_calls": 2
+    }
+  },
+  "attempts": [
+    {
+      "tag": "coordinator_initial",
+      "raw_output": "{\"status\":\"PALWAKF_COORDINATOR_SEQUENTIAL_HANDOFF_OK\",\"agent_id\":\"coordinator_agentic_v1\",\"task_class\":\"TASK_PLANNING\",\"output_type\":\"task_brief\",\"handoff_intent\":\"REVIEW_AUTHORITY_BOUNDARIES_FOR_SEQUENTIAL_READ_ONLY_ORCHESTRATION\",\"next_agent_id\":\"sovereignty_reviewer_agentic_v1\",\"decision\":\"NO_MUTATION\"}",
+      "raw_output_sha256": "48240d3148057a4c8c225c3c8166895f5128412398d42b4511a40804048d30ae",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "usage": {
+        "estimated_cost_usd": 0.0,
+        "cost_status": "unknown",
+        "cost_source": "none",
+        "input_tokens": 1380,
+        "output_tokens": 85,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "reasoning_tokens": 0,
+        "total_tokens": 1465,
+        "api_calls": 1,
+        "model": "palwakf-llama3.2-3b-64k:ctx64k",
+        "provider": "custom",
+        "session_id": "20260928_023623_a8ca96",
+        "completed": true,
+        "partial": false,
+        "interrupted": false,
+        "turn_exit_reason": "text_response(finish_reason=stop)",
+        "failed": false,
+        "service_tier": null,
+        "auxiliary": {
+          "api_calls": 1,
+          "input_tokens": 403,
+          "output_tokens": 22,
+          "cache_read_tokens": 16,
+          "cache_write_tokens": 0,
+          "reasoning_tokens": 0,
+          "estimated_cost_usd": 0,
+          "total_tokens": 425,
+          "by_task": {
+            "title_generation": {
+              "api_calls": 1,
+              "input_tokens": 403,
+              "output_tokens": 22,
+              "cache_read_tokens": 16,
+              "cache_write_tokens": 0,
+              "reasoning_tokens": 0,
+              "estimated_cost_usd": 0
+            }
+          }
+        },
+        "total_including_auxiliary": {
+          "estimated_cost_usd": 0.0,
+          "total_tokens": 1890,
+          "api_calls": 2
+        }
+      },
+      "parsed_json": {
+        "status": "PALWAKF_COORDINATOR_SEQUENTIAL_HANDOFF_OK",
+        "agent_id": "coordinator_agentic_v1",
+        "task_class": "TASK_PLANNING",
+        "output_type": "task_brief",
+        "handoff_intent": "REVIEW_AUTHORITY_BOUNDARIES_FOR_SEQUENTIAL_READ_ONLY_ORCHESTRATION",
+        "next_agent_id": "sovereignty_reviewer_agentic_v1",
+        "decision": "NO_MUTATION"
+      },
+      "parse_error": null,
+      "exact_match": true
+    }
+  ],
+  "accepted_attempt": 1,
+  "bounded_correction_limit": 1,
+  "declared_model_context": 131072,
+  "runtime_model_context": 64000,
+  "route_transition": {
+    "before": {
+      "dispatch_allowed": false,
+      "blockers": [
+        "AGENT_NOT_ADMITTED"
+      ]
+    },
+    "after": {
+      "dispatch_allowed": true,
+      "blockers": []
+    }
+  },
+  "source_manifest_before": {
+    "file_count": 305,
+    "digest": "4b9f14ad13efa8d1613f55e7a352a684fdad5cea04517064970a7004daa2de09"
+  },
+  "source_manifest_after": {
+    "file_count": 305,
+    "digest": "4b9f14ad13efa8d1613f55e7a352a684fdad5cea04517064970a7004daa2de09"
+  },
+  "decision": "NO_MUTATION"
+}

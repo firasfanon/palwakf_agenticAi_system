@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "compatibility_version": "1",
+  "contract_type": "EvidenceEnvelope",
+  "project_id": "PALWAKF_AGENTIC_AI_SYSTEM",
+  "task_id": "COORDINATOR-SOVEREIGNTY-SEQUENTIAL-ORCHESTRATION-READ-ONLY-PILOT-V1",
+  "correlation_id": "seq-orch-read-only-v1-handoff",
+  "authority_scope": "READ_ONLY_ORCHESTRATION",
+  "producer": "Agentic",
+  "created_at": "2026-09-27T23:37:02.691380Z",
+  "provenance": [
+    "coordinator-admission-sha256:51b6748c25c8c1b9c6dcc0e07587590633072be2c1e3cbf5e2952d49838fca76",
+    "coordinator-result-sha256:b75b32b4b7518501562a3f419f410cfdb95efe7714f850650f05882993262ea6",
+    "workspace-lease-sha256:a5f53d4aff30c078367546e1da9713cf0c3da99110d9e1fc0d9d5692ab357f80"
+  ],
+  "evidence_envelope_id": "evidence-envelope-seq-orch-v1-coordinator-to-reviewer",
+  "source_agent_id": "coordinator_agentic_v1",
+  "target_agent_id": "sovereignty_reviewer_agentic_v1",
+  "output_type": "task_brief",
+  "payload": {
+    "status": "PALWAKF_COORDINATOR_SEQUENTIAL_HANDOFF_OK",
+    "agent_id": "coordinator_agentic_v1",
+    "task_class": "TASK_PLANNING",
+    "output_type": "task_brief",
+    "handoff_intent": "REVIEW_AUTHORITY_BOUNDARIES_FOR_SEQUENTIAL_READ_ONLY_ORCHESTRATION",
+    "next_agent_id": "sovereignty_reviewer_agentic_v1",
+    "decision": "NO_MUTATION"
+  },
+  "payload_sha256": "68be7138ac0e7b4cf43cccb4c5d8a1470d10496fc07e6c3c99dfda9eae08d214",
+  "source_manifest_digest": "4b9f14ad13efa8d1613f55e7a352a684fdad5cea04517064970a7004daa2de09",
+  "mutation_class": "READ_ONLY",
+  "write_authority": "NONE",
+  "tools": [],
+  "delegation": false,
+  "parallel_multi_agent": false,
+  "immutable": true
+}

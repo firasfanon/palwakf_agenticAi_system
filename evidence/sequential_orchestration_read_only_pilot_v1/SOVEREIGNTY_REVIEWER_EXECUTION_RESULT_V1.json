@@ -1,0 +1,235 @@
+{
+  "schema": "palwakf.sequential_orchestration.sovereignty_reviewer_execution_result.v1",
+  "observed_at": "2026-09-27T23:38:17.372431Z",
+  "agent_id": "sovereignty_reviewer_agentic_v1",
+  "task_class": "POLICY_REVIEW",
+  "input_evidence_envelope_sha256": "f1efc2cbcbbf3b041dce92ee32097867a1db53d2a8896d38e3cad26e770f8c4f",
+  "output": {
+    "status": "PALWAKF_SEQUENTIAL_SOVEREIGNTY_REVIEW_OK",
+    "agent_id": "sovereignty_reviewer_agentic_v1",
+    "task_class": "POLICY_REVIEW",
+    "input_evidence_envelope_sha256": "f1efc2cbcbbf3b041dce92ee32097867a1db53d2a8896d38e3cad26e770f8c4f",
+    "sovereignty_review": "PASS_NO_AUTHORITY_EXPANSION",
+    "risk_register": [
+      "TIME_BOUNDED_LEASE",
+      "MODEL_CONTEXT_GTE_64000_REQUIRED",
+      "SEQUENTIAL_PHASE_BOUNDARY_REQUIRED"
+    ],
+    "evidence_escalation": [],
+    "decision": "NO_MUTATION"
+  },
+  "raw_output_sha256": "528e92bacfb32fae48f10c1d20331ecc92226d785f923ba47e16cd406551ed5d",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "usage": {
+    "estimated_cost_usd": 0.0,
+    "cost_status": "unknown",
+    "cost_source": "none",
+    "input_tokens": 683,
+    "output_tokens": 141,
+    "cache_read_tokens": 718,
+    "cache_write_tokens": 0,
+    "reasoning_tokens": 0,
+    "total_tokens": 1542,
+    "api_calls": 1,
+    "model": "palwakf-llama3.2-3b-64k:ctx64k",
+    "provider": "custom",
+    "session_id": "20260928_023746_e0cbea",
+    "completed": true,
+    "partial": false,
+    "interrupted": false,
+    "turn_exit_reason": "text_response(finish_reason=stop)",
+    "failed": false,
+    "service_tier": null,
+    "auxiliary": {
+      "api_calls": 1,
+      "input_tokens": 194,
+      "output_tokens": 20,
+      "cache_read_tokens": 245,
+      "cache_write_tokens": 0,
+      "reasoning_tokens": 0,
+      "estimated_cost_usd": 0,
+      "total_tokens": 214,
+      "by_task": {
+        "title_generation": {
+          "api_calls": 1,
+          "input_tokens": 194,
+          "output_tokens": 20,
+          "cache_read_tokens": 245,
+          "cache_write_tokens": 0,
+          "reasoning_tokens": 0,
+          "estimated_cost_usd": 0
+        }
+      }
+    },
+    "total_including_auxiliary": {
+      "estimated_cost_usd": 0.0,
+      "total_tokens": 1756,
+      "api_calls": 2
+    }
+  },
+  "attempts": [
+    {
+      "tag": "reviewer_initial",
+      "raw_output": "{\"status\":\"PALWAKF_SEQUENTIAL_SOVEREIGNTY_REVIEW_OK\",\"agent_id\":\"sovereignty_reviewer_agentic_v1\",\"task_class\":\"POLICY_REVIEW\",\"input_evidence_envelope_sha256\":\"f1efc2cbcbbf3b041dce92ee32097867a1db53d2a8896d38e3cad26e770f8c4f\",\"sovereignty_review\":\"PASS_NO_AUTHORITY_EXPANSION\",\"risk_register\":[\"TIME_BOUNDED_LEASE\",\"getModel_context_GTE_64000_REQUIRED\",\"SEQUENTIAL_PHASE_BOUNDARY_REQUIRED\"],\"evidence_escalation\":[],\"decision\":\"NO_MUTATION\"}",
+      "raw_output_sha256": "c14796acfff5131612b8694346ae735330de2991155b3210232fe74758149b42",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "usage": {
+        "estimated_cost_usd": 0.0,
+        "cost_status": "unknown",
+        "cost_source": "none",
+        "input_tokens": 1234,
+        "output_tokens": 141,
+        "cache_read_tokens": 716,
+        "cache_write_tokens": 0,
+        "reasoning_tokens": 0,
+        "total_tokens": 2091,
+        "api_calls": 1,
+        "model": "palwakf-llama3.2-3b-64k:ctx64k",
+        "provider": "custom",
+        "session_id": "20260928_023706_01f9a2",
+        "completed": true,
+        "partial": false,
+        "interrupted": false,
+        "turn_exit_reason": "text_response(finish_reason=stop)",
+        "failed": false,
+        "service_tier": null,
+        "auxiliary": {
+          "api_calls": 1,
+          "input_tokens": 327,
+          "output_tokens": 23,
+          "cache_read_tokens": 250,
+          "cache_write_tokens": 0,
+          "reasoning_tokens": 0,
+          "estimated_cost_usd": 0,
+          "total_tokens": 350,
+          "by_task": {
+            "title_generation": {
+              "api_calls": 1,
+              "input_tokens": 327,
+              "output_tokens": 23,
+              "cache_read_tokens": 250,
+              "cache_write_tokens": 0,
+              "reasoning_tokens": 0,
+              "estimated_cost_usd": 0
+            }
+          }
+        },
+        "total_including_auxiliary": {
+          "estimated_cost_usd": 0.0,
+          "total_tokens": 2441,
+          "api_calls": 2
+        }
+      },
+      "parsed_json": {
+        "status": "PALWAKF_SEQUENTIAL_SOVEREIGNTY_REVIEW_OK",
+        "agent_id": "sovereignty_reviewer_agentic_v1",
+        "task_class": "POLICY_REVIEW",
+        "input_evidence_envelope_sha256": "f1efc2cbcbbf3b041dce92ee32097867a1db53d2a8896d38e3cad26e770f8c4f",
+        "sovereignty_review": "PASS_NO_AUTHORITY_EXPANSION",
+        "risk_register": [
+          "TIME_BOUNDED_LEASE",
+          "getModel_context_GTE_64000_REQUIRED",
+          "SEQUENTIAL_PHASE_BOUNDARY_REQUIRED"
+        ],
+        "evidence_escalation": [],
+        "decision": "NO_MUTATION"
+      },
+      "parse_error": null,
+      "exact_match": false
+    },
+    {
+      "tag": "reviewer_correction",
+      "raw_output": "{\"status\":\"PALWAKF_SEQUENTIAL_SOVEREIGNTY_REVIEW_OK\",\"agent_id\":\"sovereignty_reviewer_agentic_v1\",\"task_class\":\"POLICY_REVIEW\",\"input_evidence_envelope_sha256\":\"f1efc2cbcbbf3b041dce92ee32097867a1db53d2a8896d38e3cad26e770f8c4f\",\"sovereignty_review\":\"PASS_NO_AUTHORITY_EXPANSION\",\"risk_register\":[\"TIME_BOUNDED_LEASE\",\"MODEL_CONTEXT_GTE_64000_REQUIRED\",\"SEQUENTIAL_PHASE_BOUNDARY_REQUIRED\"],\"evidence_escalation\":[],\"decision\":\"NO_MUTATION\"}",
+      "raw_output_sha256": "528e92bacfb32fae48f10c1d20331ecc92226d785f923ba47e16cd406551ed5d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "usage": {
+        "estimated_cost_usd": 0.0,
+        "cost_status": "unknown",
+        "cost_source": "none",
+        "input_tokens": 683,
+        "output_tokens": 141,
+        "cache_read_tokens": 718,
+        "cache_write_tokens": 0,
+        "reasoning_tokens": 0,
+        "total_tokens": 1542,
+        "api_calls": 1,
+        "model": "palwakf-llama3.2-3b-64k:ctx64k",
+        "provider": "custom",
+        "session_id": "20260928_023746_e0cbea",
+        "completed": true,
+        "partial": false,
+        "interrupted": false,
+        "turn_exit_reason": "text_response(finish_reason=stop)",
+        "failed": false,
+        "service_tier": null,
+        "auxiliary": {
+          "api_calls": 1,
+          "input_tokens": 194,
+          "output_tokens": 20,
+          "cache_read_tokens": 245,
+          "cache_write_tokens": 0,
+          "reasoning_tokens": 0,
+          "estimated_cost_usd": 0,
+          "total_tokens": 214,
+          "by_task": {
+            "title_generation": {
+              "api_calls": 1,
+              "input_tokens": 194,
+              "output_tokens": 20,
+              "cache_read_tokens": 245,
+              "cache_write_tokens": 0,
+              "reasoning_tokens": 0,
+              "estimated_cost_usd": 0
+            }
+          }
+        },
+        "total_including_auxiliary": {
+          "estimated_cost_usd": 0.0,
+          "total_tokens": 1756,
+          "api_calls": 2
+        }
+      },
+      "parsed_json": {
+        "status": "PALWAKF_SEQUENTIAL_SOVEREIGNTY_REVIEW_OK",
+        "agent_id": "sovereignty_reviewer_agentic_v1",
+        "task_class": "POLICY_REVIEW",
+        "input_evidence_envelope_sha256": "f1efc2cbcbbf3b041dce92ee32097867a1db53d2a8896d38e3cad26e770f8c4f",
+        "sovereignty_review": "PASS_NO_AUTHORITY_EXPANSION",
+        "risk_register": [
+          "TIME_BOUNDED_LEASE",
+          "MODEL_CONTEXT_GTE_64000_REQUIRED",
+          "SEQUENTIAL_PHASE_BOUNDARY_REQUIRED"
+        ],
+        "evidence_escalation": [],
+        "decision": "NO_MUTATION"
+      },
+      "parse_error": null,
+      "exact_match": true
+    }
+  ],
+  "accepted_attempt": 2,
+  "bounded_correction_limit": 1,
+  "declared_model_context": 131072,
+  "runtime_model_context": 64000,
+  "route_transition": {
+    "before": {
+      "dispatch_allowed": false,
+      "blockers": [
+        "AGENT_NOT_ADMITTED"
+      ]
+    },
+    "after": {
+      "dispatch_allowed": true,
+      "blockers": []
+    }
+  },
+  "source_manifest_before": {
+    "file_count": 305,
+    "digest": "4b9f14ad13efa8d1613f55e7a352a684fdad5cea04517064970a7004daa2de09"
+  },
+  "source_manifest_after": {
+    "file_count": 305,
+    "digest": "4b9f14ad13efa8d1613f55e7a352a684fdad5cea04517064970a7004daa2de09"
+  },
+  "decision": "NO_MUTATION"
+}

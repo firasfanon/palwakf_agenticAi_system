@@ -1,0 +1,95 @@
+{
+  "schema": "palwakf.coordinator_to_sovereignty_reviewer_sequential_orchestration_read_only_pilot.v1",
+  "observed_at": "2026-09-27T23:38:17.373440Z",
+  "authorization_reference": "CHATGPT_USER_AUTHORIZATION_20260928:SEPARATE_COORDINATOR_TO_SOVEREIGNTY_REVIEWER_SEQUENTIAL_ORCHESTRATION_READ_ONLY_PILOT",
+  "exact_bases": {
+    "workspace": "825248c730452b623ad84946f7eafb4fddbfa10d",
+    "mind_reference": "1918f6ad4920ba361fc1897aa2b8f3e8392374f8",
+    "agentic": "a863cf14f5860c3b0d681629610baa9dbb777cd6"
+  },
+  "execution_order": [
+    "coordinator_agentic_v1",
+    "semantic_phase_closure",
+    "sovereignty_reviewer_agentic_v1"
+  ],
+  "parallel_multi_agent": false,
+  "delegation": false,
+  "tools": [],
+  "agent_source_write": false,
+  "opencode_source_write": false,
+  "hermes_bounded_write": false,
+  "coordinator": {
+    "lease_sha256": "a5f53d4aff30c078367546e1da9713cf0c3da99110d9e1fc0d9d5692ab357f80",
+    "admission_sha256": "51b6748c25c8c1b9c6dcc0e07587590633072be2c1e3cbf5e2952d49838fca76",
+    "execution_result_sha256": "b75b32b4b7518501562a3f419f410cfdb95efe7714f850650f05882993262ea6",
+    "decision": "NO_MUTATION"
+  },
+  "immutable_handoff": {
+    "file_sha256": "ab4568380936eac1b186284d27366753c0260060828a0efc8aae02e870527972",
+    "canonical_sha256": "f1efc2cbcbbf3b041dce92ee32097867a1db53d2a8896d38e3cad26e770f8c4f",
+    "payload_sha256": "68be7138ac0e7b4cf43cccb4c5d8a1470d10496fc07e6c3c99dfda9eae08d214"
+  },
+  "phase_boundary": {
+    "closure_sha256": "ac75ed0352d56bb01b5c26025e99693eb8c8616fa7ecf8984da8fad85f6d5362",
+    "coordinator_effective_end": "2026-09-27T23:37:02.692396Z",
+    "reviewer_effective_start": "2026-09-27T23:37:02.692397Z",
+    "predecessor_semantically_revoked_before_successor_issue": true,
+    "active_authority_intervals_non_overlapping": true
+  },
+  "reviewer": {
+    "lease_sha256": "c43967bd765510c170d23627cc50799e0069da677a92b25c9c34689bcd774026",
+    "admission_sha256": "bf8558921f158c6e018c482f40fd61b26f20853fe6ca9d71741e949d52f72f2d",
+    "execution_result_sha256": "1bdee624f988de027f3027ea77856dd12b7120ddc8cc892491773d479e13c0ba",
+    "decision": "NO_MUTATION",
+    "sovereignty_review": "PASS_NO_AUTHORITY_EXPANSION"
+  },
+  "model": {
+    "id": "palwakf-llama3.2-3b-64k:ctx64k",
+    "declared_context": 131072,
+    "coordinator_runtime_context": 64000,
+    "reviewer_runtime_context": 64000
+  },
+  "hermes_execution_contract": {
+    "mode": "SCRIPTED_ONESHOT_-z",
+    "subprocess_timeout_seconds": 420,
+    "platform_toolsets_cli": [],
+    "global_disabled_toolsets": [
+      "file",
+      "terminal",
+      "web",
+      "browser",
+      "memory",
+      "delegation",
+      "skills",
+      "code_execution",
+      "image_gen",
+      "todo",
+      "clarify"
+    ],
+    "structured_output_transport": "FREE_TEXT_MACHINE_VALIDATED",
+    "bounded_correction_max_per_agent": 1,
+    "max_turns_claimed": false
+  },
+  "prior_output_contract_failure_lineage_sha256": "69e8b501a3790b8cfa401e06c77279c346df3bca95b13d2875f687d7f8107b97",
+  "source_manifest": {
+    "before": {
+      "file_count": 305,
+      "digest": "4b9f14ad13efa8d1613f55e7a352a684fdad5cea04517064970a7004daa2de09"
+    },
+    "after_coordinator": {
+      "file_count": 305,
+      "digest": "4b9f14ad13efa8d1613f55e7a352a684fdad5cea04517064970a7004daa2de09"
+    },
+    "after_reviewer": {
+      "file_count": 305,
+      "digest": "4b9f14ad13efa8d1613f55e7a352a684fdad5cea04517064970a7004daa2de09"
+    },
+    "unchanged": true
+  },
+  "local_pilot_result": "PASS_PENDING_COMMIT_PUSH_AND_INDEPENDENT_GITHUB_READBACK",
+  "main_merge": "NONE",
+  "baseline_promotion": "NONE",
+  "production_mutation": "NONE",
+  "shared_db_mutation": "NONE",
+  "single_next_action": "INDEPENDENT_GITHUB_READBACK_AND_SOVEREIGN_CLOSEOUT_OF_SEQUENTIAL_ORCHESTRATION_PILOT"
+}

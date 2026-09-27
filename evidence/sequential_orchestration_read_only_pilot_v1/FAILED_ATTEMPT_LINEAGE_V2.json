@@ -1,0 +1,19 @@
+{
+  "schema": "palwakf.sequential_orchestration.output_contract_failure_lineage.v2",
+  "prior_runner": "V4",
+  "session_id": "20260928_021944_2ecd2a",
+  "usage_sha256": "f8d9f8c4e512bdac5fadcb913f16c8a256dc86d3c41f1bc0d8f0ff438fa3abe3",
+  "state_db_sha256": "5b283035cef72688a4d85c32598fce8fc04637beee75d14b856088f564a3d02a",
+  "completed": true,
+  "failed": false,
+  "partial": false,
+  "interrupted": false,
+  "assistant_response": "Task class: `TASK_PLANNING` for sequential task planning and execution; task output type: `task_brief` with handoff intent and decision.",
+  "classification": "MODEL_COMPLETED_BUT_DID_NOT_HONOR_EXACT_JSON_OUTPUT_CONTRACT",
+  "root_cause_scope": "OUTPUT_CONTRACT_ENFORCEMENT_NOT_RUNTIME_OR_ROUTING",
+  "remote_commit": false,
+  "remote_push": false,
+  "external_residue_manifest_sha256": "5a6835fdd09d695bd8a394d743dda4442a44b6237d1b8e28a7bfb26a176723da",
+  "residue_manifest_present": true,
+  "remediation": "DIRECT_OUTPUT_CONTRACT_PLUS_AT_MOST_ONE_BOUNDED_CORRECTION_PER_AGENT"
+}
