@@ -1,0 +1,86 @@
+﻿{
+    "schema":  "palwakf.provider_runtime_admission.evidence.v1",
+    "evidence_file_ref":  "evidence/runtime_provider_admission_v1/HERMES_OPENCODE_PLAYWRIGHT_RUNTIME_EVIDENCE_V1.json",
+    "probes":  [
+                   {
+                       "provider_id":  "hermes-headless",
+                       "probe_name":  "hermes_version",
+                       "success":  true,
+                       "exit_code":  0,
+                       "version":  "Hermes Agent v0.21.4 (2026.9.21) ┬╖ upstream 01217c5f",
+                       "observed_at":  "2026-09-27T20:05:08.0233322+00:00",
+                       "evidence_ref":  "evidence/runtime_provider_admission_v1/HERMES_OPENCODE_PLAYWRIGHT_RUNTIME_EVIDENCE_V1.json#hermes_version",
+                       "locality":  "LOCAL",
+                       "mutation_performed":  false,
+                       "network_write":  false
+                   },
+                   {
+                       "provider_id":  "hermes-headless",
+                       "probe_name":  "hermes_serve_help",
+                       "success":  true,
+                       "exit_code":  0,
+                       "version":  null,
+                       "observed_at":  "2026-09-27T20:05:08.0233322+00:00",
+                       "evidence_ref":  "evidence/runtime_provider_admission_v1/HERMES_OPENCODE_PLAYWRIGHT_RUNTIME_EVIDENCE_V1.json#hermes_serve_help",
+                       "locality":  "LOCAL",
+                       "mutation_performed":  false,
+                       "network_write":  false
+                   },
+                   {
+                       "provider_id":  "opencode",
+                       "probe_name":  "opencode_version",
+                       "success":  true,
+                       "exit_code":  0,
+                       "version":  "opencode v2.0.18",
+                       "observed_at":  "2026-09-27T20:05:08.0233322+00:00",
+                       "evidence_ref":  "evidence/runtime_provider_admission_v1/HERMES_OPENCODE_PLAYWRIGHT_RUNTIME_EVIDENCE_V1.json#opencode_version",
+                       "locality":  "LOCAL",
+                       "mutation_performed":  false,
+                       "network_write":  false
+                   },
+                   {
+                       "provider_id":  "opencode",
+                       "probe_name":  "opencode_help",
+                       "success":  true,
+                       "exit_code":  0,
+                       "version":  null,
+                       "observed_at":  "2026-09-27T20:05:08.0233322+00:00",
+                       "evidence_ref":  "evidence/runtime_provider_admission_v1/HERMES_OPENCODE_PLAYWRIGHT_RUNTIME_EVIDENCE_V1.json#opencode_help",
+                       "locality":  "LOCAL",
+                       "mutation_performed":  false,
+                       "network_write":  false
+                   },
+                   {
+                       "provider_id":  "playwright",
+                       "probe_name":  "playwright_version",
+                       "success":  true,
+                       "exit_code":  0,
+                       "version":  "Version 1.63.0",
+                       "observed_at":  "2026-09-27T20:05:08.0233322+00:00",
+                       "evidence_ref":  "evidence/runtime_provider_admission_v1/HERMES_OPENCODE_PLAYWRIGHT_RUNTIME_EVIDENCE_V1.json#playwright_version",
+                       "locality":  "LOCAL",
+                       "mutation_performed":  false,
+                       "network_write":  false
+                   },
+                   {
+                       "provider_id":  "playwright",
+                       "probe_name":  "playwright_help",
+                       "success":  true,
+                       "exit_code":  0,
+                       "version":  null,
+                       "observed_at":  "2026-09-27T20:05:08.0233322+00:00",
+                       "evidence_ref":  "evidence/runtime_provider_admission_v1/HERMES_OPENCODE_PLAYWRIGHT_RUNTIME_EVIDENCE_V1.json#playwright_help",
+                       "locality":  "LOCAL",
+                       "mutation_performed":  false,
+                       "network_write":  false
+                   }
+               ],
+    "secrets_captured":  false,
+    "source_mutation":  false,
+    "production_mutation":  false,
+    "probe_policy":  {
+                         "hermes":  "--version + serve --help only; no server start",
+                         "opencode":  "native executable --version + --help; auto-update/share disabled",
+                         "playwright":  "existing local Node CLI/wrapper/Python module --version + --help; no install and no npx download"
+                     }
+}

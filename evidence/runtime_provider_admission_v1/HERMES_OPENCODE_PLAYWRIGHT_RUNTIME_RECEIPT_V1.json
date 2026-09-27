@@ -1,0 +1,214 @@
+{
+  "schema": "palwakf.runtime_provider_admission_receipt.v1",
+  "evidence_schema": "palwakf.provider_runtime_admission.evidence.v1",
+  "probe_policy": {
+    "hermes": "--version + serve --help only; no server start",
+    "opencode": "native executable --version + --help; auto-update/share disabled",
+    "playwright": "existing local Node CLI/wrapper/Python module --version + --help; no install and no npx download"
+  },
+  "agentic": {
+    "hermes": {
+      "schema_version": "1.0",
+      "compatibility_version": "1",
+      "contract_type": "ProviderDescriptor",
+      "project_id": "PALWAKF_AGENTIC_AI_SYSTEM",
+      "task_id": "HERMES-HEADLESS-ADMISSION-V1",
+      "correlation_id": "hermes-headless-admission-v1",
+      "authority_scope": "NO_SOVEREIGN_AUTHORITY",
+      "producer": "Agentic",
+      "created_at": "2026-09-27T20:05:08.023332Z",
+      "provenance": [
+        "evidence/runtime_provider_admission_v1/HERMES_OPENCODE_PLAYWRIGHT_RUNTIME_EVIDENCE_V1.json",
+        "runtime-admission-v1"
+      ],
+      "provider_id": "hermes-headless",
+      "provider_kind": "GENERAL_AGENT",
+      "version": "Hermes Agent v0.21.4 (2026.9.21) ┬╖ upstream 01217c5f",
+      "endpoint": null,
+      "lifecycle": "ADMITTED",
+      "health": "HEALTHY",
+      "capabilities": [
+        "agent.headless_api",
+        "agent.plan",
+        "agent.tool_use",
+        "agent.read_only_execution",
+        "engineering.analysis",
+        "provider.health"
+      ],
+      "admitted_capabilities": [
+        "agent.headless_api",
+        "provider.health"
+      ],
+      "read_write_class": "BOUNDED_WRITE_CAPABLE",
+      "bounded_write_admitted": false,
+      "admission_evidence": [
+        "evidence/runtime_provider_admission_v1/HERMES_OPENCODE_PLAYWRIGHT_RUNTIME_EVIDENCE_V1.json"
+      ],
+      "route_eligible": true
+    },
+    "opencode": {
+      "schema_version": "1.0",
+      "compatibility_version": "1",
+      "contract_type": "ProviderDescriptor",
+      "project_id": "PALWAKF_AGENTIC_AI_SYSTEM",
+      "task_id": "OPENCODE-RUNTIME-BINDING-V1",
+      "correlation_id": "opencode-runtime-binding-v1",
+      "authority_scope": "NO_SOVEREIGN_AUTHORITY",
+      "producer": "Agentic",
+      "created_at": "2026-09-27T20:05:08.023332Z",
+      "provenance": [
+        "evidence/runtime_provider_admission_v1/HERMES_OPENCODE_PLAYWRIGHT_RUNTIME_EVIDENCE_V1.json",
+        "runtime-admission-v1"
+      ],
+      "provider_id": "opencode",
+      "provider_kind": "ENGINEERING",
+      "version": "opencode v2.0.18",
+      "endpoint": null,
+      "lifecycle": "PROBED",
+      "health": "HEALTHY",
+      "capabilities": [
+        "engineering.analysis",
+        "engineering.edit",
+        "engineering.test",
+        "provider.health"
+      ],
+      "admitted_capabilities": [],
+      "read_write_class": "BOUNDED_WRITE_CAPABLE",
+      "bounded_write_admitted": false,
+      "admission_evidence": [],
+      "route_eligible": false
+    },
+    "playwright": {
+      "schema_version": "1.0",
+      "compatibility_version": "1",
+      "contract_type": "ProviderDescriptor",
+      "project_id": "PALWAKF_AGENTIC_AI_SYSTEM",
+      "task_id": "PLAYWRIGHT-RUNTIME-BINDING-V1",
+      "correlation_id": "playwright-runtime-binding-v1",
+      "authority_scope": "NO_SOVEREIGN_AUTHORITY",
+      "producer": "Agentic",
+      "created_at": "2026-09-27T20:05:08.023332Z",
+      "provenance": [
+        "evidence/runtime_provider_admission_v1/HERMES_OPENCODE_PLAYWRIGHT_RUNTIME_EVIDENCE_V1.json",
+        "runtime-admission-v1"
+      ],
+      "provider_id": "playwright",
+      "provider_kind": "BROWSER_UAT",
+      "version": "Version 1.63.0",
+      "endpoint": null,
+      "lifecycle": "PROBED",
+      "health": "HEALTHY",
+      "capabilities": [
+        "browser.uat",
+        "browser.navigation",
+        "browser.screenshot",
+        "provider.health"
+      ],
+      "admitted_capabilities": [],
+      "read_write_class": "BROWSER_UAT",
+      "bounded_write_admitted": false,
+      "admission_evidence": [],
+      "route_eligible": false
+    },
+    "hermes_headless_admitted": true,
+    "opencode_bound_not_admitted": true,
+    "playwright_bound_not_admitted": true,
+    "no_authority_expansion": true,
+    "hermes_bounded_write_admitted": false
+  },
+  "workspace_bindings": [
+    {
+      "provider_id": "hermes-headless",
+      "component_id": "hermes_headless",
+      "lifecycle": "ADMITTED",
+      "health": "HEALTHY",
+      "admitted_capabilities": [
+        "agent.headless_api",
+        "provider.health"
+      ],
+      "route_eligible": true,
+      "bounded_write_admitted": false,
+      "observation": {
+        "component_id": "hermes_headless",
+        "lifecycle_state": "HEALTHY",
+        "version": "Hermes Agent v0.21.4 (2026.9.21) ┬╖ upstream 01217c5f",
+        "process_name": null,
+        "process_present": null,
+        "port": null,
+        "port_listening": null,
+        "observed_at": "2026-09-27T20:05:08.023332Z",
+        "evidence": [
+          "evidence/runtime_provider_admission_v1/HERMES_OPENCODE_PLAYWRIGHT_RUNTIME_EVIDENCE_V1.json",
+          "runtime-admission-v1",
+          "provider-binding:hermes-headless"
+        ]
+      },
+      "binding_mode": "AGENTIC_PROVIDER_DESCRIPTOR_TO_WORKSPACE_RUNTIME",
+      "no_authority_expansion": true
+    },
+    {
+      "provider_id": "opencode",
+      "component_id": "opencode",
+      "lifecycle": "PROBED",
+      "health": "HEALTHY",
+      "admitted_capabilities": [],
+      "route_eligible": false,
+      "bounded_write_admitted": false,
+      "observation": {
+        "component_id": "opencode",
+        "lifecycle_state": "PROBED",
+        "version": "opencode v2.0.18",
+        "process_name": null,
+        "process_present": null,
+        "port": null,
+        "port_listening": null,
+        "observed_at": "2026-09-27T20:05:08.023332Z",
+        "evidence": [
+          "evidence/runtime_provider_admission_v1/HERMES_OPENCODE_PLAYWRIGHT_RUNTIME_EVIDENCE_V1.json",
+          "runtime-admission-v1",
+          "provider-binding:opencode"
+        ]
+      },
+      "binding_mode": "AGENTIC_PROVIDER_DESCRIPTOR_TO_WORKSPACE_RUNTIME",
+      "no_authority_expansion": true
+    },
+    {
+      "provider_id": "playwright",
+      "component_id": "playwright",
+      "lifecycle": "PROBED",
+      "health": "HEALTHY",
+      "admitted_capabilities": [],
+      "route_eligible": false,
+      "bounded_write_admitted": false,
+      "observation": {
+        "component_id": "playwright",
+        "lifecycle_state": "PROBED",
+        "version": "Version 1.63.0",
+        "process_name": null,
+        "process_present": null,
+        "port": null,
+        "port_listening": null,
+        "observed_at": "2026-09-27T20:05:08.023332Z",
+        "evidence": [
+          "evidence/runtime_provider_admission_v1/HERMES_OPENCODE_PLAYWRIGHT_RUNTIME_EVIDENCE_V1.json",
+          "runtime-admission-v1",
+          "provider-binding:playwright"
+        ]
+      },
+      "binding_mode": "AGENTIC_PROVIDER_DESCRIPTOR_TO_WORKSPACE_RUNTIME",
+      "no_authority_expansion": true
+    }
+  ],
+  "checks": {
+    "hermes_headless_admitted": true,
+    "hermes_admitted_capabilities": [
+      "agent.headless_api",
+      "provider.health"
+    ],
+    "hermes_bounded_write_admitted": false,
+    "opencode_bound_not_admitted": true,
+    "playwright_bound_not_admitted": true,
+    "cross_system_binding": "PASS",
+    "no_authority_expansion": true
+  }
+}

@@ -39,6 +39,7 @@ class ProviderRuntimeStateV1(BaseModel):
     version: str | None = Field(default=None, max_length=160)
     endpoint: str | None = Field(default=None, max_length=500)
     capabilities: tuple[str, ...] = Field(min_length=1, max_length=64)
+    admitted_capabilities: tuple[str, ...] = ()
     lifecycle: ProviderLifecycleState = ProviderLifecycleState.discovered
     health: ProviderHealthState = ProviderHealthState.unavailable
     read_write_class: Literal[
@@ -69,6 +70,8 @@ class ProviderRuntimeStateV1(BaseModel):
         if self.lifecycle == ProviderLifecycleState.benchmarked:
             if not self.probe_evidence or not self.benchmark_evidence:
                 raise ValueError("BENCHMARKED_PROVIDER_REQUIRES_PROBE_AND_BENCHMARK")
+        if any(item not in self.capabilities for item in self.admitted_capabilities):
+            raise ValueError("ADMITTED_CAPABILITY_NOT_DECLARED_BY_PROVIDER")
         if self.lifecycle == ProviderLifecycleState.admitted:
             if (
                 not self.probe_evidence
@@ -76,6 +79,10 @@ class ProviderRuntimeStateV1(BaseModel):
                 or not self.admission_evidence
             ):
                 raise ValueError("ADMITTED_PROVIDER_REQUIRES_COMPLETE_EVIDENCE")
+            if not self.admitted_capabilities:
+                raise ValueError("ADMITTED_PROVIDER_REQUIRES_CAPABILITY_SCOPE")
+        elif self.admitted_capabilities:
+            raise ValueError("NON_ADMITTED_PROVIDER_CANNOT_HAVE_ADMITTED_CAPABILITIES")
         if self.bounded_write_admitted and self.read_write_class != "BOUNDED_WRITE_CAPABLE":
             raise ValueError("BOUNDED_WRITE_ADMISSION_REQUIRES_CAPABLE_PROVIDER")
         return self
@@ -85,6 +92,7 @@ class ProviderRuntimeStateV1(BaseModel):
         return (
             self.lifecycle == ProviderLifecycleState.admitted
             and self.health == ProviderHealthState.healthy
+            and bool(self.admitted_capabilities)
         )
 
 
@@ -117,9 +125,16 @@ class ProviderContractEnvelopeV1(BaseModel):
     created_at: datetime
     provenance: tuple[str, ...] = Field(min_length=1, max_length=64)
     provider_id: str
+    provider_kind: Literal["MODEL_RUNTIME", "GENERAL_AGENT", "ENGINEERING", "BROWSER_UAT"]
+    version: str | None = None
+    endpoint: str | None = None
     lifecycle: ProviderLifecycleState
     health: ProviderHealthState
     capabilities: tuple[str, ...]
+    admitted_capabilities: tuple[str, ...]
+    read_write_class: Literal["MODEL_INFERENCE", "READ_ONLY", "BOUNDED_WRITE_CAPABLE", "BROWSER_UAT"]
+    bounded_write_admitted: bool
+    admission_evidence: tuple[str, ...]
     route_eligible: bool
 
     @model_validator(mode="after")
@@ -151,6 +166,7 @@ def default_provider_runtime_states_v1() -> tuple[ProviderRuntimeStateV1, ...]:
             display_name="Hermes Headless/API",
             provider_kind="GENERAL_AGENT",
             capabilities=(
+                "agent.headless_api",
                 "agent.plan",
                 "agent.tool_use",
                 "agent.read_only_execution",
@@ -233,6 +249,7 @@ class ProviderRuntimeRegistryV1:
                 "health_evidence": (*current.health_evidence, evidence_ref),
                 "benchmark_evidence": (),
                 "admission_evidence": (),
+                "admitted_capabilities": (),
                 "bounded_write_admitted": False,
             }
         )
@@ -264,6 +281,7 @@ class ProviderRuntimeRegistryV1:
                     "health": ProviderHealthState.degraded,
                     "benchmark_evidence": (*current.benchmark_evidence, evidence_ref),
                     "admission_evidence": (),
+                    "admitted_capabilities": (),
                     "bounded_write_admitted": False,
                 }
             )
@@ -273,6 +291,7 @@ class ProviderRuntimeRegistryV1:
                     "lifecycle": ProviderLifecycleState.benchmarked,
                     "benchmark_evidence": (*current.benchmark_evidence, evidence_ref),
                     "admission_evidence": (),
+                    "admitted_capabilities": (),
                     "bounded_write_admitted": False,
                 }
             )
@@ -286,6 +305,7 @@ class ProviderRuntimeRegistryV1:
         provider_id: str,
         *,
         evidence_ref: str,
+        admitted_capabilities: tuple[str, ...] | None = None,
         bounded_write: bool = False,
     ) -> ProviderRuntimeStateV1:
         current = self.get(provider_id)
@@ -295,10 +315,18 @@ class ProviderRuntimeRegistryV1:
             raise ProviderRoutingError("ONLY_HEALTHY_PROVIDER_CAN_BE_ADMITTED")
         if bounded_write and current.read_write_class != "BOUNDED_WRITE_CAPABLE":
             raise ProviderRoutingError("PROVIDER_NOT_BOUNDED_WRITE_CAPABLE")
+        selected_capabilities = admitted_capabilities or current.capabilities
+        if not selected_capabilities:
+            raise ProviderRoutingError("ADMISSION_CAPABILITY_SCOPE_REQUIRED")
+        if any(item not in current.capabilities for item in selected_capabilities):
+            raise ProviderRoutingError("ADMISSION_CAPABILITY_NOT_DECLARED")
+        if len(set(selected_capabilities)) != len(selected_capabilities):
+            raise ProviderRoutingError("DUPLICATE_ADMISSION_CAPABILITY")
         next_state = current.model_copy(
             update={
                 "lifecycle": ProviderLifecycleState.admitted,
                 "admission_evidence": (*current.admission_evidence, evidence_ref),
+                "admitted_capabilities": selected_capabilities,
                 "bounded_write_admitted": bounded_write,
             }
         )
@@ -360,6 +388,7 @@ class ProviderRuntimeRegistryV1:
             for item in self.snapshot()
             if item.provider_id not in exclude
             and capability in item.capabilities
+            and capability in item.admitted_capabilities
             and item.lifecycle == ProviderLifecycleState.admitted
             and item.health in allowed_health
         )
@@ -447,8 +476,15 @@ class ProviderRuntimeRegistryV1:
             created_at=created_at or datetime.now(UTC),
             provenance=provenance,
             provider_id=item.provider_id,
+            provider_kind=item.provider_kind,
+            version=item.version,
+            endpoint=item.endpoint,
             lifecycle=item.lifecycle,
             health=item.health,
             capabilities=item.capabilities,
+            admitted_capabilities=item.admitted_capabilities,
+            read_write_class=item.read_write_class,
+            bounded_write_admitted=item.bounded_write_admitted,
+            admission_evidence=item.admission_evidence,
             route_eligible=item.route_eligible,
         )
