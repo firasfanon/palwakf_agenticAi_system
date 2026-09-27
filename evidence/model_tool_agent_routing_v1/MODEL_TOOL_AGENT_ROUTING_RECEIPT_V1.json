@@ -1,0 +1,410 @@
+{
+  "schema": "palwakf.model_tool_agent_routing_receipt.v1",
+  "created_at": "2026-09-27T21:21:48.109764+00:00",
+  "execution_lease": {
+    "schema_version": "1.0",
+    "compatibility_version": "1",
+    "contract_type": "ExecutionLease",
+    "project_id": "PALWAKF_AGENTIC_AI_SYSTEM",
+    "task_id": "MODEL-TOOL-AGENT-ROUTING-V1",
+    "correlation_id": "model-tool-agent-routing-v1",
+    "authority_scope": "WORKSPACE_GOVERNED_EXECUTION",
+    "producer": "Workspace",
+    "created_at": "2026-09-27T21:21:47.753664Z",
+    "provenance": [
+      "WORKSPACE_SOVEREIGN_HANDOFF:1tHSf1whuNDr5t99QUZAFy4ngDjlORwu_vkTL0JhP8nA",
+      "SINGLE_NEXT_ACTION:MODEL_TOOL_AGENT_ROUTING_AND_EXECUTION_BINDING",
+      "OPENCODE_V7:PASS_TEMP_GIT_REPO"
+    ],
+    "lease_id": "lease-model-tool-agent-routing-v1",
+    "granted_scope": "READ_ONLY_EXECUTION",
+    "expires_at": "2026-09-27T22:21:47.753664Z",
+    "allowed_capabilities": [
+      "agent.headless_api",
+      "model.inference",
+      "model.health",
+      "provider.health"
+    ],
+    "allowed_tools": [],
+    "write_authority": "NONE",
+    "revocation_state": "ACTIVE",
+    "allowed_provider_ids": [
+      "hermes-headless",
+      "ollama"
+    ],
+    "allowed_agent_ids": [
+      "coordinator_agentic_v1"
+    ],
+    "allowed_model_ids": [
+      "qwen2.5:3b"
+    ],
+    "exact_base": "40d28da2953b1aceed466388d217d6b88533becb",
+    "branch": "task/AGENTIC-AUTONOMOUS-LOCAL-AI-MEGA-BATCH-V1",
+    "allowed_paths": [],
+    "forbidden_operations": [
+      "production",
+      "shared_db_mutation",
+      "git_push",
+      "source_write",
+      "hermes_bounded_write"
+    ],
+    "approval_reference": "WORKSPACE_SOVEREIGN_HANDOFF:1tHSf1whuNDr5t99QUZAFy4ngDjlORwu_vkTL0JhP8nA#MODEL_TOOL_AGENT_ROUTING_AND_EXECUTION_BINDING"
+  },
+  "providers": [
+    {
+      "schema_version": "1.0",
+      "compatibility_version": "1",
+      "contract_type": "ProviderDescriptor",
+      "project_id": "PALWAKF_AGENTIC_AI_SYSTEM",
+      "task_id": "MODEL-TOOL-AGENT-ROUTING-V1",
+      "correlation_id": "model-tool-agent-routing-v1",
+      "authority_scope": "NO_SOVEREIGN_AUTHORITY",
+      "producer": "Agentic",
+      "created_at": "2026-09-27T21:21:48.109764Z",
+      "provenance": [
+        "routing-runtime-benchmark-evidence",
+        "previous-runtime-provider-receipt"
+      ],
+      "provider_id": "hermes-headless",
+      "provider_kind": "GENERAL_AGENT",
+      "version": "Hermes Agent v0.21.4 (2026.9.21) ┬╖ upstream 01217c5f",
+      "endpoint": null,
+      "lifecycle": "ADMITTED",
+      "health": "HEALTHY",
+      "capabilities": [
+        "agent.headless_api",
+        "agent.plan",
+        "agent.tool_use",
+        "agent.read_only_execution",
+        "engineering.analysis",
+        "provider.health"
+      ],
+      "admitted_capabilities": [
+        "agent.headless_api",
+        "provider.health"
+      ],
+      "read_write_class": "BOUNDED_WRITE_CAPABLE",
+      "bounded_write_admitted": false,
+      "admission_evidence": [
+        "previous-runtime-provider-receipt#hermes-admission"
+      ],
+      "route_eligible": true
+    },
+    {
+      "schema_version": "1.0",
+      "compatibility_version": "1",
+      "contract_type": "ProviderDescriptor",
+      "project_id": "PALWAKF_AGENTIC_AI_SYSTEM",
+      "task_id": "MODEL-TOOL-AGENT-ROUTING-V1",
+      "correlation_id": "model-tool-agent-routing-v1",
+      "authority_scope": "NO_SOVEREIGN_AUTHORITY",
+      "producer": "Agentic",
+      "created_at": "2026-09-27T21:21:48.109764Z",
+      "provenance": [
+        "routing-runtime-benchmark-evidence",
+        "previous-runtime-provider-receipt"
+      ],
+      "provider_id": "ollama",
+      "provider_kind": "MODEL_RUNTIME",
+      "version": "0.34.3",
+      "endpoint": "http://127.0.0.1:11434",
+      "lifecycle": "ADMITTED",
+      "health": "HEALTHY",
+      "capabilities": [
+        "model.inference",
+        "model.structured_output",
+        "model.health",
+        "model.list"
+      ],
+      "admitted_capabilities": [
+        "model.inference",
+        "model.health",
+        "model.list"
+      ],
+      "read_write_class": "MODEL_INFERENCE",
+      "bounded_write_admitted": false,
+      "admission_evidence": [
+        "routing-benchmark#ollama-admission"
+      ],
+      "route_eligible": true
+    },
+    {
+      "schema_version": "1.0",
+      "compatibility_version": "1",
+      "contract_type": "ProviderDescriptor",
+      "project_id": "PALWAKF_AGENTIC_AI_SYSTEM",
+      "task_id": "MODEL-TOOL-AGENT-ROUTING-V1",
+      "correlation_id": "model-tool-agent-routing-v1",
+      "authority_scope": "NO_SOVEREIGN_AUTHORITY",
+      "producer": "Agentic",
+      "created_at": "2026-09-27T21:21:48.109764Z",
+      "provenance": [
+        "routing-runtime-benchmark-evidence",
+        "previous-runtime-provider-receipt"
+      ],
+      "provider_id": "opencode",
+      "provider_kind": "ENGINEERING",
+      "version": "opencode v2.0.18",
+      "endpoint": null,
+      "lifecycle": "ADMITTED",
+      "health": "HEALTHY",
+      "capabilities": [
+        "engineering.analysis",
+        "engineering.edit",
+        "engineering.test",
+        "provider.health"
+      ],
+      "admitted_capabilities": [
+        "engineering.analysis",
+        "provider.health"
+      ],
+      "read_write_class": "BOUNDED_WRITE_CAPABLE",
+      "bounded_write_admitted": false,
+      "admission_evidence": [
+        "routing-benchmark#opencode-admission"
+      ],
+      "route_eligible": true
+    },
+    {
+      "schema_version": "1.0",
+      "compatibility_version": "1",
+      "contract_type": "ProviderDescriptor",
+      "project_id": "PALWAKF_AGENTIC_AI_SYSTEM",
+      "task_id": "MODEL-TOOL-AGENT-ROUTING-V1",
+      "correlation_id": "model-tool-agent-routing-v1",
+      "authority_scope": "NO_SOVEREIGN_AUTHORITY",
+      "producer": "Agentic",
+      "created_at": "2026-09-27T21:21:48.109764Z",
+      "provenance": [
+        "routing-runtime-benchmark-evidence",
+        "previous-runtime-provider-receipt"
+      ],
+      "provider_id": "playwright",
+      "provider_kind": "BROWSER_UAT",
+      "version": "Version 1.63.0",
+      "endpoint": null,
+      "lifecycle": "ADMITTED",
+      "health": "HEALTHY",
+      "capabilities": [
+        "browser.uat",
+        "browser.navigation",
+        "browser.screenshot",
+        "provider.health"
+      ],
+      "admitted_capabilities": [
+        "browser.uat",
+        "browser.navigation",
+        "browser.screenshot",
+        "provider.health"
+      ],
+      "read_write_class": "BROWSER_UAT",
+      "bounded_write_admitted": false,
+      "admission_evidence": [
+        "routing-benchmark#playwright-admission"
+      ],
+      "route_eligible": true
+    }
+  ],
+  "models": [
+    {
+      "model_id": "qwen2.5:3b",
+      "provider_id": "ollama",
+      "capabilities": [
+        "model.inference"
+      ],
+      "health": "HEALTHY",
+      "admitted": true,
+      "local_only": true,
+      "evidence": [
+        "routing-benchmark#ollama-inference"
+      ]
+    }
+  ],
+  "tools": [
+    {
+      "tool_id": "opencode.engineering_analysis",
+      "provider_id": "opencode",
+      "capability_id": "engineering.analysis",
+      "health": "HEALTHY",
+      "admitted": true,
+      "mutation_class": "READ_ONLY",
+      "evidence": [
+        "routing-runtime-benchmark-evidence"
+      ]
+    },
+    {
+      "tool_id": "playwright.browser_uat",
+      "provider_id": "playwright",
+      "capability_id": "browser.uat",
+      "health": "HEALTHY",
+      "admitted": true,
+      "mutation_class": "READ_ONLY",
+      "evidence": [
+        "routing-runtime-benchmark-evidence"
+      ]
+    },
+    {
+      "tool_id": "playwright.browser_navigation",
+      "provider_id": "playwright",
+      "capability_id": "browser.navigation",
+      "health": "HEALTHY",
+      "admitted": true,
+      "mutation_class": "READ_ONLY",
+      "evidence": [
+        "routing-runtime-benchmark-evidence"
+      ]
+    },
+    {
+      "tool_id": "playwright.browser_screenshot",
+      "provider_id": "playwright",
+      "capability_id": "browser.screenshot",
+      "health": "HEALTHY",
+      "admitted": true,
+      "mutation_class": "READ_ONLY",
+      "evidence": [
+        "routing-runtime-benchmark-evidence"
+      ]
+    }
+  ],
+  "agents": [
+    {
+      "agent_id": "coordinator_agentic_v1",
+      "role_id": "coordinator",
+      "route_eligible": false,
+      "admission_basis": "REGISTRY_V2_ADMISSION_REQUIRED_MORE_RESTRICTIVE_WINS",
+      "capabilities": [
+        "agent.headless_api",
+        "model.inference",
+        "model.health",
+        "provider.health"
+      ],
+      "allowed_tools": [],
+      "allowed_provider_ids": [
+        "hermes-headless",
+        "ollama"
+      ],
+      "allowed_model_providers": [
+        "ollama"
+      ],
+      "mutation_ceiling": "READ_ONLY",
+      "allowed_task_classes": [
+        "READ_ONLY_DIAGNOSTIC",
+        "TASK_PLANNING"
+      ]
+    },
+    {
+      "agent_id": "sovereignty_reviewer_agentic_v1",
+      "role_id": "sovereignty_reviewer",
+      "route_eligible": false,
+      "admission_basis": "REGISTRY_V2_ADMISSION_REQUIRED_MORE_RESTRICTIVE_WINS",
+      "capabilities": [
+        "agent.headless_api",
+        "model.inference",
+        "model.health",
+        "provider.health"
+      ],
+      "allowed_tools": [],
+      "allowed_provider_ids": [
+        "hermes-headless",
+        "ollama"
+      ],
+      "allowed_model_providers": [
+        "ollama"
+      ],
+      "mutation_ceiling": "READ_ONLY",
+      "allowed_task_classes": [
+        "READ_ONLY_DIAGNOSTIC",
+        "POLICY_REVIEW"
+      ]
+    },
+    {
+      "agent_id": "coding_builder_agentic_v1",
+      "role_id": "coding_builder",
+      "route_eligible": false,
+      "admission_basis": "REGISTRY_V2_DISABLED_PENDING_ADMISSION",
+      "capabilities": [
+        "engineering.analysis",
+        "engineering.edit",
+        "engineering.test"
+      ],
+      "allowed_tools": [
+        "opencode.engineering_analysis"
+      ],
+      "allowed_provider_ids": [
+        "opencode"
+      ],
+      "allowed_model_providers": [
+        "ollama"
+      ],
+      "mutation_ceiling": "READ_ONLY",
+      "allowed_task_classes": [
+        "REPOSITORY_ANALYSIS"
+      ]
+    },
+    {
+      "agent_id": "tester_agentic_v1",
+      "role_id": "tester",
+      "route_eligible": false,
+      "admission_basis": "REGISTRY_V2_DISABLED_PENDING_ADMISSION",
+      "capabilities": [
+        "browser.uat",
+        "browser.navigation",
+        "browser.screenshot"
+      ],
+      "allowed_tools": [
+        "playwright.browser_uat",
+        "playwright.browser_navigation",
+        "playwright.browser_screenshot"
+      ],
+      "allowed_provider_ids": [
+        "playwright"
+      ],
+      "allowed_model_providers": [],
+      "mutation_ceiling": "READ_ONLY",
+      "allowed_task_classes": [
+        "TEST_TRIAGE"
+      ]
+    }
+  ],
+  "candidate_route": {
+    "dispatch_allowed": false,
+    "blockers": [
+      "AGENT_NOT_ADMITTED"
+    ],
+    "agent_id": "coordinator_agentic_v1",
+    "execution_provider_id": "hermes-headless",
+    "model_provider_id": "ollama",
+    "model_id": "qwen2.5:3b",
+    "tool_ids": [],
+    "provider_ids": [
+      "hermes-headless",
+      "ollama"
+    ],
+    "capability_ids": [
+      "agent.headless_api",
+      "model.inference"
+    ],
+    "mutation_class": "READ_ONLY",
+    "lease_id": "lease-model-tool-agent-routing-v1",
+    "no_authority_expansion": true
+  },
+  "checks": {
+    "execution_lease_projection": "PASS",
+    "ollama_model_inference_provider_admitted": true,
+    "opencode_engineering_analysis_provider_admitted": true,
+    "opencode_source_write_admitted": false,
+    "playwright_uat_provider_admitted": true,
+    "hermes_headless_provider_admitted": true,
+    "coordinator_dispatch_allowed": false,
+    "coordinator_blocker": "AGENT_NOT_ADMITTED",
+    "coding_builder_route_eligible": false,
+    "tester_route_eligible": false,
+    "more_restrictive_policy_wins": true,
+    "no_agent_self_authorization": true,
+    "no_provider_authority_expansion": true,
+    "no_hermes_bounded_write": true,
+    "no_production_authority": true,
+    "no_shared_db_mutation": true
+  },
+  "single_next_action": "CONTROLLED_AGENT_ADMISSION_AND_READ_ONLY_EXECUTION_PILOT"
+}

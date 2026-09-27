@@ -1,0 +1,59 @@
+{
+    "schema":  "palwakf.model_tool_agent_routing_benchmark.v1",
+    "observed_at":  "2026-09-27T21:21:47.4118316+00:00",
+    "previous_provider_receipt":  {
+                                      "path":  "evidence/runtime_provider_admission_v1/HERMES_OPENCODE_PLAYWRIGHT_RUNTIME_RECEIPT_V1.json",
+                                      "sha256":  "711f0eb18d93246009250d68db07a11bbbf50918eb05692eb4c94883b4f8845e"
+                                  },
+    "ollama":  {
+                   "evidence_source":  "OPERATOR_TERMINAL_READBACK_CONFIRMED",
+                   "success":  true,
+                   "version":  "0.34.3",
+                   "selected_model":  "qwen2.5:3b",
+                   "real_inference":  true,
+                   "endpoint":  "http://127.0.0.1:11434",
+                   "admitted_capabilities":  [
+                                                 "model.inference",
+                                                 "model.health",
+                                                 "model.list"
+                                             ]
+               },
+    "opencode":  {
+                     "evidence_source":  "OPERATOR_TERMINAL_READBACK_CONFIRMED_V7",
+                     "success":  true,
+                     "version":  "2.0.18",
+                     "selected_model":  "ollama/qwen2.5:3b",
+                     "execution_context":  "TEMP_GIT_REPOSITORY",
+                     "exit_code":  0,
+                     "timed_out":  false,
+                     "read_only_analysis":  "PASS",
+                     "root_cause":  "HEADLESS_RUN_REQUIRES_OR_BENEFITS_FROM_GIT_WORKTREE_CONTEXT",
+                     "admitted_capabilities":  [
+                                                   "engineering.analysis",
+                                                   "provider.health"
+                                               ],
+                     "source_write_admitted":  false
+                 },
+    "playwright":  {
+                       "evidence_source":  "LIVE_LOCAL_RUNTIME_BENCHMARK_THIS_RESUME",
+                       "success":  true,
+                       "runtime":  "C:\\Users\\DELL\\StudioProjects\\_palwakf_remote_poc\\meshcentral\\node_modules\\playwright\\cli.js",
+                       "benchmark":  "LOCAL_SETCONTENT_TITLE_TEXT_SCREENSHOT",
+                       "screenshot_sha256":  "aa28aa27032fa980c55a20e5f93d5f74e9796893054debca98565f2d1ef28827",
+                       "admitted_capabilities":  [
+                                                     "browser.uat",
+                                                     "browser.navigation",
+                                                     "browser.screenshot",
+                                                     "provider.health"
+                                                 ]
+                   },
+    "governance":  {
+                       "project_source_mutation_by_runtime_benchmarks":  false,
+                       "production_mutation":  false,
+                       "shared_db_mutation":  false,
+                       "opencode_source_write":  false,
+                       "hermes_bounded_write":  false,
+                       "more_restrictive_policy_wins":  true,
+                       "agent_self_authorization":  false
+                   }
+}
