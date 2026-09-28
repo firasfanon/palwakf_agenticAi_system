@@ -1,0 +1,81 @@
+{
+  "arbitrary_shell": false,
+  "attempt_lineage": [
+    {
+      "attempt": 1,
+      "failure": "HISTORICAL_RDC_TEST_EXPECTED_DEFAULT_R3_AFTER_INTENTIONAL_R4_SUPERSESSION",
+      "push": "NONE",
+      "result": "FAIL_CLOSED",
+      "source_commit": "NONE"
+    },
+    {
+      "attempt": 2,
+      "repair": "PIN_HISTORICAL_RDC_TEST_TO_R3",
+      "result": "RESUME_FROM_FAILED_GATE_ONLY"
+    }
+  ],
+  "authority_owner": "Workspace",
+  "authorized_anchors": {
+    "agentic": "73cca89c8928cdc688d271bb5a92053e1f785414",
+    "mind_reference": "1918f6ad4920ba361fc1897aa2b8f3e8392374f8",
+    "workspace": "c208a5e8b6de47f91d578b9b91f69c27d191edea"
+  },
+  "baseline_promotion": "NONE",
+  "break_glass_reason": {
+    "github_connector_write": "403_RESOURCE_NOT_ACCESSIBLE_BY_INTEGRATION",
+    "palwakf_remote_mcp_direct_chat_connector": "NOT_AVAILABLE",
+    "remote_desktop_commander": "DEVICE_OFFLINE"
+  },
+  "controlled_agent_admission_v1_v2_v3_mutation": "NONE",
+  "created_at": "2026-09-28T20:45:31.708886Z",
+  "delegation": false,
+  "execution_router": "Agentic",
+  "main_merge": "NONE",
+  "manual_terminal_class": "BREAK_GLASS",
+  "manual_terminal_interventions_per_task": 2,
+  "model_tool_agent_routing_v1_mutation": "NONE",
+  "opencode_source_write": false,
+  "owner_project": "PALWAKF_AGENTIC_AI_SYSTEM",
+  "p2_status": "BINDING_IMPLEMENTATION_PASS_PENDING_P3_LIVE_PROOF",
+  "p3_required": [
+    "automated_execution",
+    "restart_resume",
+    "audit_readback",
+    "recovery",
+    "manual_terminal_interventions_target_zero"
+  ],
+  "parallel_multi_agent": false,
+  "production": "NONE",
+  "provider_registry_extension": "V2_EXECUTION_TRANSPORT_ONLY",
+  "provider_runtime_registry_v1_mutation": "NONE",
+  "remote_capabilities": [
+    "mesh_device_info",
+    "mesh_hostname",
+    "file_read",
+    "temp_write",
+    "temp_delete",
+    "bounded_powershell",
+    "process_port_readback",
+    "git_readback",
+    "playwright_screenshot_uat",
+    "audit_readback"
+  ],
+  "routing_extension": "V2_REMOTE_TRANSPORT_TOOLS",
+  "schema": "palwakf.autonomous_execution_channel_binding.v1",
+  "shared_db_mutation": "NONE",
+  "source_manifest": {
+    "backend/src/palwakf_local_agents/model_tool_agent_routing_v2.py": "8b980bb6705064c9f0b118128b0c57fe60bcb86ac9c5fb0cbe760d5ed00e2bba",
+    "backend/src/palwakf_local_agents/provider_runtime_registry_v2.py": "5ca097ec80b331255cd0c56057262befc301fd6ae139c25bf1f7200bf4d96da9",
+    "backend/tests/test_model_tool_agent_routing_v2.py": "0fbaba65d8a3d8713f585fdfd9818c1fff6fef9afc54fb25cf6f241d8a7062d4",
+    "backend/tests/test_provider_runtime_registry_v2.py": "2bab5cb10ffd9a0424815ec4921165e111427e8425cf577665672c39b03bc49c"
+  },
+  "source_write": false,
+  "system_os_contract_v1_blob": "c96f1efc382dfa7b205d030714c44c108289541f",
+  "system_os_contract_v1_mutation": "NONE",
+  "transport": [
+    "palwakf-remote-mcp",
+    "meshcentral",
+    "meshagent"
+  ],
+  "transport_sovereign_authority": "NONE"
+}
