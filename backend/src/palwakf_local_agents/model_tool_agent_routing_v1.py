@@ -165,6 +165,23 @@ def default_agent_descriptors_v1() -> tuple[AgentDescriptorV1, ...]:
             allowed_task_classes=("READ_ONLY_DIAGNOSTIC", "POLICY_REVIEW"),
         ),
         AgentDescriptorV1(
+            agent_id="knowledge_researcher_agentic_v1",
+            role_id="knowledge_researcher",
+            route_eligible=False,
+            admission_basis="REGISTRY_V2_ADMISSION_REQUIRED_MORE_RESTRICTIVE_WINS",
+            capabilities=(
+                "agent.headless_api",
+                "model.inference",
+                "model.health",
+                "provider.health",
+            ),
+            allowed_tools=(),
+            allowed_provider_ids=("hermes-headless", "ollama"),
+            allowed_model_providers=("ollama",),
+            mutation_ceiling="READ_ONLY",
+            allowed_task_classes=("READ_ONLY_DIAGNOSTIC", "KNOWLEDGE_REVIEW"),
+        ),
+        AgentDescriptorV1(
             agent_id="coding_builder_agentic_v1",
             role_id="coding_builder",
             route_eligible=False,

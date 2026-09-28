@@ -55,7 +55,7 @@ roles:
   output_mode: controlled_contract_and_human_review
 - role_id: knowledge_researcher
   title_ar: باحث المعرفة والمصادر
-  status: admission_required_v2
+  status: admission_required_v3
   autonomy_ceiling: L1_PLAN_ONLY
   allowed_skills:
   - knowledge_source_review
