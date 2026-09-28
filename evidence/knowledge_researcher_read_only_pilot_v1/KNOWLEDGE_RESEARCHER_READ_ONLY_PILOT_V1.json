@@ -1,0 +1,57 @@
+{
+  "accepted_attempt": 1,
+  "admission_contract": "CONTROLLED_AGENT_ADMISSION_V3",
+  "agent": "knowledge_researcher_agentic_v1",
+  "agent_source_write": false,
+  "authorization_reference": "CHATGPT_USER_AUTHORIZATION_20260928:KNOWLEDGE_RESEARCHER_V3_ADMISSION_RUNTIME_DESCRIPTOR_SINGLE_AGENT_READ_ONLY_PILOT",
+  "authorized_exact_bases": {
+    "agentic": "5fd1be9bc4ef23af6388fb1393167ced3ddcf83d",
+    "mind_reference": "1918f6ad4920ba361fc1897aa2b8f3e8392374f8",
+    "workspace": "cf8d784e1b779c4be779ef7b12edf460db1be906"
+  },
+  "baseline_promotion": "NONE",
+  "bounded_correction_limit": 1,
+  "decision": "NO_MUTATION",
+  "delegation": false,
+  "engineering_head": "99ef2e2aaeb19668dd82af7a51fc5fc7476b27b4",
+  "evidence": {
+    "admission_sha256": "fcbf04e0f70db65654c71c8bbe7231581f0e94a6db574acdfed7e04e5b5d973f",
+    "execution_result_sha256": "6d252614dd9fca6b0b256088f0ee57010613b90fec459d4b6c6302ef01d0f8c5",
+    "knowledge_package_canonical_sha256": "6c1f6fe6ba7c81b664c3b7eca4236c497e4281afc016ff2c43f422dd90f57881",
+    "knowledge_package_file_sha256": "921614f189d78d02537b10b4d0e7a46fcbbf5e6ed9359dd6a6887353b310729e",
+    "lease_sha256": "984818790d0bf5147f70619686191eb3e2d255fb709b69d43337e2d1ec5d92de"
+  },
+  "external_research": false,
+  "hermes_bounded_write": false,
+  "local_pilot_result": "PASS_PENDING_EVIDENCE_COMMIT_PUSH_AND_INDEPENDENT_GITHUB_READBACK",
+  "main_merge": "NONE",
+  "model": {
+    "declared_context": 131072,
+    "id": "palwakf-llama3.2-3b-64k:ctx64k",
+    "runtime_context": 64000
+  },
+  "network_access_by_agent": false,
+  "opencode_source_write": false,
+  "parallel_multi_agent": false,
+  "production_mutation": "NONE",
+  "route": {
+    "execution_provider": "hermes-headless",
+    "model_id": "palwakf-llama3.2-3b-64k:ctx64k",
+    "model_provider": "ollama",
+    "no_authority_expansion": true,
+    "post_admission_blockers": [],
+    "post_admission_dispatch_allowed": true,
+    "pre_admission_blockers": [
+      "AGENT_NOT_ADMITTED"
+    ],
+    "pre_admission_dispatch_allowed": false,
+    "tools": []
+  },
+  "schema": "palwakf.knowledge_researcher.read_only_pilot.v1",
+  "shared_db_mutation": "NONE",
+  "single_next_action": "INDEPENDENT_GITHUB_READBACK_AND_SOVEREIGN_CLOSEOUT_OF_KNOWLEDGE_RESEARCHER_V3_PILOT",
+  "source_manifest_unchanged": true,
+  "task_class": "KNOWLEDGE_REVIEW",
+  "tools": [],
+  "v2_immutable": true
+}

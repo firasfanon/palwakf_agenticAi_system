@@ -1,0 +1,1416 @@
+{
+  "accepted_attempt": 1,
+  "agent_id": "knowledge_researcher_agentic_v1",
+  "attempts": [
+    {
+      "attempt": 1,
+      "exact_match": true,
+      "parse_error": null,
+      "parsed_json": {
+        "agent_id": "knowledge_researcher_agentic_v1",
+        "conflicts": [],
+        "decision": "NO_MUTATION",
+        "network_access_used": false,
+        "output_type": "knowledge_review",
+        "reviewed_package_id": "knowledge-package-researcher-v3-pilot-v1",
+        "status": "PALWAKF_KNOWLEDGE_RESEARCHER_READ_ONLY_PILOT_OK",
+        "task_class": "KNOWLEDGE_REVIEW",
+        "tools_used": [],
+        "unknowns": [
+          "External-source freshness is intentionally not evaluated in this bounded no-network pilot."
+        ],
+        "verified_items": [
+          "K1",
+          "K2",
+          "K3"
+        ]
+      },
+      "raw_output": "{\"status\":\"PALWAKF_KNOWLEDGE_RESEARCHER_READ_ONLY_PILOT_OK\",\"agent_id\":\"knowledge_researcher_agentic_v1\",\"task_class\":\"KNOWLEDGE_REVIEW\",\"output_type\":\"knowledge_review\",\"reviewed_package_id\":\"knowledge-package-researcher-v3-pilot-v1\",\"verified_items\":[\"K1\",\"K2\",\"K3\"],\"conflicts\":[],\"unknowns\":[\"External-source freshness is intentionally not evaluated in this bounded no-network pilot.\"],\"network_access_used\":false,\"tools_used\":[],\"decision\":\"NO_MUTATION\"}",
+      "raw_output_sha256": "d660bd8c0d7b92cc53e1c7537a506a781ec2e967e894b12d2ea140e49481d2dc",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "usage": {
+        "api_calls": 1,
+        "auxiliary": {
+          "api_calls": 1,
+          "by_task": {
+            "title_generation": {
+              "api_calls": 1,
+              "cache_read_tokens": 16,
+              "cache_write_tokens": 0,
+              "estimated_cost_usd": 0,
+              "input_tokens": 484,
+              "output_tokens": 17,
+              "reasoning_tokens": 0
+            }
+          },
+          "cache_read_tokens": 16,
+          "cache_write_tokens": 0,
+          "estimated_cost_usd": 0,
+          "input_tokens": 484,
+          "output_tokens": 17,
+          "reasoning_tokens": 0,
+          "total_tokens": 501
+        },
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "completed": true,
+        "cost_source": "none",
+        "cost_status": "unknown",
+        "estimated_cost_usd": 0.0,
+        "failed": false,
+        "input_tokens": 1659,
+        "interrupted": false,
+        "model": "palwakf-llama3.2-3b-64k:ctx64k",
+        "output_tokens": 115,
+        "partial": false,
+        "provider": "custom",
+        "reasoning_tokens": 0,
+        "service_tier": null,
+        "session_id": "20260928_031514_421922",
+        "total_including_auxiliary": {
+          "api_calls": 2,
+          "estimated_cost_usd": 0.0,
+          "total_tokens": 2275
+        },
+        "total_tokens": 1774,
+        "turn_exit_reason": "text_response(finish_reason=stop)"
+      }
+    }
+  ],
+  "bounded_correction_limit": 1,
+  "decision": "NO_MUTATION",
+  "declared_model_context": 131072,
+  "external_research": false,
+  "input_knowledge_package_canonical_sha256": "6c1f6fe6ba7c81b664c3b7eca4236c497e4281afc016ff2c43f422dd90f57881",
+  "input_knowledge_package_file_sha256": "921614f189d78d02537b10b4d0e7a46fcbbf5e6ed9359dd6a6887353b310729e",
+  "network_access_by_agent": false,
+  "output": {
+    "agent_id": "knowledge_researcher_agentic_v1",
+    "conflicts": [],
+    "decision": "NO_MUTATION",
+    "network_access_used": false,
+    "output_type": "knowledge_review",
+    "reviewed_package_id": "knowledge-package-researcher-v3-pilot-v1",
+    "status": "PALWAKF_KNOWLEDGE_RESEARCHER_READ_ONLY_PILOT_OK",
+    "task_class": "KNOWLEDGE_REVIEW",
+    "tools_used": [],
+    "unknowns": [
+      "External-source freshness is intentionally not evaluated in this bounded no-network pilot."
+    ],
+    "verified_items": [
+      "K1",
+      "K2",
+      "K3"
+    ]
+  },
+  "runtime_model_context": 64000,
+  "schema": "palwakf.knowledge_researcher.execution_result.v1",
+  "source_manifest_after": {
+    "digest": "40f41fa70af73da1d46024df714ee5bba4ad21149754c823c3a317ac88b4d045",
+    "entries": [
+      {
+        "path": "backend/src/palwakf_local_agents/__init__.py",
+        "sha256": "d966bc9c99743fa6c5c7b9fa73d0792c9433f6192f3f7081f1a2d0255d203561"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/__init__.py",
+        "sha256": "4226beac740c258852e1537bbfb42ac0cbec224f639132c6edbb2b066637bf8d"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/api.py",
+        "sha256": "c40c8854a3fa9230c1ccd33ae324f919680d78b89c89787802e787e5c1a6eb9f"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/contracts.py",
+        "sha256": "665057464618e9f1438b88bd90df920a574bc641f4455cbec1c75dba50023724"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/external_contracts.py",
+        "sha256": "19449c64173c47f199656733e82198023c5128f60ed2a136c996113a9313d542"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/external_skill_admission.py",
+        "sha256": "777a42aae2dcfee7154a316aa1c2fa9e709207a8fa167ef70a746e6c606066a0"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/intersystem_v1.py",
+        "sha256": "d0af8ced487814968f3804800659cc061e84b1f023a2b67dce0628ba58762a02"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/learning.py",
+        "sha256": "8a86cfb6117c4d5b10153ec2ab98e42c533b4738d444be30509b3dc800ba08d1"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/learning_service.py",
+        "sha256": "8644eac5d5533db3e71c81aed0b4a81967337f6e0aba34ff8348997aeb62ebd9"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/orchestration.py",
+        "sha256": "745479a494376dc3e79baa6ba035569557eb5dcbc8383a827d833af480f89345"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/provider_learning.py",
+        "sha256": "3930ffb93043558f738c617220c1c2d71137aca18f6d05a17736bfc8fde22343"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/provider_readiness.py",
+        "sha256": "167ca4378df392eead04143a78ac7e4a1ff320cec38a583283e2e1cde85ae1b6"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/providers.py",
+        "sha256": "ebd8abcbd1a831e54d5850f12d4c4ef4589bd799ab4d36ebf30a830745829cda"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/registry_projection.py",
+        "sha256": "1412f9cef17e6577887cfe6b28c4fd44bb0f9fbd4c6f454ac8bb456a5a06ec6a"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/runtime.py",
+        "sha256": "740a49cde51fb20e72568443b132ee36f87da417620fe2abb2a3c20c1e7082b5"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_os_v2.py",
+        "sha256": "891c7ce632ee5bbf3912a5443233ab38dc7ff5f42eac90a7c8fe296eb1c2b15d"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/app.py",
+        "sha256": "f7a9c25fc94c147cfe3065d9887293a4e76d69fac821af333bbb2c51377a104c"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/backend_frontend_alignment/__init__.py",
+        "sha256": "75b4d11e069f604417aee9b705b47517bc30c6c316c3961c6f5539a7f3ab572b"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/backend_frontend_alignment/router.py",
+        "sha256": "da94edf9b2b495689233e44f593ef71e66fafc8a334720936b2b151af66aa211"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/command_center/__init__.py",
+        "sha256": "a13e1eef0e7ccc580497f18432ba3af1899d1bcbbe5856bcc3aece2457dfff39"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/command_center/models.py",
+        "sha256": "afe2cd4bf71958948a90f02c0bffc459b66da88002e23b4360c85b9548418372"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/command_center/read_only_store.py",
+        "sha256": "21b0f18c671171e3b9d82d4c8007b0e1f85b5b08f6e1ad1a8b69f06f429323aa"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/command_center/router.py",
+        "sha256": "90bf67d103a0c4ea207faaa69815c54f1098f169cf9f98c40de46c7bbef8a61d"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/command_center/static/app.js",
+        "sha256": "10d4a2924db236431d20542e3b65ba1ca0401c959a3fdec193761c6f5206200a"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/command_center/static/index.html",
+        "sha256": "014577f1c44195d6cd4f1b9031f79c66d70f796210ada97fda8a658298baecb6"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/command_center/static/styles.css",
+        "sha256": "c8d81916be7425bb8b19368ba98bbc96a1c07c940509256032a911f9b673696d"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/controlled_agent_admission_v1.py",
+        "sha256": "81d1490f7701c98be4d56b07f419d8c386bb9799d48d203d74f9f40c1a102850"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/controlled_agent_admission_v2.py",
+        "sha256": "34d2142539f239e21600732fce2fcdfa1f6eebddf21f61d6820b8bcb45cc0613"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/controlled_agent_admission_v3.py",
+        "sha256": "b78b3113a864142b859c985921ba770dde4cbd014eee00f3c84e75ab7dc3e629"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/controlled_software_development_pipeline_v1.py",
+        "sha256": "02134411e816f11c74f45ce6ddbe96b2e9dac7e70136e50d7139827e55a205d7"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/first_human_authorized_read_only_operation_v1.py",
+        "sha256": "63e14b22cc82c5f07736b7a2edee7f02d7390c019c2dc5c24c6c6a294b6a0c06"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/full_stack_operational_waves_3_to_8_v1.py",
+        "sha256": "08721d65eece341cbbf977bcb813f6b535b7c58c33957518b3272291545eae64"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_capability_foundation/__init__.py",
+        "sha256": "e281cc9857ec7f55621c1f580377d930ad3c363073c224a2d56a019539aa92bd"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_capability_foundation/authz.py",
+        "sha256": "aec40a51fae7f1a092080f3a5c51c949c6a5e4bdf45098b7e66ef64afe73100f"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_capability_foundation/contracts.py",
+        "sha256": "dbe8fdf2e5a9bcd2fe482ddcea5e3c0f2d599baa751f878edb3bdec7f3250a3f"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_capability_foundation/router.py",
+        "sha256": "4a0f63f020f16dfd0ff26a9badebf9f9ded651876fe0af47c724836c52b0c4d0"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_capability_foundation/store.py",
+        "sha256": "3374907838b5a88f266420be061848797a7832237291f095d08e36dd6da6da97"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_capability_foundation/tools.py",
+        "sha256": "2743abdab5617c16ee7143a4b5aeb031af11a220935a084e3d38fb90a700de57"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_coding_model_provider_v1.py",
+        "sha256": "9a578638625da4aca9ec4b228f4f3d64272bbe51de608a51b4cdfb9e933c65be"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_operations/__init__.py",
+        "sha256": "9b849ce601ac76966fe4e178f595cd16679094d418f030eba8ed84b81ba702cb"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_operations/contracts.py",
+        "sha256": "474766b5ef80c3f01b6c99e78b8733a488b8986a0c57876ecd7c759eaf6ef5c9"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_operations/router.py",
+        "sha256": "be99e13d5dd2308cd560f8518348338e5bca83ff5dd144b993add1e5c9e2c5df"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_operations/static/app.js",
+        "sha256": "9d10208e2447bf15b505d05f15e4367534cc7d6bf15795818b478e379c8505a6"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_operations/static/index.html",
+        "sha256": "59e3fd1f2efd0216683db961b0bad57285e688c01f88874881571be20e524054"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_operations/static/styles.css",
+        "sha256": "a054353f348e571a5c175fb2f847baa1e9455ee40330fdb7093bdfb991a59935"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_operations/store.py",
+        "sha256": "f3faffa395ccec35432f696eee8a766ffba08d93cfad82972017b650f0decd93"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/legacy_write_authorization.py",
+        "sha256": "e9c1dcbe30ff2ee7be10f798457899437f497bb5aeb7fd138d9538f140af5b53"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/__init__.py",
+        "sha256": "a096481618b13e82e90070080ddc7d251bcebb8eedcb3b560a792a8ead77885f"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/contracts.py",
+        "sha256": "66f27c60e05082a9f161bfc12e166f0c5e9482f743a1a6b824b1d165ce22f900"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/engine.py",
+        "sha256": "833e44b30ec7bec898c39fa81fae8c5a60969b04f2639565c997004197c43989"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/model_pilot.py",
+        "sha256": "e078b153c82c41156dbc51a2b3774e10e471403041f839704aac61cf7647fc67"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/policy.py",
+        "sha256": "3d1005fe189546cc13103aee8bf4ff94347b44f72dadfc66ee5428bb77755919"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/registry.py",
+        "sha256": "8a5999eee022bc2629cce496782776c2f6549ddca35ee6b41c163e57c1f39c98"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+        "sha256": "c2ff3a19b144f9d89f3b4a680457a45228f0ce48adae997b5002998efd2a1f2c"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/static/app.js",
+        "sha256": "0849853f7a9e2b0eb28d400caa929feacb822120f8b8b307bcddaa382a820320"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/static/index.html",
+        "sha256": "ff18a0f93e8c6c0e1d7e0b0e07a0d0f4531da31b95b0f64b9a04a4eff0f17657"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/static/styles.css",
+        "sha256": "d67309aae5f02cb80c6c3569ea42617a4f6d992232850495e281e4ff76643750"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/store.py",
+        "sha256": "ba2e9df9b0342f65c498718e7d53dd425f7e5426ffaf85e1a023b805541c2ed1"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/model_tool_agent_routing_v1.py",
+        "sha256": "1a240598a4945c3010d05b1b89482b4d0da939686423cb040814df03bba28d9c"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/models.py",
+        "sha256": "57877924fad104037f2fb6954960cd8ae14fb42037fd006942b2d09dfb191a93"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/open_source_adapter_contracts_v1.json",
+        "sha256": "f376f57bbfaf0f852f1c9914115505c923a0b6f78ef049fb374f5cbfa4240c6e"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/open_source_capabilities_v1.py",
+        "sha256": "bce73c59e6231d6f8ce72f6ae648ad0f6a0ec5fe165bc33bb81eb6256cdc483d"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/open_source_capability_registry_v1.json",
+        "sha256": "9907d6f9a7d969832a2c139a55dea0486f2fde6aa01a98bce6df3a164c011502"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/open_source_tools_operational_admission_wave1_v1.py",
+        "sha256": "235cac7c3a5c7a26c8c8a62e681129c9bd759e264c6e4c7b62ef094f5a00886f"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/__init__.py",
+        "sha256": "668d6abed9780743c0846aa025e6b5bb45b097f3f02992c7e405a505002f362e"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/codebase_index.py",
+        "sha256": "742cba9367249d56f5ad951bab308bdd0afd09206253f560f41c9571ca82836e"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/contracts.py",
+        "sha256": "30136cca6f4782c294696feb96eeec18af061fdba975b069facef21dd08e6d49"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/innovation_resilience.py",
+        "sha256": "c14cd971a748d376e3b035c6db597909839976cc588908165406a7d5382325bf"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/model_readiness.py",
+        "sha256": "cfb1e45a6bba27904a4184dddb00eb4f853fa782bf790223d2fa9dfea0dc5c67"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/router.py",
+        "sha256": "7541adc8304233e81a593707c923ab1ab9266993d434d11636a761567fccb5ad"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/state_store.py",
+        "sha256": "04a28d3e8d9d1ab82d904394dbf2b3f66fbbba59ccf48eea7d8bfd66b9039b13"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/tools.py",
+        "sha256": "4b2a771be3247d0fbe1689d95776efce0c369aa963d70304308ffea2217bf61e"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/project_reader/__init__.py",
+        "sha256": "cbb7d3f98f791241a56d0e1fbc098858bf2b54879fd4ac5dd22579853ae6c523"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/project_reader/router.py",
+        "sha256": "1680d34b411fd79ed2a127def7d18349420d4f4f1ad9dc7a2716679d4eaa4dd2"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/provider_operational_admission_v1.py",
+        "sha256": "d98fe42c768d197d665d64ccced5644aad9b6915716dd984b449cc32621c51fa"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/provider_runtime_registry_v1.py",
+        "sha256": "f68dfe0879fc1b4681453044694d76d6a8c24fd68c25e32f4385fdbda94d894b"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/quality_accepted_tools_goal_planner_binding_v1.json",
+        "sha256": "318ddd0b32d7e368c3deb1dc4c9241ea3f6074a0adfada1f646f36a0af2aca61"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/quality_accepted_tools_goal_planner_binding_v1.py",
+        "sha256": "48a49469031eb68bd36850c7c5f2dae39b6dd9fc2642ed7ca024afef0fcccf26"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/quality_gated_external_scanners_wave2_v1.py",
+        "sha256": "029e07f1b9a1c4dd7a96931fb1c2ae11270aeee894e652bc9b54496da08b8bbd"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/quality_gated_read_only_operations_wave1_v1.py",
+        "sha256": "bcf89bab1c9329e7662652d0af8348245cfd85ec827bd2b52bf85daea8645da8"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/quality_tool_selection_policy_v1.json",
+        "sha256": "0e0d9c83982469788b16059d2a16a71782583cc2d48336cc35634207ef06e873"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/registry.py",
+        "sha256": "1f303603c1d29711cea46590721777d5aab6c32bc244d7c0ac5a803c67e20663"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/safe_read_model_source_native_v1.py",
+        "sha256": "f9e95438909869ec32184bd7a2f789af504f65bfa9b1e28914c1e7d61c8a1b6b"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/settings.py",
+        "sha256": "bb3129bc5588e9317ac45b1c988ed35eb4fdc38edabcb4ef3ec1b0753afc612c"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/store.py",
+        "sha256": "8dce4fb74629d8b9e866917f14166eb7f7db50fee4f2600a03f1c38d0c2e4d23"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_catalog_wave1_v1.json",
+        "sha256": "357ccb86cc8a7667089fc666a0e26566ef9c3eaec295bd99ffb170893302591b"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_fixtures_wave1_v1/clean_security_samples/clean.txt",
+        "sha256": "be1b12bb11600ad33008fcad5e3255c6669ccbae58fc801c0e870b37b1608b0c"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_fixtures_wave1_v1/expected_golden_results.json",
+        "sha256": "f5383441c2e1681217a5f388ef5ad3e07a059a9af8140dbd54ae86beedfed86f"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_fixtures_wave1_v1/flutter_dart/main.dart",
+        "sha256": "e2c15c3640919570a2b67b2c3d85691317e88a988d118688fa7784ac4367a4fa"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_fixtures_wave1_v1/python_backend/app.py",
+        "sha256": "7c9c7a38caa590c96e90771bc2c230da947880fa2c0cc462a84865893fb323ab"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_fixtures_wave1_v1/react_typescript/App.tsx",
+        "sha256": "c55ff6225de2520c39569cf0c89b88891f07ffbefbc7cd69bd657848a73aec60"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_fixtures_wave1_v1/seeded_security_findings/synthetic_aws.txt",
+        "sha256": "2b7318597d3b3e1c42634554a187d3789e0197ef640098b4805dbdb9b543f04a"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_fixtures_wave1_v1/semgrep_rules.yml",
+        "sha256": "86e6fb523372ce3e5a471a0d23e3ce570a259a11f58a6d9e9f4e6cfd9a9b7b23"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_lab_wave1_v1.py",
+        "sha256": "d95128d157fbbce5a9654a7e64b6383a5125d4d2e9cdd438b51e34009577afb0"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/__init__.py",
+        "sha256": "0aab6a9cb99da10ef509301bdcfa46f8cc7b4a75609e53d19ac1c484ae5bf77a"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/contracts.py",
+        "sha256": "c482a5a9d8369d262523cc69b8e9603b63e44167b665056b36bf53926e63097b"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/policy.py",
+        "sha256": "ca52ee55f7d55f41696727b17a9d7d95b2aed3fc3ebc3a53a6095902bb3d78f6"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/router.py",
+        "sha256": "a4856d00e833d4f5e8e241f754893021c7614bb25d25f6887b73450e13356cf4"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/static/app.js",
+        "sha256": "44dfa302ef5883a29f455d738246d289dd6363737656e037285cf47422e18c76"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/static/index.html",
+        "sha256": "c13951efcb1117208f08d7c5364fe7b8522d328f06af198193a2b54ce251fb6f"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/static/styles.css",
+        "sha256": "cb15b2e9a233c98c5d231809063b6fa1a442238239435a355e35eca9d4cc0117"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/store.py",
+        "sha256": "ed13948d965656d841a91a28ca9b21ffddcb63f99b666efea9b17b474fa69502"
+      },
+      {
+        "path": "agents/backend_engineer/AGENT_CHARTER_V2.md",
+        "sha256": "fdd0afde32a9d91d2c7dde6a8b761ab9e827321ac1a605cca9e5f8397bc33e21"
+      },
+      {
+        "path": "agents/backend_engineer/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "267c2a71031047086d0f98242e85da4fd2c0b852321b018443fe07648ca0ab36"
+      },
+      {
+        "path": "agents/charters/read_only_analysis_pack_01/COORDINATOR_READ_ONLY_ANALYSIS_PACK_01.md",
+        "sha256": "bbb115237c398ea8774e7e92b1e3da18c94741d71776011c250c020a173b1fd7"
+      },
+      {
+        "path": "agents/charters/read_only_analysis_pack_01/DOCUMENTATION_HANDOFF_READ_ONLY_ANALYSIS_PACK_01.md",
+        "sha256": "c9c722096a002fe88cadc32031b84cdb636766c92ee396690dac6bc1ea33d830"
+      },
+      {
+        "path": "agents/charters/read_only_analysis_pack_01/KNOWLEDGE_RESEARCHER_READ_ONLY_ANALYSIS_PACK_01.md",
+        "sha256": "a67cf8e2d198bcb7bcafe684bd0aebbe474c44bbae6bb92816c389d7a6dbbe33"
+      },
+      {
+        "path": "agents/charters/read_only_analysis_pack_01/SOVEREIGNTY_REVIEWER_READ_ONLY_ANALYSIS_PACK_01.md",
+        "sha256": "35696c36d6edc4fed5ab7c2b2fbbbbe2672fbe64d3d950d97379d098d48831a2"
+      },
+      {
+        "path": "agents/charters/structured_analysis_payload_foundation/DOCUMENTATION_HANDOFF_STRUCTURED_PAYLOAD_V1.md",
+        "sha256": "97edb579c10ab49d7b63164434f0a83286830dc5389c5ff00b07e0df909426c1"
+      },
+      {
+        "path": "agents/charters/structured_analysis_payload_foundation/KNOWLEDGE_RESEARCHER_STRUCTURED_PAYLOAD_V1.md",
+        "sha256": "0378c7ff4ba274efa5593cb784fa5eafee8f19fb50ee0c5c16075f5820de39d0"
+      },
+      {
+        "path": "agents/coding_builder/AGENT_CHARTER_V2.md",
+        "sha256": "b73de769e4bdfa701ba90051a7dbb53cd61b0555ac910dcb8f5d8cb4f62850f9"
+      },
+      {
+        "path": "agents/coding_builder/SYSTEM_PROMPT_AR.md",
+        "sha256": "d24cb8c48fc5086063dd363334ae4a04837f9c38508fa71954e73b550ec1c966"
+      },
+      {
+        "path": "agents/coding_builder/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "e0b21cb2835464c1ea2f7eaf33a4580b4d6653e75f2f9ee221246d0c75aaca32"
+      },
+      {
+        "path": "agents/coordinator/AGENT_CHARTER_V2.md",
+        "sha256": "0cc96a55fa79dbc4e957be3ec68abfff6506f319e33a2bb46091bce39ade383d"
+      },
+      {
+        "path": "agents/coordinator/SYSTEM_PROMPT_AR.md",
+        "sha256": "df5f1ffa5bc74e9796a38102c8d76b3cd336bd025b9b09f143bc2f133c1bbde4"
+      },
+      {
+        "path": "agents/coordinator/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "0bb53c0d4beb46dac7b5b1bfe73787e21ce36e05d48c79ff2d43785078896872"
+      },
+      {
+        "path": "agents/database_engineer/AGENT_CHARTER_V2.md",
+        "sha256": "c850afb44f6c99ba3596044b32326056fd40bdb2de126b4864038ea49a687546"
+      },
+      {
+        "path": "agents/database_engineer/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "730931773d24b97e692330cb0332ca7f56a27898ad1b8abea4c3cb66175c8450"
+      },
+      {
+        "path": "agents/documentation_handoff/AGENT_CHARTER_V2.md",
+        "sha256": "cdc97f10c670313f4848378666a2f7b44e7966e407133e162670cc6f49af011c"
+      },
+      {
+        "path": "agents/documentation_handoff/SYSTEM_PROMPT_AR.md",
+        "sha256": "832cf9dc4fabcf84ed5dda9697872d1239f60e77a858fa11b3a84cb213f4fcac"
+      },
+      {
+        "path": "agents/documentation_handoff/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "41e9a4096dbae3670e6302f8f1950da793503f9cdf0ce708a9fbb445ea582fad"
+      },
+      {
+        "path": "agents/frontend_engineer/AGENT_CHARTER_V2.md",
+        "sha256": "0112f5199ed60eca72da1f76ea6ad91f92dd54ff7a338c65b480cdf6b9be475b"
+      },
+      {
+        "path": "agents/frontend_engineer/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "39f8000cd7229fe5d94d648dfd2bbf3ae04660986cefa6acb67d83055b1caa48"
+      },
+      {
+        "path": "agents/knowledge_researcher/AGENT_CHARTER_V2.md",
+        "sha256": "b474c3aa19b8bc14399f6cc55f554cb923d2f7dac6f6135bd8d942c099279c6f"
+      },
+      {
+        "path": "agents/knowledge_researcher/SYSTEM_PROMPT_AR.md",
+        "sha256": "bdbe516726b9e1fd3b616b15ec0fb0eaad9f41c22fc7b6f33cfadf07eef90e26"
+      },
+      {
+        "path": "agents/knowledge_researcher/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "100022690f49824b4a4d66da85a138245cf2796970ffc04f8bf149182b50e78a"
+      },
+      {
+        "path": "agents/output_profiles/read_only_analysis_pack_01/coordinator.json",
+        "sha256": "03032bdfff1f526e7ec53e693f7509c9b2bfeb3cd34db7d664a6040db0a0f41f"
+      },
+      {
+        "path": "agents/output_profiles/read_only_analysis_pack_01/documentation_handoff.json",
+        "sha256": "fdbb8bd6d4feedf34f5e359d99967fbbc882875a4ace83a5c226a134ad2b52e0"
+      },
+      {
+        "path": "agents/output_profiles/read_only_analysis_pack_01/knowledge_researcher.json",
+        "sha256": "7abc6196563fdf719f46088428b8fb5ed1cf5ffed97fdfe7cbe036fed316eeb1"
+      },
+      {
+        "path": "agents/output_profiles/read_only_analysis_pack_01/sovereignty_reviewer.json",
+        "sha256": "07ce743b9267a54e247add0770a4ead08e5a09577679e28c87468a055533906b"
+      },
+      {
+        "path": "agents/output_profiles/structured_analysis_payload_foundation/documentation_handoff.json",
+        "sha256": "e5e90fe507b43959dfd280648c5bd6c556d79a07bbff32176bffbd1e01f784d3"
+      },
+      {
+        "path": "agents/output_profiles/structured_analysis_payload_foundation/knowledge_researcher.json",
+        "sha256": "150ff15ba4d4a496f58c30ba142ab1320d0e83dee74affc840b7f845316b54f4"
+      },
+      {
+        "path": "agents/product_analyst/AGENT_CHARTER_V2.md",
+        "sha256": "21a93fe722ed7cca113f92a313225b4c48b621daa064c7ee7bc463607691a158"
+      },
+      {
+        "path": "agents/product_analyst/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "567bd7ca9f7912c7a57e801e1f16f845fe6d744c4e660858316b9269cffd491d"
+      },
+      {
+        "path": "agents/qa_security_reviewer/AGENT_CHARTER_V2.md",
+        "sha256": "3cd4fc749d82293441591a005719be9f6bdc96034c23c629db53c3e62b1a17a5"
+      },
+      {
+        "path": "agents/qa_security_reviewer/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "5916765b74b3c2a553d270ccb580f2880d669d039f8a35d084f9213544cb20e9"
+      },
+      {
+        "path": "agents/registry/AGENT_SKILL_ASSIGNMENTS_V1.json",
+        "sha256": "03a22998ce9f44bce676f44e6fe4e9078175a376e1aceb40df99f57572386392"
+      },
+      {
+        "path": "agents/registry.yaml",
+        "sha256": "c791944453bae4ecdbed9b7fd2ec493bf60aaa2f909d2f7c752f3adde39bcf43"
+      },
+      {
+        "path": "agents/registry_v2.yaml",
+        "sha256": "9e6ee016313d602577b1ae22d46b515f9d2f8d21658d8e3078d4c7f0e24ee4b9"
+      },
+      {
+        "path": "agents/release_engineer/AGENT_CHARTER_V2.md",
+        "sha256": "37119e34d63c11191da9fc10af95b152eec9842b2af467fc9d3347d750898918"
+      },
+      {
+        "path": "agents/release_engineer/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "205300401170adb2ee67dd55b340c23383509843b02693436d913514461c7644"
+      },
+      {
+        "path": "agents/solution_architect/AGENT_CHARTER_V2.md",
+        "sha256": "ea1ae8c93e744d34fdd5bf61f51fc54c21c51baa7c557fb8865bc3fdc9a66b4d"
+      },
+      {
+        "path": "agents/solution_architect/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "011b969dc0f3bbde81a9ed515de6e228d211cfcbd0501de7d0595783175cfb6c"
+      },
+      {
+        "path": "agents/sovereignty_reviewer/AGENT_CHARTER_V2.md",
+        "sha256": "f7da44f8f8e8585ac61b57a358a2e758042252ef552056aae4bb56726e1bc891"
+      },
+      {
+        "path": "agents/sovereignty_reviewer/SYSTEM_PROMPT_AR.md",
+        "sha256": "8b113c4608d5134ed3b3482a4777670e2a02c6c883aa2a36db3118a425be3a12"
+      },
+      {
+        "path": "agents/sovereignty_reviewer/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "29b5f9cce0c99f6405e829d201811baa1317eca4b27759c94096c196e67dcbca"
+      },
+      {
+        "path": "agents/tester/AGENT_CHARTER_V2.md",
+        "sha256": "6dbcfedc0b13bd70e041b55ae8318808cbcf2d32925ceeff7e147e3fc683e298"
+      },
+      {
+        "path": "agents/tester/SYSTEM_PROMPT_AR.md",
+        "sha256": "d8e70610fb110ef93d6fd71617b9a35b735ac509d50ca236494c8a291205fdd4"
+      },
+      {
+        "path": "agents/tester/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "51e199d2413708f4ee4e1b634e982d162d6c86afc32a6f29101f6d2e3c353870"
+      },
+      {
+        "path": "agents/ui_ux_designer/AGENT_CHARTER_V2.md",
+        "sha256": "efb4a1eb1886d9bacdd981fffbf3099d6855f6c4da45be4f79ae6caf24422512"
+      },
+      {
+        "path": "agents/ui_ux_designer/SYSTEM_PROMPT_AR.md",
+        "sha256": "5f9c2f24f32be37b828fc5d38c0d9473088193638740d92e49a473f388a1309f"
+      },
+      {
+        "path": "agents/ui_ux_designer/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "4e1e7e44122124612a95b6bafbbc4e54d2b8e5388a6802187b19dd95fb4e007a"
+      },
+      {
+        "path": "contracts/accepted_baseline_hashes_v1.json",
+        "sha256": "391daa876e3d51524c0dd2cd0738dd62539f6c55833ee4ed9bf76c210927ddc6"
+      },
+      {
+        "path": "contracts/API_AUTHORIZATION_CONTRACT_REGISTER_V1.json",
+        "sha256": "bd883b7a1827891817498ddaa8df673106c9a7903707f32f2be3a7e8f6316a91"
+      },
+      {
+        "path": "contracts/authorization_boundary_reconciliation_state_v1.json",
+        "sha256": "9d36e64b585aaafadb5f136378e32ae5af9edcf2941d4e96bfe794e75fb7a74b"
+      },
+      {
+        "path": "contracts/BASELINE_CONTRACT_GOVERNED_LOCAL_AGENT_CORE_V1.json",
+        "sha256": "e356ec618e3ab62d8cdba065e3eb9df02a9e77f782e70f010f31f207aaa5b765"
+      },
+      {
+        "path": "contracts/expected_postimage_hashes_v1.json",
+        "sha256": "a46b29cd39a491a506f5ae2cbdab99870e88b1e2666be24b68e9506e97797026"
+      },
+      {
+        "path": "contracts/final_execution_carrier_reconciliation_state_v1.json",
+        "sha256": "74eab7d2e283de16b1cd69895255fa40a2d6ae467825c44a944ed717a97681d2"
+      },
+      {
+        "path": "contracts/master_batch_contract_v1.json",
+        "sha256": "a21ec4882ae52c514e7a132b4380acbd8899e9d0870e1f44f1172565c99e1944"
+      },
+      {
+        "path": "contracts/PALWAKF_SYSTEM_OS_CONTRACT_V1.json",
+        "sha256": "c90dde8345994819953c2cb3a4b2e71b2df04baa29a35b385fddbc2fcccdf3f4"
+      },
+      {
+        "path": "contracts/scope_aware_unsafe_variable_colon_scanner_repair_v1.json",
+        "sha256": "7bcf91a90fd9b863ebef8c21b4946aecfc0be16714f56ed3cc551791105bae3e"
+      },
+      {
+        "path": "contracts/workspace_core_source_contract.json",
+        "sha256": "db22b06b696d1e82add1ff520d78c02f5d5dee2a94ed3122423dd5b61f5b8776"
+      }
+    ]
+  },
+  "source_manifest_before": {
+    "digest": "40f41fa70af73da1d46024df714ee5bba4ad21149754c823c3a317ac88b4d045",
+    "entries": [
+      {
+        "path": "backend/src/palwakf_local_agents/__init__.py",
+        "sha256": "d966bc9c99743fa6c5c7b9fa73d0792c9433f6192f3f7081f1a2d0255d203561"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/__init__.py",
+        "sha256": "4226beac740c258852e1537bbfb42ac0cbec224f639132c6edbb2b066637bf8d"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/api.py",
+        "sha256": "c40c8854a3fa9230c1ccd33ae324f919680d78b89c89787802e787e5c1a6eb9f"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/contracts.py",
+        "sha256": "665057464618e9f1438b88bd90df920a574bc641f4455cbec1c75dba50023724"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/external_contracts.py",
+        "sha256": "19449c64173c47f199656733e82198023c5128f60ed2a136c996113a9313d542"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/external_skill_admission.py",
+        "sha256": "777a42aae2dcfee7154a316aa1c2fa9e709207a8fa167ef70a746e6c606066a0"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/intersystem_v1.py",
+        "sha256": "d0af8ced487814968f3804800659cc061e84b1f023a2b67dce0628ba58762a02"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/learning.py",
+        "sha256": "8a86cfb6117c4d5b10153ec2ab98e42c533b4738d444be30509b3dc800ba08d1"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/learning_service.py",
+        "sha256": "8644eac5d5533db3e71c81aed0b4a81967337f6e0aba34ff8348997aeb62ebd9"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/orchestration.py",
+        "sha256": "745479a494376dc3e79baa6ba035569557eb5dcbc8383a827d833af480f89345"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/provider_learning.py",
+        "sha256": "3930ffb93043558f738c617220c1c2d71137aca18f6d05a17736bfc8fde22343"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/provider_readiness.py",
+        "sha256": "167ca4378df392eead04143a78ac7e4a1ff320cec38a583283e2e1cde85ae1b6"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/providers.py",
+        "sha256": "ebd8abcbd1a831e54d5850f12d4c4ef4589bd799ab4d36ebf30a830745829cda"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/registry_projection.py",
+        "sha256": "1412f9cef17e6577887cfe6b28c4fd44bb0f9fbd4c6f454ac8bb456a5a06ec6a"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_core_v1/runtime.py",
+        "sha256": "740a49cde51fb20e72568443b132ee36f87da417620fe2abb2a3c20c1e7082b5"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/agentic_os_v2.py",
+        "sha256": "891c7ce632ee5bbf3912a5443233ab38dc7ff5f42eac90a7c8fe296eb1c2b15d"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/app.py",
+        "sha256": "f7a9c25fc94c147cfe3065d9887293a4e76d69fac821af333bbb2c51377a104c"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/backend_frontend_alignment/__init__.py",
+        "sha256": "75b4d11e069f604417aee9b705b47517bc30c6c316c3961c6f5539a7f3ab572b"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/backend_frontend_alignment/router.py",
+        "sha256": "da94edf9b2b495689233e44f593ef71e66fafc8a334720936b2b151af66aa211"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/command_center/__init__.py",
+        "sha256": "a13e1eef0e7ccc580497f18432ba3af1899d1bcbbe5856bcc3aece2457dfff39"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/command_center/models.py",
+        "sha256": "afe2cd4bf71958948a90f02c0bffc459b66da88002e23b4360c85b9548418372"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/command_center/read_only_store.py",
+        "sha256": "21b0f18c671171e3b9d82d4c8007b0e1f85b5b08f6e1ad1a8b69f06f429323aa"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/command_center/router.py",
+        "sha256": "90bf67d103a0c4ea207faaa69815c54f1098f169cf9f98c40de46c7bbef8a61d"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/command_center/static/app.js",
+        "sha256": "10d4a2924db236431d20542e3b65ba1ca0401c959a3fdec193761c6f5206200a"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/command_center/static/index.html",
+        "sha256": "014577f1c44195d6cd4f1b9031f79c66d70f796210ada97fda8a658298baecb6"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/command_center/static/styles.css",
+        "sha256": "c8d81916be7425bb8b19368ba98bbc96a1c07c940509256032a911f9b673696d"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/controlled_agent_admission_v1.py",
+        "sha256": "81d1490f7701c98be4d56b07f419d8c386bb9799d48d203d74f9f40c1a102850"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/controlled_agent_admission_v2.py",
+        "sha256": "34d2142539f239e21600732fce2fcdfa1f6eebddf21f61d6820b8bcb45cc0613"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/controlled_agent_admission_v3.py",
+        "sha256": "b78b3113a864142b859c985921ba770dde4cbd014eee00f3c84e75ab7dc3e629"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/controlled_software_development_pipeline_v1.py",
+        "sha256": "02134411e816f11c74f45ce6ddbe96b2e9dac7e70136e50d7139827e55a205d7"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/first_human_authorized_read_only_operation_v1.py",
+        "sha256": "63e14b22cc82c5f07736b7a2edee7f02d7390c019c2dc5c24c6c6a294b6a0c06"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/full_stack_operational_waves_3_to_8_v1.py",
+        "sha256": "08721d65eece341cbbf977bcb813f6b535b7c58c33957518b3272291545eae64"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_capability_foundation/__init__.py",
+        "sha256": "e281cc9857ec7f55621c1f580377d930ad3c363073c224a2d56a019539aa92bd"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_capability_foundation/authz.py",
+        "sha256": "aec40a51fae7f1a092080f3a5c51c949c6a5e4bdf45098b7e66ef64afe73100f"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_capability_foundation/contracts.py",
+        "sha256": "dbe8fdf2e5a9bcd2fe482ddcea5e3c0f2d599baa751f878edb3bdec7f3250a3f"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_capability_foundation/router.py",
+        "sha256": "4a0f63f020f16dfd0ff26a9badebf9f9ded651876fe0af47c724836c52b0c4d0"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_capability_foundation/store.py",
+        "sha256": "3374907838b5a88f266420be061848797a7832237291f095d08e36dd6da6da97"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_capability_foundation/tools.py",
+        "sha256": "2743abdab5617c16ee7143a4b5aeb031af11a220935a084e3d38fb90a700de57"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_coding_model_provider_v1.py",
+        "sha256": "9a578638625da4aca9ec4b228f4f3d64272bbe51de608a51b4cdfb9e933c65be"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_operations/__init__.py",
+        "sha256": "9b849ce601ac76966fe4e178f595cd16679094d418f030eba8ed84b81ba702cb"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_operations/contracts.py",
+        "sha256": "474766b5ef80c3f01b6c99e78b8733a488b8986a0c57876ecd7c759eaf6ef5c9"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_operations/router.py",
+        "sha256": "be99e13d5dd2308cd560f8518348338e5bca83ff5dd144b993add1e5c9e2c5df"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_operations/static/app.js",
+        "sha256": "9d10208e2447bf15b505d05f15e4367534cc7d6bf15795818b478e379c8505a6"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_operations/static/index.html",
+        "sha256": "59e3fd1f2efd0216683db961b0bad57285e688c01f88874881571be20e524054"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_operations/static/styles.css",
+        "sha256": "a054353f348e571a5c175fb2f847baa1e9455ee40330fdb7093bdfb991a59935"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/governed_operations/store.py",
+        "sha256": "f3faffa395ccec35432f696eee8a766ffba08d93cfad82972017b650f0decd93"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/legacy_write_authorization.py",
+        "sha256": "e9c1dcbe30ff2ee7be10f798457899437f497bb5aeb7fd138d9538f140af5b53"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/__init__.py",
+        "sha256": "a096481618b13e82e90070080ddc7d251bcebb8eedcb3b560a792a8ead77885f"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/contracts.py",
+        "sha256": "66f27c60e05082a9f161bfc12e166f0c5e9482f743a1a6b824b1d165ce22f900"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/engine.py",
+        "sha256": "833e44b30ec7bec898c39fa81fae8c5a60969b04f2639565c997004197c43989"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/model_pilot.py",
+        "sha256": "e078b153c82c41156dbc51a2b3774e10e471403041f839704aac61cf7647fc67"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/policy.py",
+        "sha256": "3d1005fe189546cc13103aee8bf4ff94347b44f72dadfc66ee5428bb77755919"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/registry.py",
+        "sha256": "8a5999eee022bc2629cce496782776c2f6549ddca35ee6b41c163e57c1f39c98"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/router.py",
+        "sha256": "c2ff3a19b144f9d89f3b4a680457a45228f0ce48adae997b5002998efd2a1f2c"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/static/app.js",
+        "sha256": "0849853f7a9e2b0eb28d400caa929feacb822120f8b8b307bcddaa382a820320"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/static/index.html",
+        "sha256": "ff18a0f93e8c6c0e1d7e0b0e07a0d0f4531da31b95b0f64b9a04a4eff0f17657"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/static/styles.css",
+        "sha256": "d67309aae5f02cb80c6c3569ea42617a4f6d992232850495e281e4ff76643750"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/local_agent_core/store.py",
+        "sha256": "ba2e9df9b0342f65c498718e7d53dd425f7e5426ffaf85e1a023b805541c2ed1"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/model_tool_agent_routing_v1.py",
+        "sha256": "1a240598a4945c3010d05b1b89482b4d0da939686423cb040814df03bba28d9c"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/models.py",
+        "sha256": "57877924fad104037f2fb6954960cd8ae14fb42037fd006942b2d09dfb191a93"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/open_source_adapter_contracts_v1.json",
+        "sha256": "f376f57bbfaf0f852f1c9914115505c923a0b6f78ef049fb374f5cbfa4240c6e"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/open_source_capabilities_v1.py",
+        "sha256": "bce73c59e6231d6f8ce72f6ae648ad0f6a0ec5fe165bc33bb81eb6256cdc483d"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/open_source_capability_registry_v1.json",
+        "sha256": "9907d6f9a7d969832a2c139a55dea0486f2fde6aa01a98bce6df3a164c011502"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/open_source_tools_operational_admission_wave1_v1.py",
+        "sha256": "235cac7c3a5c7a26c8c8a62e681129c9bd759e264c6e4c7b62ef094f5a00886f"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/__init__.py",
+        "sha256": "668d6abed9780743c0846aa025e6b5bb45b097f3f02992c7e405a505002f362e"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/codebase_index.py",
+        "sha256": "742cba9367249d56f5ad951bab308bdd0afd09206253f560f41c9571ca82836e"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/contracts.py",
+        "sha256": "30136cca6f4782c294696feb96eeec18af061fdba975b069facef21dd08e6d49"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/innovation_resilience.py",
+        "sha256": "c14cd971a748d376e3b035c6db597909839976cc588908165406a7d5382325bf"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/model_readiness.py",
+        "sha256": "cfb1e45a6bba27904a4184dddb00eb4f853fa782bf790223d2fa9dfea0dc5c67"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/router.py",
+        "sha256": "7541adc8304233e81a593707c923ab1ab9266993d434d11636a761567fccb5ad"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/state_store.py",
+        "sha256": "04a28d3e8d9d1ab82d904394dbf2b3f66fbbba59ccf48eea7d8bfd66b9039b13"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/operational_core_v1/tools.py",
+        "sha256": "4b2a771be3247d0fbe1689d95776efce0c369aa963d70304308ffea2217bf61e"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/project_reader/__init__.py",
+        "sha256": "cbb7d3f98f791241a56d0e1fbc098858bf2b54879fd4ac5dd22579853ae6c523"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/project_reader/router.py",
+        "sha256": "1680d34b411fd79ed2a127def7d18349420d4f4f1ad9dc7a2716679d4eaa4dd2"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/provider_operational_admission_v1.py",
+        "sha256": "d98fe42c768d197d665d64ccced5644aad9b6915716dd984b449cc32621c51fa"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/provider_runtime_registry_v1.py",
+        "sha256": "f68dfe0879fc1b4681453044694d76d6a8c24fd68c25e32f4385fdbda94d894b"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/quality_accepted_tools_goal_planner_binding_v1.json",
+        "sha256": "318ddd0b32d7e368c3deb1dc4c9241ea3f6074a0adfada1f646f36a0af2aca61"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/quality_accepted_tools_goal_planner_binding_v1.py",
+        "sha256": "48a49469031eb68bd36850c7c5f2dae39b6dd9fc2642ed7ca024afef0fcccf26"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/quality_gated_external_scanners_wave2_v1.py",
+        "sha256": "029e07f1b9a1c4dd7a96931fb1c2ae11270aeee894e652bc9b54496da08b8bbd"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/quality_gated_read_only_operations_wave1_v1.py",
+        "sha256": "bcf89bab1c9329e7662652d0af8348245cfd85ec827bd2b52bf85daea8645da8"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/quality_tool_selection_policy_v1.json",
+        "sha256": "0e0d9c83982469788b16059d2a16a71782583cc2d48336cc35634207ef06e873"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/registry.py",
+        "sha256": "1f303603c1d29711cea46590721777d5aab6c32bc244d7c0ac5a803c67e20663"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/safe_read_model_source_native_v1.py",
+        "sha256": "f9e95438909869ec32184bd7a2f789af504f65bfa9b1e28914c1e7d61c8a1b6b"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/settings.py",
+        "sha256": "bb3129bc5588e9317ac45b1c988ed35eb4fdc38edabcb4ef3ec1b0753afc612c"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/store.py",
+        "sha256": "8dce4fb74629d8b9e866917f14166eb7f7db50fee4f2600a03f1c38d0c2e4d23"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_catalog_wave1_v1.json",
+        "sha256": "357ccb86cc8a7667089fc666a0e26566ef9c3eaec295bd99ffb170893302591b"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_fixtures_wave1_v1/clean_security_samples/clean.txt",
+        "sha256": "be1b12bb11600ad33008fcad5e3255c6669ccbae58fc801c0e870b37b1608b0c"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_fixtures_wave1_v1/expected_golden_results.json",
+        "sha256": "f5383441c2e1681217a5f388ef5ad3e07a059a9af8140dbd54ae86beedfed86f"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_fixtures_wave1_v1/flutter_dart/main.dart",
+        "sha256": "e2c15c3640919570a2b67b2c3d85691317e88a988d118688fa7784ac4367a4fa"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_fixtures_wave1_v1/python_backend/app.py",
+        "sha256": "7c9c7a38caa590c96e90771bc2c230da947880fa2c0cc462a84865893fb323ab"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_fixtures_wave1_v1/react_typescript/App.tsx",
+        "sha256": "c55ff6225de2520c39569cf0c89b88891f07ffbefbc7cd69bd657848a73aec60"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_fixtures_wave1_v1/seeded_security_findings/synthetic_aws.txt",
+        "sha256": "2b7318597d3b3e1c42634554a187d3789e0197ef640098b4805dbdb9b543f04a"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_fixtures_wave1_v1/semgrep_rules.yml",
+        "sha256": "86e6fb523372ce3e5a471a0d23e3ce570a259a11f58a6d9e9f4e6cfd9a9b7b23"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/tool_quality_lab_wave1_v1.py",
+        "sha256": "d95128d157fbbce5a9654a7e64b6383a5125d4d2e9cdd438b51e34009577afb0"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/__init__.py",
+        "sha256": "0aab6a9cb99da10ef509301bdcfa46f8cc7b4a75609e53d19ac1c484ae5bf77a"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/contracts.py",
+        "sha256": "c482a5a9d8369d262523cc69b8e9603b63e44167b665056b36bf53926e63097b"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/policy.py",
+        "sha256": "ca52ee55f7d55f41696727b17a9d7d95b2aed3fc3ebc3a53a6095902bb3d78f6"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/router.py",
+        "sha256": "a4856d00e833d4f5e8e241f754893021c7614bb25d25f6887b73450e13356cf4"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/static/app.js",
+        "sha256": "44dfa302ef5883a29f455d738246d289dd6363737656e037285cf47422e18c76"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/static/index.html",
+        "sha256": "c13951efcb1117208f08d7c5364fe7b8522d328f06af198193a2b54ce251fb6f"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/static/styles.css",
+        "sha256": "cb15b2e9a233c98c5d231809063b6fa1a442238239435a355e35eca9d4cc0117"
+      },
+      {
+        "path": "backend/src/palwakf_local_agents/workspace_core/store.py",
+        "sha256": "ed13948d965656d841a91a28ca9b21ffddcb63f99b666efea9b17b474fa69502"
+      },
+      {
+        "path": "agents/backend_engineer/AGENT_CHARTER_V2.md",
+        "sha256": "fdd0afde32a9d91d2c7dde6a8b761ab9e827321ac1a605cca9e5f8397bc33e21"
+      },
+      {
+        "path": "agents/backend_engineer/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "267c2a71031047086d0f98242e85da4fd2c0b852321b018443fe07648ca0ab36"
+      },
+      {
+        "path": "agents/charters/read_only_analysis_pack_01/COORDINATOR_READ_ONLY_ANALYSIS_PACK_01.md",
+        "sha256": "bbb115237c398ea8774e7e92b1e3da18c94741d71776011c250c020a173b1fd7"
+      },
+      {
+        "path": "agents/charters/read_only_analysis_pack_01/DOCUMENTATION_HANDOFF_READ_ONLY_ANALYSIS_PACK_01.md",
+        "sha256": "c9c722096a002fe88cadc32031b84cdb636766c92ee396690dac6bc1ea33d830"
+      },
+      {
+        "path": "agents/charters/read_only_analysis_pack_01/KNOWLEDGE_RESEARCHER_READ_ONLY_ANALYSIS_PACK_01.md",
+        "sha256": "a67cf8e2d198bcb7bcafe684bd0aebbe474c44bbae6bb92816c389d7a6dbbe33"
+      },
+      {
+        "path": "agents/charters/read_only_analysis_pack_01/SOVEREIGNTY_REVIEWER_READ_ONLY_ANALYSIS_PACK_01.md",
+        "sha256": "35696c36d6edc4fed5ab7c2b2fbbbbe2672fbe64d3d950d97379d098d48831a2"
+      },
+      {
+        "path": "agents/charters/structured_analysis_payload_foundation/DOCUMENTATION_HANDOFF_STRUCTURED_PAYLOAD_V1.md",
+        "sha256": "97edb579c10ab49d7b63164434f0a83286830dc5389c5ff00b07e0df909426c1"
+      },
+      {
+        "path": "agents/charters/structured_analysis_payload_foundation/KNOWLEDGE_RESEARCHER_STRUCTURED_PAYLOAD_V1.md",
+        "sha256": "0378c7ff4ba274efa5593cb784fa5eafee8f19fb50ee0c5c16075f5820de39d0"
+      },
+      {
+        "path": "agents/coding_builder/AGENT_CHARTER_V2.md",
+        "sha256": "b73de769e4bdfa701ba90051a7dbb53cd61b0555ac910dcb8f5d8cb4f62850f9"
+      },
+      {
+        "path": "agents/coding_builder/SYSTEM_PROMPT_AR.md",
+        "sha256": "d24cb8c48fc5086063dd363334ae4a04837f9c38508fa71954e73b550ec1c966"
+      },
+      {
+        "path": "agents/coding_builder/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "e0b21cb2835464c1ea2f7eaf33a4580b4d6653e75f2f9ee221246d0c75aaca32"
+      },
+      {
+        "path": "agents/coordinator/AGENT_CHARTER_V2.md",
+        "sha256": "0cc96a55fa79dbc4e957be3ec68abfff6506f319e33a2bb46091bce39ade383d"
+      },
+      {
+        "path": "agents/coordinator/SYSTEM_PROMPT_AR.md",
+        "sha256": "df5f1ffa5bc74e9796a38102c8d76b3cd336bd025b9b09f143bc2f133c1bbde4"
+      },
+      {
+        "path": "agents/coordinator/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "0bb53c0d4beb46dac7b5b1bfe73787e21ce36e05d48c79ff2d43785078896872"
+      },
+      {
+        "path": "agents/database_engineer/AGENT_CHARTER_V2.md",
+        "sha256": "c850afb44f6c99ba3596044b32326056fd40bdb2de126b4864038ea49a687546"
+      },
+      {
+        "path": "agents/database_engineer/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "730931773d24b97e692330cb0332ca7f56a27898ad1b8abea4c3cb66175c8450"
+      },
+      {
+        "path": "agents/documentation_handoff/AGENT_CHARTER_V2.md",
+        "sha256": "cdc97f10c670313f4848378666a2f7b44e7966e407133e162670cc6f49af011c"
+      },
+      {
+        "path": "agents/documentation_handoff/SYSTEM_PROMPT_AR.md",
+        "sha256": "832cf9dc4fabcf84ed5dda9697872d1239f60e77a858fa11b3a84cb213f4fcac"
+      },
+      {
+        "path": "agents/documentation_handoff/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "41e9a4096dbae3670e6302f8f1950da793503f9cdf0ce708a9fbb445ea582fad"
+      },
+      {
+        "path": "agents/frontend_engineer/AGENT_CHARTER_V2.md",
+        "sha256": "0112f5199ed60eca72da1f76ea6ad91f92dd54ff7a338c65b480cdf6b9be475b"
+      },
+      {
+        "path": "agents/frontend_engineer/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "39f8000cd7229fe5d94d648dfd2bbf3ae04660986cefa6acb67d83055b1caa48"
+      },
+      {
+        "path": "agents/knowledge_researcher/AGENT_CHARTER_V2.md",
+        "sha256": "b474c3aa19b8bc14399f6cc55f554cb923d2f7dac6f6135bd8d942c099279c6f"
+      },
+      {
+        "path": "agents/knowledge_researcher/SYSTEM_PROMPT_AR.md",
+        "sha256": "bdbe516726b9e1fd3b616b15ec0fb0eaad9f41c22fc7b6f33cfadf07eef90e26"
+      },
+      {
+        "path": "agents/knowledge_researcher/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "100022690f49824b4a4d66da85a138245cf2796970ffc04f8bf149182b50e78a"
+      },
+      {
+        "path": "agents/output_profiles/read_only_analysis_pack_01/coordinator.json",
+        "sha256": "03032bdfff1f526e7ec53e693f7509c9b2bfeb3cd34db7d664a6040db0a0f41f"
+      },
+      {
+        "path": "agents/output_profiles/read_only_analysis_pack_01/documentation_handoff.json",
+        "sha256": "fdbb8bd6d4feedf34f5e359d99967fbbc882875a4ace83a5c226a134ad2b52e0"
+      },
+      {
+        "path": "agents/output_profiles/read_only_analysis_pack_01/knowledge_researcher.json",
+        "sha256": "7abc6196563fdf719f46088428b8fb5ed1cf5ffed97fdfe7cbe036fed316eeb1"
+      },
+      {
+        "path": "agents/output_profiles/read_only_analysis_pack_01/sovereignty_reviewer.json",
+        "sha256": "07ce743b9267a54e247add0770a4ead08e5a09577679e28c87468a055533906b"
+      },
+      {
+        "path": "agents/output_profiles/structured_analysis_payload_foundation/documentation_handoff.json",
+        "sha256": "e5e90fe507b43959dfd280648c5bd6c556d79a07bbff32176bffbd1e01f784d3"
+      },
+      {
+        "path": "agents/output_profiles/structured_analysis_payload_foundation/knowledge_researcher.json",
+        "sha256": "150ff15ba4d4a496f58c30ba142ab1320d0e83dee74affc840b7f845316b54f4"
+      },
+      {
+        "path": "agents/product_analyst/AGENT_CHARTER_V2.md",
+        "sha256": "21a93fe722ed7cca113f92a313225b4c48b621daa064c7ee7bc463607691a158"
+      },
+      {
+        "path": "agents/product_analyst/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "567bd7ca9f7912c7a57e801e1f16f845fe6d744c4e660858316b9269cffd491d"
+      },
+      {
+        "path": "agents/qa_security_reviewer/AGENT_CHARTER_V2.md",
+        "sha256": "3cd4fc749d82293441591a005719be9f6bdc96034c23c629db53c3e62b1a17a5"
+      },
+      {
+        "path": "agents/qa_security_reviewer/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "5916765b74b3c2a553d270ccb580f2880d669d039f8a35d084f9213544cb20e9"
+      },
+      {
+        "path": "agents/registry/AGENT_SKILL_ASSIGNMENTS_V1.json",
+        "sha256": "03a22998ce9f44bce676f44e6fe4e9078175a376e1aceb40df99f57572386392"
+      },
+      {
+        "path": "agents/registry.yaml",
+        "sha256": "c791944453bae4ecdbed9b7fd2ec493bf60aaa2f909d2f7c752f3adde39bcf43"
+      },
+      {
+        "path": "agents/registry_v2.yaml",
+        "sha256": "9e6ee016313d602577b1ae22d46b515f9d2f8d21658d8e3078d4c7f0e24ee4b9"
+      },
+      {
+        "path": "agents/release_engineer/AGENT_CHARTER_V2.md",
+        "sha256": "37119e34d63c11191da9fc10af95b152eec9842b2af467fc9d3347d750898918"
+      },
+      {
+        "path": "agents/release_engineer/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "205300401170adb2ee67dd55b340c23383509843b02693436d913514461c7644"
+      },
+      {
+        "path": "agents/solution_architect/AGENT_CHARTER_V2.md",
+        "sha256": "ea1ae8c93e744d34fdd5bf61f51fc54c21c51baa7c557fb8865bc3fdc9a66b4d"
+      },
+      {
+        "path": "agents/solution_architect/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "011b969dc0f3bbde81a9ed515de6e228d211cfcbd0501de7d0595783175cfb6c"
+      },
+      {
+        "path": "agents/sovereignty_reviewer/AGENT_CHARTER_V2.md",
+        "sha256": "f7da44f8f8e8585ac61b57a358a2e758042252ef552056aae4bb56726e1bc891"
+      },
+      {
+        "path": "agents/sovereignty_reviewer/SYSTEM_PROMPT_AR.md",
+        "sha256": "8b113c4608d5134ed3b3482a4777670e2a02c6c883aa2a36db3118a425be3a12"
+      },
+      {
+        "path": "agents/sovereignty_reviewer/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "29b5f9cce0c99f6405e829d201811baa1317eca4b27759c94096c196e67dcbca"
+      },
+      {
+        "path": "agents/tester/AGENT_CHARTER_V2.md",
+        "sha256": "6dbcfedc0b13bd70e041b55ae8318808cbcf2d32925ceeff7e147e3fc683e298"
+      },
+      {
+        "path": "agents/tester/SYSTEM_PROMPT_AR.md",
+        "sha256": "d8e70610fb110ef93d6fd71617b9a35b735ac509d50ca236494c8a291205fdd4"
+      },
+      {
+        "path": "agents/tester/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "51e199d2413708f4ee4e1b634e982d162d6c86afc32a6f29101f6d2e3c353870"
+      },
+      {
+        "path": "agents/ui_ux_designer/AGENT_CHARTER_V2.md",
+        "sha256": "efb4a1eb1886d9bacdd981fffbf3099d6855f6c4da45be4f79ae6caf24422512"
+      },
+      {
+        "path": "agents/ui_ux_designer/SYSTEM_PROMPT_AR.md",
+        "sha256": "5f9c2f24f32be37b828fc5d38c0d9473088193638740d92e49a473f388a1309f"
+      },
+      {
+        "path": "agents/ui_ux_designer/SYSTEM_PROMPT_V2_AR.md",
+        "sha256": "4e1e7e44122124612a95b6bafbbc4e54d2b8e5388a6802187b19dd95fb4e007a"
+      },
+      {
+        "path": "contracts/accepted_baseline_hashes_v1.json",
+        "sha256": "391daa876e3d51524c0dd2cd0738dd62539f6c55833ee4ed9bf76c210927ddc6"
+      },
+      {
+        "path": "contracts/API_AUTHORIZATION_CONTRACT_REGISTER_V1.json",
+        "sha256": "bd883b7a1827891817498ddaa8df673106c9a7903707f32f2be3a7e8f6316a91"
+      },
+      {
+        "path": "contracts/authorization_boundary_reconciliation_state_v1.json",
+        "sha256": "9d36e64b585aaafadb5f136378e32ae5af9edcf2941d4e96bfe794e75fb7a74b"
+      },
+      {
+        "path": "contracts/BASELINE_CONTRACT_GOVERNED_LOCAL_AGENT_CORE_V1.json",
+        "sha256": "e356ec618e3ab62d8cdba065e3eb9df02a9e77f782e70f010f31f207aaa5b765"
+      },
+      {
+        "path": "contracts/expected_postimage_hashes_v1.json",
+        "sha256": "a46b29cd39a491a506f5ae2cbdab99870e88b1e2666be24b68e9506e97797026"
+      },
+      {
+        "path": "contracts/final_execution_carrier_reconciliation_state_v1.json",
+        "sha256": "74eab7d2e283de16b1cd69895255fa40a2d6ae467825c44a944ed717a97681d2"
+      },
+      {
+        "path": "contracts/master_batch_contract_v1.json",
+        "sha256": "a21ec4882ae52c514e7a132b4380acbd8899e9d0870e1f44f1172565c99e1944"
+      },
+      {
+        "path": "contracts/PALWAKF_SYSTEM_OS_CONTRACT_V1.json",
+        "sha256": "c90dde8345994819953c2cb3a4b2e71b2df04baa29a35b385fddbc2fcccdf3f4"
+      },
+      {
+        "path": "contracts/scope_aware_unsafe_variable_colon_scanner_repair_v1.json",
+        "sha256": "7bcf91a90fd9b863ebef8c21b4946aecfc0be16714f56ed3cc551791105bae3e"
+      },
+      {
+        "path": "contracts/workspace_core_source_contract.json",
+        "sha256": "db22b06b696d1e82add1ff520d78c02f5d5dee2a94ed3122423dd5b61f5b8776"
+      }
+    ]
+  },
+  "task_class": "KNOWLEDGE_REVIEW",
+  "tools": []
+}

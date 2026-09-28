@@ -1,0 +1,50 @@
+{
+  "admission_id": "admission-knowledge-researcher-v3-a0a1afd1c6e64db1b88e4cb17ea36fd0",
+  "admission_scope": "READ_ONLY_EXECUTION",
+  "admission_status": "ADMITTED",
+  "agent_id": "knowledge_researcher_agentic_v1",
+  "allowed_capabilities": [
+    "agent.headless_api",
+    "model.inference",
+    "model.health",
+    "provider.health"
+  ],
+  "allowed_model_ids": [
+    "palwakf-llama3.2-3b-64k:ctx64k"
+  ],
+  "allowed_outputs": [
+    "knowledge_review"
+  ],
+  "allowed_provider_ids": [
+    "hermes-headless",
+    "ollama"
+  ],
+  "allowed_task_classes": [
+    "KNOWLEDGE_REVIEW"
+  ],
+  "allowed_tools": [],
+  "branch": "task/AGENTIC-AUTONOMOUS-LOCAL-AI-MEGA-BATCH-V1",
+  "created_at": "2026-09-28T00:15:09.761325Z",
+  "delegation_allowed": false,
+  "evidence": [
+    "human-authorization",
+    "fresh-workspace-execution-lease-v5",
+    "runtime-descriptor",
+    "bounded-static-knowledge-package"
+  ],
+  "exact_base": "99ef2e2aaeb19668dd82af7a51fc5fc7476b27b4",
+  "expires_at": "2026-09-28T00:30:09.761324Z",
+  "hermes_bounded_write_allowed": false,
+  "human_authority_reference": "CHATGPT_USER_AUTHORIZATION_20260928:KNOWLEDGE_RESEARCHER_V3_ADMISSION_RUNTIME_DESCRIPTOR_SINGLE_AGENT_READ_ONLY_PILOT",
+  "lease_id": "lease-knowledge-researcher-v3-105aa66b3fe64933ba70ae9debbd0875",
+  "mutation_ceiling": "READ_ONLY",
+  "opencode_source_write_allowed": false,
+  "parallel_multi_agent_allowed": false,
+  "playwright_admission_allowed": false,
+  "production_authority": false,
+  "schema": "palwakf.controlled_agent_admission.v3",
+  "self_authorized": false,
+  "shared_db_mutation_authority": false,
+  "source_write_allowed": false,
+  "write_authority": "NONE"
+}
