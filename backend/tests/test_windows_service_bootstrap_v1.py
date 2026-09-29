@@ -50,6 +50,10 @@ def test_bootstrap_uses_machine_global_pywin32_service_host():
     assert "-match '^C:\\Users\\'" not in source
     assert "-match 'C:\\Users\\'" not in source
     assert "-like 'C:\\Users\\*'" in source
+    assert "$serviceExeOutput = @(" in source
+    assert "$serviceExeCandidates = @(" in source
+    assert "Test-Path -LiteralPath $_ -PathType Leaf" in source
+    assert "$serviceExe = $serviceExeCandidates[-1]" in source
 
 
 @pytest.mark.parametrize("encoding", ["utf-8", "utf-8-sig"])
