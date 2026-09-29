@@ -1,0 +1,24 @@
+{
+  "executor": {
+    "executor_id": "DESKTOP-S5A0JSB",
+    "repository_id": "firasfanon/palwakf_agenticAi_system",
+    "allowed_roots": [
+      "C:\\Users\\DELL\\StudioProjects\\palwakf_agenticAi_system"
+    ],
+    "state_dir": "C:\\Users\\DELL\\StudioProjects\\palwakf_agenticAi_system\\runtime_state\\outbound_executor_v1",
+    "max_output_bytes": 131072
+  },
+  "transport": {
+    "repository": "firasfanon/palwakf_agenticAi_system",
+    "task_label": "palwakf-local-executor",
+    "token_env_var": "PALWAKF_GITHUB_TOKEN",
+    "api_base": "https://api.github.com",
+    "heartbeat_comment_id": null,
+    "user_agent": "palwakf-outbound-local-executor-v1"
+  },
+  "authority_public_keys_b64": {
+    "REPLACE_WITH_WORKSPACE_AUTHORITY_KEY_ID": "REPLACE_WITH_BASE64_ED25519_PUBLIC_KEY"
+  },
+  "poll_seconds": 15,
+  "heartbeat_seconds": 60
+}
