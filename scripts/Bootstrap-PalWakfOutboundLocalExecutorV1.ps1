@@ -42,8 +42,29 @@ if ($LASTEXITCODE -ne 0) { throw 'PYWIN32_POSTINSTALL_FAILED' }
 & $python -c "import servicemanager, win32service, win32serviceutil, pywintypes, cryptography; import palwakf_local_agents.windows_service_v1 as s; assert s.PalWakfOutboundExecutorService is not None; print('GLOBAL_SERVICE_HOST_IMPORT=PASS')"
 if ($LASTEXITCODE -ne 0) { throw 'SERVICE_HOST_IMPORT_PREFLIGHT_FAILED' }
 
-$serviceExe = (& $python -c "import win32serviceutil; print(win32serviceutil.LocatePythonServiceExe())").Trim()
-if (-not (Test-Path -LiteralPath $serviceExe)) {
+$serviceExeOutput = @(
+  & $python -c "import win32serviceutil; print(win32serviceutil.LocatePythonServiceExe())"
+)
+if ($LASTEXITCODE -ne 0) {
+  throw "PYTHONSERVICE_EXE_DISCOVERY_FAILED:$LASTEXITCODE"
+}
+
+$serviceExeCandidates = @(
+  $serviceExeOutput |
+    ForEach-Object { "$_".Trim() } |
+    Where-Object {
+      $_ -and
+      (Test-Path -LiteralPath $_ -PathType Leaf)
+    }
+)
+
+if ($serviceExeCandidates.Count -eq 0) {
+  throw "PYTHONSERVICE_EXE_NOT_FOUND:$($serviceExeOutput -join ' | ')"
+}
+
+$serviceExe = $serviceExeCandidates[-1]
+
+if (-not (Test-Path -LiteralPath $serviceExe -PathType Leaf)) {
   throw "PYTHONSERVICE_EXE_NOT_FOUND:$serviceExe"
 }
 if ($serviceExe -like 'C:\Users\*' -or $serviceExe -like '*\.venv*') {
