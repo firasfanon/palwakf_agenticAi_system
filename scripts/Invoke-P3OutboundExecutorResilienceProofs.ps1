@@ -1,15 +1,15 @@
 param(
     [string]$ServiceName = "PalWakfOutboundLocalExecutorV1",
-    [string]$PythonExe = "C:\\Program Files\\Python311\\python.exe",
-    [string]$ConfigPath = "C:\\ProgramData\\PalWakf\\outbound_executor_v1\\config.json",
-    [string]$RuntimeAuditPath = "C:\\ProgramData\\PalWakf\\outbound_executor_v1\\state\\transport-runtime.jsonl",
+    [string]$PythonExe = "C:\Program Files\Python311\python.exe",
+    [string]$ConfigPath = "C:\ProgramData\PalWakf\outbound_executor_v1\config.json",
+    [string]$RuntimeAuditPath = "C:\ProgramData\PalWakf\outbound_executor_v1\state\transport-runtime.jsonl",
     [string]$EvidencePath = ""
 )
 
 $ErrorActionPreference = "Stop"
 $repoRoot = Split-Path -Parent $PSScriptRoot
 if (-not $EvidencePath) {
-    $EvidencePath = Join-Path $repoRoot ".venv-outbound-executor-v1\\P3_RESILIENCE_PROOFS_HARDENED.log"
+    $EvidencePath = Join-Path $repoRoot ".venv-outbound-executor-v1\P3_RESILIENCE_PROOFS_HARDENED.log"
 }
 $firewallRule = "PalWakf-P3-Network-Loss-Proof-Hardened"
 
