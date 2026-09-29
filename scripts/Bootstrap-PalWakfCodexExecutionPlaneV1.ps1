@@ -29,11 +29,25 @@ if ($LASTEXITCODE -ne 0) { throw "NODE_VERSION_READBACK_FAILED" }
 $npmVersion = (& $npm --version).Trim()
 if ($LASTEXITCODE -ne 0) { throw "NPM_VERSION_READBACK_FAILED" }
 
-& $npm install -g $PackageSpec
-if ($LASTEXITCODE -ne 0) { throw "CODEX_INSTALL_FAILED" }
-
 $codex = Resolve-CommandPath @("codex.cmd","codex.exe","codex")
-if (-not $codex) { throw "CODEX_COMMAND_NOT_FOUND_AFTER_INSTALL" }
+$installStatus = "SKIPPED_EXISTING_ELIGIBLE"
+
+if ($codex) {
+    $preVersion = (@(& $codex --version 2>&1) -join " ").Trim()
+    $preExecHelp = @(& $codex exec-server --help 2>&1)
+    $preExecRc = $LASTEXITCODE
+    if ([string]::IsNullOrWhiteSpace($preVersion) -or $preExecRc -ne 0) {
+        $codex = $null
+    }
+}
+
+if (-not $codex) {
+    & $npm install -g $PackageSpec
+    if ($LASTEXITCODE -ne 0) { throw "CODEX_INSTALL_FAILED" }
+    $installStatus = "INSTALLED"
+    $codex = Resolve-CommandPath @("codex.cmd","codex.exe","codex")
+    if (-not $codex) { throw "CODEX_COMMAND_NOT_FOUND_AFTER_INSTALL" }
+}
 
 $codexVersion = (@(& $codex --version 2>&1) -join " ").Trim()
 if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($codexVersion)) {
@@ -62,6 +76,7 @@ $evidence = [ordered]@{
     npm_version = $npmVersion
     codex_path = $codex
     codex_version = $codexVersion
+    install_status = $installStatus
     exec_server_supported = $true
     credential_material_provisioned = $false
     credential_material_logged = $false
@@ -77,6 +92,7 @@ $evidence | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $evidencePath -En
 
 Write-Host "CODEX_BOOTSTRAP=PASS"
 Write-Host ("CODEX_VERSION=" + $codexVersion)
+Write-Host ("CODEX_INSTALL_STATUS=" + $installStatus)
 Write-Host ("CODEX_PATH=" + $codex)
 Write-Host "CODEX_EXEC_SERVER=AVAILABLE"
 Write-Host ("EVIDENCE_PATH=" + $evidencePath)
