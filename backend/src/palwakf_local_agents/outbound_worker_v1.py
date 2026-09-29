@@ -13,6 +13,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from palwakf_local_agents.github_issue_transport_v1 import (
     GitHubIssueTransportSettingsV1,
     GitHubIssueTransportV1,
+    TransportError,
 )
 from palwakf_local_agents.outbound_capabilities_v1 import default_capability_registry_v1
 from palwakf_local_agents.outbound_contracts_v1 import Ed25519AuthorityVerifierV1, TaskEnvelopeV1
@@ -48,25 +49,50 @@ class OutboundWorkerV1:
         while not self._stop.is_set():
             now = time.monotonic()
             if now - last_heartbeat >= self.config.heartbeat_seconds:
-                self.transport.publish_heartbeat({
-                    "executor_id": self.config.executor.executor_id,
-                    "executor_version": "1.0.0-task",
-                    "service_state": "RUNNING",
-                    "last_seen": datetime.now(UTC).isoformat(),
-                    "transport_state": "OUTBOUND_POLLING",
-                })
-                last_heartbeat = now
-            claimed = self.transport.claim_task(executor_id=self.config.executor.executor_id)
+                try:
+                    self.transport.publish_heartbeat({
+                        "executor_id": self.config.executor.executor_id,
+                        "executor_version": "1.0.0-task",
+                        "service_state": "RUNNING",
+                        "last_seen": datetime.now(UTC).isoformat(),
+                        "transport_state": "OUTBOUND_POLLING",
+                    })
+                    last_heartbeat = now
+                except TransportError:
+                    self._stop.wait(self.config.poll_seconds)
+                    continue
+
+            try:
+                claimed = self.transport.claim_task(executor_id=self.config.executor.executor_id)
+            except TransportError:
+                self._stop.wait(self.config.poll_seconds)
+                continue
             if claimed is None:
                 self._stop.wait(self.config.poll_seconds)
                 continue
+
             try:
                 envelope = TaskEnvelopeV1.model_validate(self.transport.read_envelope(claimed))
                 evidence = self.executor.execute(envelope, transport_adapter=self.transport.transport_id)
+            except Exception as exc:
+                try:
+                    self.transport.release_or_fail(
+                        claimed,
+                        reason=f"{type(exc).__name__}:{str(exc)[:300]}",
+                    )
+                except TransportError:
+                    pass
+                self._stop.wait(self.config.poll_seconds)
+                continue
+
+            try:
                 self.transport.publish_result(claimed, evidence.model_dump(mode="json"))
                 self.transport.ack_task(claimed, status=evidence.exit_state)
-            except Exception as exc:
-                self.transport.release_or_fail(claimed, reason=f"{type(exc).__name__}:{str(exc)[:300]}")
+            except TransportError:
+                # Keep the worker alive through transient network loss. The open
+                # issue will be reclaimed after recovery; the local ledger then
+                # returns the existing evidence without re-running the handler.
+                self._stop.wait(self.config.poll_seconds)
 
 
 def load_worker_config(path: str) -> WorkerConfigV1:

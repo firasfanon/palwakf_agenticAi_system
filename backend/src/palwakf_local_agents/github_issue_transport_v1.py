@@ -15,6 +15,11 @@ from palwakf_local_agents.windows_protected_secret_v1 import read_windows_protec
 BEGIN = "PALWAKF_TASK_ENVELOPE_V1_BEGIN"
 END = "PALWAKF_TASK_ENVELOPE_V1_END"
 
+TERMINAL_STATES = {
+    "COMPLETED", "REJECTED", "BLOCKED", "FAILED", "INTERRUPTED",
+    "DRIFTED", "TIMED_OUT", "CANCELLED", "RECOVERY_REQUIRED",
+}
+
 
 class TransportError(RuntimeError):
     pass
@@ -95,6 +100,38 @@ class GitHubIssueTransportV1:
             raise TransportError("TASK_ENVELOPE_MUST_BE_OBJECT")
         return value
 
+    @staticmethod
+    def _label_names(issue: Mapping[str, Any]) -> set[str]:
+        labels = issue.get("labels") or []
+        names: set[str] = set()
+        for item in labels:
+            if isinstance(item, Mapping):
+                name = item.get("name")
+                if isinstance(name, str):
+                    names.add(name)
+            elif isinstance(item, str):
+                names.add(item)
+        return names
+
+    @staticmethod
+    def _has_terminal_ack(comments: Any) -> bool:
+        for comment in comments or []:
+            if not isinstance(comment, Mapping):
+                continue
+            body = comment.get("body") or ""
+            if not isinstance(body, str) or not body.startswith("PALWAKF_ACK_V1"):
+                continue
+            if "```json" not in body:
+                continue
+            raw = body.split("```json", 1)[1].split("```", 1)[0].strip()
+            try:
+                payload = json.loads(raw)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(payload, dict) and payload.get("status") in TERMINAL_STATES:
+                return True
+        return False
+
     def health(self) -> Mapping[str, Any]:
         owner, repo = self.settings.repository.split("/", 1)
         self._request("GET", f"/repos/{owner}/{repo}")
@@ -117,18 +154,41 @@ class GitHubIssueTransportV1:
                 continue
             if envelope.get("executor_id") != executor_id:
                 continue
+
+            # GitHub's list endpoint can be briefly stale after a terminal close.
+            # Re-read the individual issue and terminal ACK immediately before
+            # emitting a claim so a stale list result cannot trigger execution.
+            number = int(issue["number"])
+            live_issue = self._request("GET", f"/repos/{owner}/{repo}/issues/{number}")
+            if not isinstance(live_issue, Mapping) or live_issue.get("state") != "open":
+                continue
+            if self.settings.task_label not in self._label_names(live_issue):
+                continue
+            try:
+                live_envelope = self._extract_envelope(str(live_issue.get("body") or ""))
+            except TransportError:
+                continue
+            if live_envelope.get("executor_id") != executor_id:
+                continue
+            comments = self._request(
+                "GET",
+                f"/repos/{owner}/{repo}/issues/{number}/comments?per_page=100",
+            )
+            if self._has_terminal_ack(comments):
+                continue
+
             claim = {
                 "schema": "palwakf.github_issue_claim.v1",
                 "executor_id": executor_id,
-                "task_id": envelope.get("task_id"),
+                "task_id": live_envelope.get("task_id"),
                 "claimed_at": datetime.now(UTC).isoformat(),
             }
             self._request(
                 "POST",
-                f"/repos/{owner}/{repo}/issues/{issue['number']}/comments",
+                f"/repos/{owner}/{repo}/issues/{number}/comments",
                 {"body": "PALWAKF_CLAIM_V1\n\x60\x60\x60json\n" + json.dumps(claim, sort_keys=True) + "\n\x60\x60\x60"},
             )
-            return {"issue_number": issue["number"], "issue_id": issue["id"], "envelope": envelope}
+            return {"issue_number": number, "issue_id": live_issue.get("id", issue["id"]), "envelope": live_envelope}
         return None
 
     def read_envelope(self, claimed: Mapping[str, Any]) -> Mapping[str, Any]:
@@ -147,18 +207,17 @@ class GitHubIssueTransportV1:
 
     def ack_task(self, claimed: Mapping[str, Any], *, status: str) -> None:
         self._comment(claimed, "PALWAKF_ACK_V1", {"status": status, "at": datetime.now(UTC).isoformat()})
-        terminal_states = {
-            "COMPLETED", "REJECTED", "BLOCKED", "FAILED", "INTERRUPTED",
-            "DRIFTED", "TIMED_OUT", "CANCELLED", "RECOVERY_REQUIRED",
-        }
-        if status in terminal_states:
+        if status in TERMINAL_STATES:
             owner, repo = self.settings.repository.split("/", 1)
             number = int(claimed["issue_number"])
             state_reason = "completed" if status == "COMPLETED" else "not_planned"
+            issue = self._request("GET", f"/repos/{owner}/{repo}/issues/{number}")
+            labels = sorted(self._label_names(issue if isinstance(issue, Mapping) else {}))
+            labels = [name for name in labels if name != self.settings.task_label]
             self._request(
                 "PATCH",
                 f"/repos/{owner}/{repo}/issues/{number}",
-                {"state": "closed", "state_reason": state_reason},
+                {"state": "closed", "state_reason": state_reason, "labels": labels},
             )
 
     def publish_progress(self, claimed: Mapping[str, Any], payload: Mapping[str, Any]) -> None:
