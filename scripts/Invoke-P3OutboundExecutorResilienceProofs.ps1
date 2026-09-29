@@ -87,8 +87,18 @@ try {
         $auditStart = @(Get-Content -LiteralPath $RuntimeAuditPath).Count
     }
     $networkPid = Get-ServicePid
-    New-NetFirewallRule -DisplayName $firewallRule -Direction Outbound -Action Block -Service $ServiceName -Protocol TCP -RemotePort 443 | Out-Null
-    Write-Evidence ("NETWORK_LOSS_INJECTED=TRUE PID=" + $networkPid + " AUDIT_START_LINE=" + $auditStart)
+    $svcForFirewall = Get-CimInstance Win32_Service | Where-Object { $_.Name -eq $ServiceName } | Select-Object -First 1
+    if (-not $svcForFirewall) { throw "SERVICE_NOT_FOUND_FOR_FIREWALL" }
+    $serviceProgram = [Environment]::ExpandEnvironmentVariables([string]$svcForFirewall.PathName).Trim('"')
+    if (-not (Test-Path -LiteralPath $serviceProgram -PathType Leaf)) {
+        throw ("SERVICE_PROGRAM_NOT_FOUND:" + $serviceProgram)
+    }
+    New-NetFirewallRule -DisplayName $firewallRule -Direction Outbound -Action Block -Program $serviceProgram -Protocol TCP -RemotePort 443 -Profile Any | Out-Null
+    $appFilter = Get-NetFirewallRule -DisplayName $firewallRule | Get-NetFirewallApplicationFilter
+    if (-not $appFilter -or -not [string]::Equals($appFilter.Program, $serviceProgram, [System.StringComparison]::OrdinalIgnoreCase)) {
+        throw ("NETWORK_BLOCK_RULE_PROGRAM_MISMATCH:" + $serviceProgram)
+    }
+    Write-Evidence ("NETWORK_LOSS_INJECTED=TRUE PID=" + $networkPid + " PROGRAM=" + $serviceProgram + " AUDIT_START_LINE=" + $auditStart)
 
     $deadline = (Get-Date).AddSeconds(80)
     do {
