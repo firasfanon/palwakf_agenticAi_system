@@ -50,10 +50,10 @@ def test_bootstrap_uses_machine_global_pywin32_service_host():
     assert "-match '^C:\\Users\\'" not in source
     assert "-match 'C:\\Users\\'" not in source
     assert "-like 'C:\\Users\\*'" in source
-    assert "$serviceExeOutput = @(" in source
-    assert "$serviceExeCandidates = @(" in source
-    assert "Test-Path -LiteralPath $_ -PathType Leaf" in source
-    assert "$serviceExe = $serviceExeCandidates[-1]" in source
+    assert "$expectedGlobalServiceExe" in source
+    assert "$pywin32HostAlreadyAdmitted" in source
+    assert "PYWIN32_POSTINSTALL=SKIPPED_ALREADY_ADMITTED" in source
+    assert "$serviceExe = (Resolve-Path -LiteralPath $expectedGlobalServiceExe).Path" in source
     assert "palwakf_outbound_executor_v1.acceptance.json" in source
     assert "Copy-Item -LiteralPath $authoritativeConfig -Destination $config -Force" in source
     assert "EXECUTOR_CONFIG_SYNC_HASH_MISMATCH" in source
