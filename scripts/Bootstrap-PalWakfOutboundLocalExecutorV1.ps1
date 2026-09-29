@@ -21,7 +21,7 @@ if ($LASTEXITCODE -ne 0 -or $version -notin @('3.11','3.12')) {
 }
 
 $basePrefix = (& $python -c "import sys; print(sys.base_prefix)").Trim()
-if ($python -match '^C:\Users\' -or $basePrefix -match '^C:\Users\') {
+if ($python -like 'C:\Users\*' -or $basePrefix -like 'C:\Users\*') {
   throw "MACHINE_PYTHON_MUST_NOT_BE_USER_SCOPED:$python|$basePrefix"
 }
 
@@ -46,7 +46,7 @@ $serviceExe = (& $python -c "import win32serviceutil; print(win32serviceutil.Loc
 if (-not (Test-Path -LiteralPath $serviceExe)) {
   throw "PYTHONSERVICE_EXE_NOT_FOUND:$serviceExe"
 }
-if ($serviceExe -match '^C:\Users\' -or $serviceExe -match '\\.venv') {
+if ($serviceExe -like 'C:\Users\*' -or $serviceExe -like '*\.venv*') {
   throw "PYTHONSERVICE_EXE_NOT_MACHINE_GLOBAL:$serviceExe"
 }
 
@@ -80,11 +80,16 @@ sc.exe failure $svcName reset= 86400 actions= restart/60000/restart/60000/restar
 if ($LASTEXITCODE -ne 0) { throw 'WINDOWS_SERVICE_RECOVERY_POLICY_FAILED' }
 
 $imagePath = (Get-ItemProperty -Path $svcKey).ImagePath
-if ($imagePath -match 'C:\Users\' -or $imagePath -match '\\.venv') {
+$imagePathNormalized = $imagePath.Trim('"')
+if ($imagePathNormalized -like 'C:\Users\*' -or $imagePathNormalized -like '*\.venv*') {
   throw "SERVICE_IMAGE_PATH_NOT_MACHINE_GLOBAL:$imagePath"
 }
-if ($imagePath -notmatch 'Python31[12]\\pythonservice\.exe') {
-  throw "SERVICE_IMAGE_PATH_UNEXPECTED:$imagePath"
+if (-not [string]::Equals(
+  $imagePathNormalized,
+  $serviceExe,
+  [System.StringComparison]::OrdinalIgnoreCase
+)) {
+  throw "SERVICE_IMAGE_PATH_UNEXPECTED:$imagePath|EXPECTED:$serviceExe"
 }
 
 Start-Service -Name $svcName -ErrorAction Stop
