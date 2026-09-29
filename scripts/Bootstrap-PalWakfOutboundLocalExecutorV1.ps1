@@ -45,9 +45,10 @@ if ($LASTEXITCODE -ne 0) { throw 'WINDOWS_SERVICE_AUTOSTART_CONFIG_FAILED' }
 sc.exe failure PalWakfOutboundLocalExecutorV1 reset= 86400 actions= restart/60000/restart/60000/restart/60000 | Out-Null
 if ($LASTEXITCODE -ne 0) { throw 'WINDOWS_SERVICE_RECOVERY_POLICY_FAILED' }
 
-Start-Service -Name PalWakfOutboundLocalExecutorV1 -ErrorAction SilentlyContinue
-Start-Sleep -Seconds 2
+Start-Service -Name PalWakfOutboundLocalExecutorV1 -ErrorAction Stop
+Start-Sleep -Seconds 3
 $svc = Get-Service -Name PalWakfOutboundLocalExecutorV1 -ErrorAction Stop
+if ($svc.Status -ne 'Running') { throw "WINDOWS_SERVICE_NOT_RUNNING:$($svc.Status)" }
 
 [pscustomobject]@{
   Bootstrap = 'PASS'
