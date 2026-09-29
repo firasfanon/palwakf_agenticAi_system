@@ -64,6 +64,10 @@ def test_bootstrap_uses_machine_global_pywin32_service_host():
     assert stop_index < package_index < postinstall_index
     assert "WINDOWS_SERVICE_STOP_TIMEOUT" in source
     assert "WaitForStatus(" in source
+    assert "PYWIN32_POSTINSTALL=SKIPPED_ALREADY_ADMITTED" in source
+    assert "$pywin32HostAlreadyAdmitted" in source
+    assert "$expectedGlobalServiceExe" in source
+    assert "PyWin32PostInstallStatus = $postinstallStatus" in source
 
 
 @pytest.mark.parametrize("encoding", ["utf-8", "utf-8-sig"])
