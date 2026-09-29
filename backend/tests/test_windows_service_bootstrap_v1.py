@@ -58,6 +58,12 @@ def test_bootstrap_uses_machine_global_pywin32_service_host():
     assert "Copy-Item -LiteralPath $authoritativeConfig -Destination $config -Force" in source
     assert "EXECUTOR_CONFIG_SYNC_HASH_MISMATCH" in source
     assert "ConfigSync = 'PASS'" in source
+    stop_index = source.index("Stop-Service -Name $svcName -Force -ErrorAction Stop")
+    postinstall_index = source.index("& $postinstall -install -silent")
+    package_index = source.index('& $python -m pip install --upgrade "$repo[windows]"')
+    assert stop_index < package_index < postinstall_index
+    assert "WINDOWS_SERVICE_STOP_TIMEOUT" in source
+    assert "WaitForStatus(" in source
 
 
 @pytest.mark.parametrize("encoding", ["utf-8", "utf-8-sig"])
