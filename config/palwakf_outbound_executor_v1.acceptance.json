@@ -1,0 +1,25 @@
+{
+  "executor": {
+    "executor_id": "DESKTOP-S5A0JSB",
+    "repository_id": "firasfanon/palwakf_agenticAi_system",
+    "allowed_roots": [
+      "C:\\Users\\DELL\\StudioProjects\\palwakf_agenticAi_system"
+    ],
+    "state_dir": "C:\\ProgramData\\PalWakf\\outbound_executor_v1\\state",
+    "max_output_bytes": 131072
+  },
+  "transport": {
+    "repository": "firasfanon/palwakf_agenticAi_system",
+    "task_label": "question",
+    "token_env_var": null,
+    "token_protected_path": "C:\\ProgramData\\PalWakf\\outbound_executor_v1\\secrets\\github_token.dpapi",
+    "api_base": "https://api.github.com",
+    "heartbeat_comment_id": null,
+    "user_agent": "palwakf-outbound-local-executor-v1"
+  },
+  "authority_public_keys_b64": {
+    "acceptance-20260929": "mMkFSv93qn2jTemK82EaPTa5pZvHnWHERykbzoHHttI="
+  },
+  "poll_seconds": 15,
+  "heartbeat_seconds": 60
+}
