@@ -6,13 +6,29 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $repo = (Resolve-Path -LiteralPath $RepoRoot).Path
-$config = (Resolve-Path -LiteralPath $ConfigPath).Path
+$config = [System.IO.Path]::GetFullPath($ConfigPath)
 $python = (Resolve-Path -LiteralPath $MachinePythonExe).Path
+$authoritativeConfig = Join-Path $repo 'config\palwakf_outbound_executor_v1.acceptance.json'
 $svcName = 'PalWakfOutboundLocalExecutorV1'
 $svcKey = "HKLM:\SYSTEM\CurrentControlSet\Services\$svcName"
 
 if (-not (Test-Path -LiteralPath (Join-Path $repo 'pyproject.toml'))) {
   throw 'REPO_PYPROJECT_NOT_FOUND'
+}
+if (-not (Test-Path -LiteralPath $authoritativeConfig -PathType Leaf)) {
+  throw 'AUTHORITATIVE_EXECUTOR_CONFIG_NOT_FOUND'
+}
+
+$configDir = Split-Path -Parent $config
+if (-not (Test-Path -LiteralPath $configDir)) {
+  New-Item -ItemType Directory -Force -Path $configDir | Out-Null
+}
+Copy-Item -LiteralPath $authoritativeConfig -Destination $config -Force
+
+$sourceConfigHash = (Get-FileHash -LiteralPath $authoritativeConfig -Algorithm SHA256).Hash.ToLowerInvariant()
+$runtimeConfigHash = (Get-FileHash -LiteralPath $config -Algorithm SHA256).Hash.ToLowerInvariant()
+if ($sourceConfigHash -ne $runtimeConfigHash) {
+  throw "EXECUTOR_CONFIG_SYNC_HASH_MISMATCH:$sourceConfigHash|$runtimeConfigHash"
 }
 
 $version = (& $python -c "import sys; print('.'.join(map(str,sys.version_info[:2])))").Trim()
@@ -155,5 +171,7 @@ finally {
   ConfigSet = -not [string]::IsNullOrWhiteSpace(
     [Environment]::GetEnvironmentVariable('PALWAKF_EXECUTOR_CONFIG','Machine')
   )
+  ConfigSync = 'PASS'
+  ConfigSha256 = $runtimeConfigHash
   ManualTerminalInterventionsPerTaskTarget = 0
 }
