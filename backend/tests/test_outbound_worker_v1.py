@@ -21,7 +21,7 @@ class _StopAfterWait:
 def _worker_with(transport):
     worker = object.__new__(OutboundWorkerV1)
     worker.config = SimpleNamespace(
-        heartbeat_seconds=60,
+        heartbeat_seconds=0,
         poll_seconds=5,
         executor=SimpleNamespace(executor_id="DESKTOP-S5A0JSB"),
     )
