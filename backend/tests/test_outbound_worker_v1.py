@@ -28,6 +28,8 @@ def _worker_with(transport):
     worker.transport = transport
     worker.executor = SimpleNamespace()
     worker._stop = _StopAfterWait()
+    worker._transport_degraded = False
+    worker.runtime_transport_audit_path = None
     return worker
 
 
@@ -57,3 +59,16 @@ def test_worker_survives_claim_poll_transport_failure():
     worker = _worker_with(Transport())
     worker.run()
     assert worker._stop.wait_calls == 1
+
+
+def test_transport_runtime_audit_records_error_and_recovery(tmp_path):
+    worker = _worker_with(SimpleNamespace())
+    worker.runtime_transport_audit_path = tmp_path / "transport-runtime.jsonl"
+    worker._mark_transport_failure(TransportError("offline"))
+    assert worker._transport_degraded is True
+    worker._mark_transport_success()
+    assert worker._transport_degraded is False
+    lines = worker.runtime_transport_audit_path.read_text(encoding="utf-8").splitlines()
+    assert len(lines) == 2
+    assert '"event": "TRANSPORT_ERROR"' in lines[0]
+    assert '"event": "TRANSPORT_RECOVERED"' in lines[1]

@@ -40,9 +40,35 @@ class OutboundWorkerV1:
             registry=default_capability_registry_v1(),
         )
         self._stop = threading.Event()
+        self._transport_degraded = False
+        self.runtime_transport_audit_path = Path(config.executor.state_dir) / "transport-runtime.jsonl"
 
     def stop(self) -> None:
         self._stop.set()
+
+    def _record_transport_event(self, event: str, error: Exception | None = None) -> None:
+        path = getattr(self, "runtime_transport_audit_path", None)
+        if path is None:
+            return
+        payload = {
+            "event": event,
+            "at": datetime.now(UTC).isoformat(),
+            "executor_id": self.config.executor.executor_id,
+        }
+        if error is not None:
+            payload["error"] = f"{type(error).__name__}:{str(error)[:300]}"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(payload, sort_keys=True) + "\n")
+
+    def _mark_transport_failure(self, exc: TransportError) -> None:
+        self._transport_degraded = True
+        self._record_transport_event("TRANSPORT_ERROR", exc)
+
+    def _mark_transport_success(self) -> None:
+        if self._transport_degraded:
+            self._record_transport_event("TRANSPORT_RECOVERED")
+            self._transport_degraded = False
 
     def run(self) -> None:
         last_heartbeat = 0.0
@@ -58,13 +84,17 @@ class OutboundWorkerV1:
                         "transport_state": "OUTBOUND_POLLING",
                     })
                     last_heartbeat = now
-                except TransportError:
+                    self._mark_transport_success()
+                except TransportError as exc:
+                    self._mark_transport_failure(exc)
                     self._stop.wait(self.config.poll_seconds)
                     continue
 
             try:
                 claimed = self.transport.claim_task(executor_id=self.config.executor.executor_id)
-            except TransportError:
+                self._mark_transport_success()
+            except TransportError as exc:
+                self._mark_transport_failure(exc)
                 self._stop.wait(self.config.poll_seconds)
                 continue
             if claimed is None:
@@ -88,7 +118,8 @@ class OutboundWorkerV1:
             try:
                 self.transport.publish_result(claimed, evidence.model_dump(mode="json"))
                 self.transport.ack_task(claimed, status=evidence.exit_state)
-            except TransportError:
+            except TransportError as exc:
+                self._mark_transport_failure(exc)
                 # Keep the worker alive through transient network loss. The open
                 # issue will be reclaimed after recovery; the local ledger then
                 # returns the existing evidence without re-running the handler.
