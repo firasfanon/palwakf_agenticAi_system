@@ -9,6 +9,8 @@ from typing import Any, Mapping, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from palwakf_local_agents.windows_protected_secret_v1 import read_windows_protected_text
+
 
 BEGIN = "PALWAKF_TASK_ENVELOPE_V1_BEGIN"
 END = "PALWAKF_TASK_ENVELOPE_V1_END"
@@ -34,7 +36,8 @@ class GitHubIssueTransportSettingsV1(BaseModel):
 
     repository: str = Field(pattern=r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
     task_label: str = "palwakf-local-executor"
-    token_env_var: str = "PALWAKF_GITHUB_TOKEN"
+    token_env_var: str | None = "PALWAKF_GITHUB_TOKEN"
+    token_protected_path: str | None = None
     api_base: str = "https://api.github.com"
     heartbeat_comment_id: int | None = None
     user_agent: str = "palwakf-outbound-local-executor-v1"
@@ -47,10 +50,13 @@ class GitHubIssueTransportV1:
         self.settings = settings
 
     def _token(self) -> str:
-        token = os.environ.get(self.settings.token_env_var, "")
-        if not token:
-            raise TransportError("GITHUB_TOKEN_NOT_SET")
-        return token
+        if self.settings.token_env_var:
+            token = os.environ.get(self.settings.token_env_var, "")
+            if token:
+                return token
+        if self.settings.token_protected_path:
+            return read_windows_protected_text(self.settings.token_protected_path)
+        raise TransportError("GITHUB_TOKEN_NOT_SET")
 
     def _request(self, method: str, path: str, body: Mapping[str, Any] | None = None) -> Any:
         url = self.settings.api_base.rstrip("/") + path
@@ -97,7 +103,10 @@ class GitHubIssueTransportV1:
     def claim_task(self, *, executor_id: str) -> Mapping[str, Any] | None:
         owner, repo = self.settings.repository.split("/", 1)
         label = urllib.parse.quote(self.settings.task_label)
-        issues = self._request("GET", f"/repos/{owner}/{repo}/issues?state=open&labels={label}&per_page=20&sort=created&direction=asc")
+        issues = self._request(
+            "GET",
+            f"/repos/{owner}/{repo}/issues?state=open&labels={label}&per_page=20&sort=created&direction=asc",
+        )
         for issue in issues or []:
             if "pull_request" in issue:
                 continue
@@ -114,7 +123,11 @@ class GitHubIssueTransportV1:
                 "task_id": envelope.get("task_id"),
                 "claimed_at": datetime.now(UTC).isoformat(),
             }
-            self._request("POST", f"/repos/{owner}/{repo}/issues/{issue['number']}/comments", {"body": "PALWAKF_CLAIM_V1\n\x60\x60\x60json\n" + json.dumps(claim, sort_keys=True) + "\n\x60\x60\x60"})
+            self._request(
+                "POST",
+                f"/repos/{owner}/{repo}/issues/{issue['number']}/comments",
+                {"body": "PALWAKF_CLAIM_V1\n\x60\x60\x60json\n" + json.dumps(claim, sort_keys=True) + "\n\x60\x60\x60"},
+            )
             return {"issue_number": issue["number"], "issue_id": issue["id"], "envelope": envelope}
         return None
 
@@ -127,7 +140,9 @@ class GitHubIssueTransportV1:
     def _comment(self, claimed: Mapping[str, Any], marker: str, payload: Mapping[str, Any]) -> None:
         owner, repo = self.settings.repository.split("/", 1)
         number = int(claimed["issue_number"])
-        body = marker + "\n\x60\x60\x60json\n" + json.dumps(dict(payload), ensure_ascii=False, sort_keys=True, default=str) + "\n\x60\x60\x60"
+        body = marker + "\n\x60\x60\x60json\n" + json.dumps(
+            dict(payload), ensure_ascii=False, sort_keys=True, default=str
+        ) + "\n\x60\x60\x60"
         self._request("POST", f"/repos/{owner}/{repo}/issues/{number}/comments", {"body": body})
 
     def ack_task(self, claimed: Mapping[str, Any], *, status: str) -> None:
@@ -144,7 +159,9 @@ class GitHubIssueTransportV1:
         if comment_id is None:
             return
         owner, repo = self.settings.repository.split("/", 1)
-        body = "PALWAKF_HEARTBEAT_V1\n\x60\x60\x60json\n" + json.dumps(dict(payload), sort_keys=True, default=str) + "\n\x60\x60\x60"
+        body = "PALWAKF_HEARTBEAT_V1\n\x60\x60\x60json\n" + json.dumps(
+            dict(payload), sort_keys=True, default=str
+        ) + "\n\x60\x60\x60"
         self._request("PATCH", f"/repos/{owner}/{repo}/issues/comments/{comment_id}", {"body": body})
 
     def release_or_fail(self, claimed: Mapping[str, Any], *, reason: str) -> None:
