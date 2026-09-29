@@ -18,7 +18,7 @@
     "user_agent": "palwakf-outbound-local-executor-v1"
   },
   "authority_public_keys_b64": {
-    "acceptance-20260929-r2": "arGyjrnM7gFUAuUkWCKCWIs8o+BDoWrFRJa6PrF0dIc="
+    "acceptance-20260929-r3": "DaUOLu8Mm+qZ1eyeCHFsI7wOWAmhtxY6UjzmXEtvSFk="
   },
   "poll_seconds": 15,
   "heartbeat_seconds": 60
