@@ -47,6 +47,9 @@ def test_bootstrap_uses_machine_global_pywin32_service_host():
     assert "MACHINE_PYTHON_MUST_NOT_BE_USER_SCOPED" in source
     assert "PYTHONSERVICE_EXE_NOT_MACHINE_GLOBAL" in source
     assert "SERVICE_IMAGE_PATH_NOT_MACHINE_GLOBAL" in source
+    assert "-match '^C:\\Users\\'" not in source
+    assert "-match 'C:\\Users\\'" not in source
+    assert "-like 'C:\\Users\\*'" in source
 
 
 @pytest.mark.parametrize("encoding", ["utf-8", "utf-8-sig"])
