@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - task/AGENTIC-P3-OUTBOUND-LOCAL-EXECUTOR-V1
+      - task/AGENTIC-CODEX-EXECUTION-PLANE-ADMISSION-V1
   workflow_dispatch:
 
 permissions:
