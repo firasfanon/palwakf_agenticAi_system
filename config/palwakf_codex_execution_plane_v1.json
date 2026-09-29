@@ -1,0 +1,44 @@
+{
+  "schema": "palwakf.codex_execution_plane.v1",
+  "role": "PRIVILEGED_ENGINEERING_BOOTSTRAP_RECOVERY_PLANE",
+  "execution_mode": "SELF_HOSTED_CODEX_EXEC_SERVER",
+  "interactive_cli_role": "DIAGNOSTIC_AND_HUMAN_OPERATED_DEVELOPMENT_ONLY",
+  "allowed_roots": [
+    "C:\\Users\\DELL\\StudioProjects\\palwakf_workspace_manager",
+    "C:\\Users\\DELL\\StudioProjects\\palwakf_mind_assistant",
+    "C:\\Users\\DELL\\StudioProjects\\palwakf_agenticAi_system"
+  ],
+  "required_outbound": [
+    "https://api.openai.com",
+    "wss://codex-cloud-environments.chatgpt.com"
+  ],
+  "credentials": {
+    "application_key_env": "OPENAI_API_KEY",
+    "executor_key_env": "CODEX_API_KEY",
+    "require_distinct_keys": true,
+    "allow_secret_in_git": false,
+    "allow_secret_in_logs": false,
+    "allow_secret_in_evidence": false
+  },
+  "prohibited_actions": [
+    "main_merge_without_explicit_authorization",
+    "baseline_promotion_without_explicit_authorization",
+    "production_mutation_without_explicit_authorization",
+    "shared_db_mutation_without_explicit_authorization",
+    "operational_authority_bypass",
+    "arbitrary_filesystem_expansion",
+    "secret_exfiltration"
+  ],
+  "predecessor": {
+    "phase": "P3",
+    "status": "CLOSED_PASS",
+    "head": "551372c297860023b8775cd38cb66f1cac4d4498",
+    "tree": "9cc2a25ef8fd5ab96f7857e5f15853899afef472"
+  },
+  "retirement_gate": {
+    "render_responses_relay": "KEEP_UNTIL_CODEX_BOOTSTRAP_RECOVERY_PASS",
+    "task_scheduler_relay": "KEEP_UNTIL_CODEX_BOOTSTRAP_RECOVERY_PASS",
+    "palwakf_remote_mcp": "RETAIN",
+    "remote_desktop_commander": "BREAK_GLASS_ONLY"
+  }
+}
