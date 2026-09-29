@@ -60,42 +60,45 @@ if ($LASTEXITCODE -ne 0) { throw 'PIP_UPGRADE_FAILED' }
 & $python -m pip install --upgrade "$repo[windows]"
 if ($LASTEXITCODE -ne 0) { throw 'PACKAGE_INSTALL_FAILED' }
 
-$postinstall = Join-Path (Split-Path -Parent $python) 'Scripts\pywin32_postinstall.exe'
-if (-not (Test-Path -LiteralPath $postinstall)) {
+$pythonRoot = Split-Path -Parent $python
+$postinstall = Join-Path $pythonRoot 'Scripts\pywin32_postinstall.exe'
+$expectedGlobalServiceExe = Join-Path $pythonRoot 'pythonservice.exe'
+
+if (-not (Test-Path -LiteralPath $postinstall -PathType Leaf)) {
   throw "PYWIN32_POSTINSTALL_EXE_NOT_FOUND:$postinstall"
 }
 
-& $postinstall -install -silent
-if ($LASTEXITCODE -ne 0) { throw 'PYWIN32_POSTINSTALL_FAILED' }
+& $python -c "import servicemanager, win32service, win32serviceutil, pywintypes, cryptography"
+$hostImportExit = $LASTEXITCODE
+
+$pywin32HostAlreadyAdmitted = (
+  $hostImportExit -eq 0 -and
+  (Test-Path -LiteralPath $expectedGlobalServiceExe -PathType Leaf)
+)
+
+if ($pywin32HostAlreadyAdmitted) {
+  $postinstallStatus = 'SKIPPED_ALREADY_ADMITTED'
+  Write-Host 'PYWIN32_POSTINSTALL=SKIPPED_ALREADY_ADMITTED'
+} else {
+  & $postinstall -install -silent
+  if ($LASTEXITCODE -ne 0) {
+    throw 'PYWIN32_POSTINSTALL_FAILED'
+  }
+  $postinstallStatus = 'PASS'
+  Write-Host 'PYWIN32_POSTINSTALL=PASS'
+}
 
 & $python -c "import servicemanager, win32service, win32serviceutil, pywintypes, cryptography; import palwakf_local_agents.windows_service_v1 as s; assert s.PalWakfOutboundExecutorService is not None; print('GLOBAL_SERVICE_HOST_IMPORT=PASS')"
-if ($LASTEXITCODE -ne 0) { throw 'SERVICE_HOST_IMPORT_PREFLIGHT_FAILED' }
-
-$serviceExeOutput = @(
-  & $python -c "import win32serviceutil; print(win32serviceutil.LocatePythonServiceExe())"
-)
 if ($LASTEXITCODE -ne 0) {
-  throw "PYTHONSERVICE_EXE_DISCOVERY_FAILED:$LASTEXITCODE"
+  throw 'SERVICE_HOST_IMPORT_PREFLIGHT_FAILED'
 }
 
-$serviceExeCandidates = @(
-  $serviceExeOutput |
-    ForEach-Object { "$_".Trim() } |
-    Where-Object {
-      $_ -and
-      (Test-Path -LiteralPath $_ -PathType Leaf)
-    }
-)
-
-if ($serviceExeCandidates.Count -eq 0) {
-  throw "PYTHONSERVICE_EXE_NOT_FOUND:$($serviceExeOutput -join ' | ')"
+if (-not (Test-Path -LiteralPath $expectedGlobalServiceExe -PathType Leaf)) {
+  throw "PYTHONSERVICE_EXE_NOT_FOUND:$expectedGlobalServiceExe"
 }
 
-$serviceExe = $serviceExeCandidates[-1]
+$serviceExe = (Resolve-Path -LiteralPath $expectedGlobalServiceExe).Path
 
-if (-not (Test-Path -LiteralPath $serviceExe -PathType Leaf)) {
-  throw "PYTHONSERVICE_EXE_NOT_FOUND:$serviceExe"
-}
 if ($serviceExe -like 'C:\Users\*' -or $serviceExe -like '*\.venv*') {
   throw "PYTHONSERVICE_EXE_NOT_MACHINE_GLOBAL:$serviceExe"
 }
@@ -173,6 +176,7 @@ finally {
   Python = $python
   PythonBasePrefix = $basePrefix
   PyWin32PostInstall = $postinstall
+  PyWin32PostInstallStatus = $postinstallStatus
   ServiceExecutable = $serviceExe
   ServiceName = $svc.Name
   Status = $svc.Status.ToString()
