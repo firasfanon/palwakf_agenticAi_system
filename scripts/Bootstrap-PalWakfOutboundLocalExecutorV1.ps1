@@ -41,6 +41,19 @@ if ($python -like 'C:\Users\*' -or $basePrefix -like 'C:\Users\*') {
   throw "MACHINE_PYTHON_MUST_NOT_BE_USER_SCOPED:$python|$basePrefix"
 }
 
+$existing = Get-Service -Name $svcName -ErrorAction SilentlyContinue
+if ($existing -and $existing.Status -ne 'Stopped') {
+  Stop-Service -Name $svcName -Force -ErrorAction Stop
+  $existing.WaitForStatus(
+    [System.ServiceProcess.ServiceControllerStatus]::Stopped,
+    [TimeSpan]::FromSeconds(30)
+  )
+  $existing.Refresh()
+  if ($existing.Status -ne 'Stopped') {
+    throw "WINDOWS_SERVICE_STOP_TIMEOUT:$($existing.Status)"
+  }
+}
+
 & $python -m pip install --upgrade pip
 if ($LASTEXITCODE -ne 0) { throw 'PIP_UPGRADE_FAILED' }
 
@@ -92,9 +105,6 @@ $env:PALWAKF_EXECUTOR_CONFIG = $config
 
 $existing = Get-Service -Name $svcName -ErrorAction SilentlyContinue
 if ($existing) {
-  if ($existing.Status -ne 'Stopped') {
-    Stop-Service -Name $svcName -ErrorAction Stop
-  }
   & $python -m palwakf_local_agents.windows_service_v1 --startup auto update
   if ($LASTEXITCODE -ne 0) { throw 'WINDOWS_SERVICE_UPDATE_FAILED' }
 } else {
