@@ -25,6 +25,7 @@ def test_ack_rejected_task_posts_ack_and_closes_issue():
     transport = GitHubIssueTransportV1(
         GitHubIssueTransportSettingsV1(
             repository="owner/repo",
+            task_label="question",
             token_env_var=None,
             token_protected_path="C:\\ProgramData\\PalWakf\\secret.dpapi",
         )
@@ -55,6 +56,7 @@ def test_ack_completed_task_closes_issue_as_completed():
     transport = GitHubIssueTransportV1(
         GitHubIssueTransportSettingsV1(
             repository="owner/repo",
+            task_label="question",
             token_env_var=None,
             token_protected_path="C:\\ProgramData\\PalWakf\\secret.dpapi",
         )
