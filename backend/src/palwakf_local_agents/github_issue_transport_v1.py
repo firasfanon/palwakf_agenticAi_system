@@ -147,6 +147,19 @@ class GitHubIssueTransportV1:
 
     def ack_task(self, claimed: Mapping[str, Any], *, status: str) -> None:
         self._comment(claimed, "PALWAKF_ACK_V1", {"status": status, "at": datetime.now(UTC).isoformat()})
+        terminal_states = {
+            "COMPLETED", "REJECTED", "BLOCKED", "FAILED", "INTERRUPTED",
+            "DRIFTED", "TIMED_OUT", "CANCELLED", "RECOVERY_REQUIRED",
+        }
+        if status in terminal_states:
+            owner, repo = self.settings.repository.split("/", 1)
+            number = int(claimed["issue_number"])
+            state_reason = "completed" if status == "COMPLETED" else "not_planned"
+            self._request(
+                "PATCH",
+                f"/repos/{owner}/{repo}/issues/{number}",
+                {"state": "closed", "state_reason": state_reason},
+            )
 
     def publish_progress(self, claimed: Mapping[str, Any], payload: Mapping[str, Any]) -> None:
         self._comment(claimed, "PALWAKF_PROGRESS_V1", payload)
