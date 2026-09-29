@@ -54,6 +54,10 @@ def test_bootstrap_uses_machine_global_pywin32_service_host():
     assert "$serviceExeCandidates = @(" in source
     assert "Test-Path -LiteralPath $_ -PathType Leaf" in source
     assert "$serviceExe = $serviceExeCandidates[-1]" in source
+    assert "palwakf_outbound_executor_v1.acceptance.json" in source
+    assert "Copy-Item -LiteralPath $authoritativeConfig -Destination $config -Force" in source
+    assert "EXECUTOR_CONFIG_SYNC_HASH_MISMATCH" in source
+    assert "ConfigSync = 'PASS'" in source
 
 
 @pytest.mark.parametrize("encoding", ["utf-8", "utf-8-sig"])
