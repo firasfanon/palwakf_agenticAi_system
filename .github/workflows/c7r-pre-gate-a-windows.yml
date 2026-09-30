@@ -91,6 +91,12 @@ jobs:
           if ($text -match '\[string\[\]\]\$Args') {
             throw 'C7R_POWERSHELL_AUTOMATIC_ARGS_PARAMETER_COLLISION'
           }
+          if ($text -notmatch 'function Invoke-NativeCaptured') {
+            throw 'C7R_NATIVE_CAPTURE_HELPER_MISSING'
+          }
+          if ($text -notmatch "\$ErrorActionPreference = 'Continue'") {
+            throw 'C7R_NATIVE_STDERR_EXITCODE_CLASSIFICATION_MISSING'
+          }
           @'
           from pathlib import Path
           from palwakf_local_agents.outbound_capabilities_v1 import default_capability_registry_v1
