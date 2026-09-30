@@ -101,8 +101,8 @@ def test_accepts_workspace_cross_repo_signature_vector() -> None:
         "algorithm": "ED25519",
         "key_id": "workspace-c7r-vector-v1",
         "signature_b64": (
-            "NLzye7JdRiApOTP4Oj0H0f2A0jxJGSgHwjf+gtVbjFAJpwCeuE3cDheXbpD3wPFP"
-            "nxOX1S2O10Dr++0leJi2Bg=="
+            "52Hhw/BM5qUB1cpZ+x5J2uEqT5ysbvXNihcOJJdw8H5AbSdJdns7Zy/FvxhQ75+G"
+            "705ezzwAHhAYAKFH44fuBA=="
         ),
     }
     model = TaskEnvelopeV1.model_validate(envelope)
