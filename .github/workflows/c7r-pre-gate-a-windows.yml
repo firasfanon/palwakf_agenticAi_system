@@ -103,6 +103,18 @@ jobs:
           if ($text -notmatch [regex]::Escape('[System.Text.UTF8Encoding]::new($false)')) {
             throw 'C7R_BOOTSTRAP_UTF8_NO_BOM_WRITER_MISSING'
           }
+          if ($text -notmatch [regex]::Escape('[Parameter(Mandatory=$true)][string]$CodexExecutable')) {
+            throw 'C7R_CODEX_EXECUTABLE_INPUT_MISSING'
+          }
+          if ($text -notmatch 'Set-ServiceEnvironmentEntry') {
+            throw 'C7R_CODEX_SERVICE_ENV_BINDING_MISSING'
+          }
+          if ($text -notmatch 'PALWAKF_CODEX_EXECUTABLE') {
+            throw 'C7R_CODEX_EXPLICIT_PROVIDER_ENV_MISSING'
+          }
+          if ($text -notmatch 'C7R_CODEX_BINARY_SHA_GATE_FAILED') {
+            throw 'C7R_CODEX_BINARY_SHA_GATE_MISSING'
+          }
           @'
           from pathlib import Path
           from palwakf_local_agents.outbound_capabilities_v1 import default_capability_registry_v1
