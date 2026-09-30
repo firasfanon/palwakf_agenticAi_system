@@ -67,3 +67,24 @@ def test_missing_external_public_trust_store_preserves_embedded_acceptance_key(
     keys = _config(tmp_path / "missing.json").effective_authority_public_keys()
 
     assert list(keys) == ["acceptance-r11"]
+
+
+def test_external_public_trust_store_can_be_the_sole_runtime_root(tmp_path: Path) -> None:
+    path = tmp_path / "authority-keys.json"
+    durable = base64.b64encode(b"d" * 32).decode("ascii")
+    path.write_text(
+        json.dumps({"workspace-c7r-v1": durable}),
+        encoding="utf-8",
+    )
+    config = _config(path).model_copy(update={"authority_public_keys_b64": {}})
+
+    keys = config.effective_authority_public_keys()
+
+    assert keys == {"workspace-c7r-v1": durable}
+
+
+def test_empty_authority_root_fails_closed(tmp_path: Path) -> None:
+    config = _config(None).model_copy(update={"authority_public_keys_b64": {}})
+
+    with pytest.raises(RuntimeError, match="AUTHORITY_PUBLIC_KEY_STORE_EMPTY"):
+        config.effective_authority_public_keys()
