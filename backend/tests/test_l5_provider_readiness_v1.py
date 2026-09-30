@@ -12,7 +12,7 @@ from pydantic import ValidationError
 
 def hardware(cpu: str = "cpu-a") -> HardwareProfile:
     return HardwareProfile(
-        machine="DESKTOP-S5A0JSB",
+        machine="Futuer-IT",
         cpu=cpu,
         gpu_devices=("GeForce GTX 1050",),
         gpu_memory_mb=(4096,),
@@ -165,7 +165,7 @@ def test_gpu_memory_shape_is_fail_closed() -> None:
         match="GPU_MEMORY_DEVICE_COUNT_MISMATCH",
     ):
         HardwareProfile(
-            machine="DESKTOP-S5A0JSB",
+            machine="Futuer-IT",
             cpu="cpu-a",
             gpu_devices=("gpu-a", "gpu-b"),
             gpu_memory_mb=(4096,),
