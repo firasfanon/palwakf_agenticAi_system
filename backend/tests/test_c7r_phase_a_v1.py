@@ -420,3 +420,125 @@ def test_c7r_handler_admits_model_catalog(
 
     assert summary["state"] == "COMPLETED"
     assert summary["models"][0]["slug"] == "model-a"
+
+
+def test_safe_direct_error_shape_redacts_raw_text() -> None:
+    raw = json.dumps(
+        {
+            "detail": "sensitive admission text",
+            "error": {
+                "message": "provider secret-looking message",
+                "code": "subscription_sharing_user_not_eligible",
+                "param": "model",
+            },
+        }
+    ).encode("utf-8")
+
+    result = c7r._safe_direct_error_shape(raw)
+    serialized = json.dumps(result)
+
+    assert result["body_kind"] == "object"
+    assert result["top_level_keys"] == ["detail", "error"]
+    assert result["error_keys"] == ["code", "message", "param"]
+    assert result["error_code"] == "subscription_sharing_user_not_eligible"
+    assert result["error_param"] == "model"
+    assert result["detail_present"] is True
+    assert "sensitive admission text" not in serialized
+    assert "provider secret-looking message" not in serialized
+
+
+def test_direct_admission_probe_captures_safe_http_403(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        c7r,
+        "_credentials_with_refresh",
+        lambda: {"access_token": "secret-access-token"},
+    )
+    monkeypatch.setattr(
+        c7r,
+        "_model_for_account",
+        lambda token, requested: (
+            "gpt-5.6-sol"
+            if token == "secret-access-token" and requested == "gpt-5.6-sol"
+            else (_ for _ in ()).throw(AssertionError("unexpected model lookup"))
+        ),
+    )
+    captured: dict[str, object] = {}
+
+    def fail_with_403(request, timeout=0):
+        captured["body"] = json.loads(request.data.decode("utf-8"))
+        assert timeout == 90
+        raise c7r.urllib.error.HTTPError(
+            request.full_url,
+            403,
+            "Forbidden",
+            {"x-request-id": "req_safe_123"},
+            __import__("io").BytesIO(
+                json.dumps(
+                    {
+                        "error": {
+                            "message": "must not escape",
+                            "code": "subscription_sharing_user_not_eligible",
+                            "param": "model",
+                        }
+                    }
+                ).encode("utf-8")
+            ),
+        )
+
+    monkeypatch.setattr(c7r.urllib.request, "urlopen", fail_with_403)
+
+    result = c7r._direct_admission_probe("gpt-5.6-sol")
+    serialized = json.dumps(result)
+    body = captured["body"]
+
+    assert body == {
+        "model": "gpt-5.6-sol",
+        "input": [
+            {
+                "role": "user",
+                "content": "Say exactly: PALWAKF_C7R_DIRECT_PROBE_OK",
+            }
+        ],
+        "store": False,
+        "stream": True,
+    }
+    assert result["state"] == "ADMISSION_BLOCKED"
+    assert result["http_status"] == 403
+    assert result["request_id"] == "req_safe_123"
+    assert result["error_code"] == "subscription_sharing_user_not_eligible"
+    assert result["error_param"] == "model"
+    assert "must not escape" not in serialized
+    assert "secret-access-token" not in serialized
+
+
+def test_direct_admission_probe_evidence_summary_is_redacted() -> None:
+    result = c7r._with_evidence_summary(
+        {
+            "operation": "direct_admission_probe",
+            "state": "ADMISSION_BLOCKED",
+            "model": "gpt-5.6-sol",
+            "http_status": 403,
+            "request_id": "req_safe_123",
+            "body_kind": "object",
+            "top_level_keys": ["error"],
+            "error_keys": ["code", "message"],
+            "error_code": "subscription_sharing_user_not_eligible",
+            "error_param": None,
+            "detail_present": False,
+            "terminal_event": None,
+            "store": False,
+            "stream": True,
+            "tokens_exposed": False,
+            "normal_openai_api_key_used": False,
+            "normal_codex_api_key_used": False,
+        }
+    )
+    summary = json.loads(str(result["_evidence_summary"]))
+
+    assert summary["operation"] == "direct_admission_probe"
+    assert summary["http_status"] == 403
+    assert summary["request_id"] == "req_safe_123"
+    assert summary["error_code"] == "subscription_sharing_user_not_eligible"
+    assert summary["tokens_exposed"] is False

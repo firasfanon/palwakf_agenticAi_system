@@ -740,6 +740,167 @@ def _model_catalog() -> dict[str, Any]:
     }
 
 
+def _safe_direct_error_shape(raw: bytes) -> dict[str, Any]:
+    try:
+        payload = json.loads(raw.decode("utf-8"))
+    except Exception:
+        return {
+            "body_kind": "non_json",
+            "top_level_keys": [],
+            "error_keys": [],
+            "error_code": None,
+            "error_param": None,
+            "detail_present": False,
+        }
+    if not isinstance(payload, dict):
+        return {
+            "body_kind": type(payload).__name__,
+            "top_level_keys": [],
+            "error_keys": [],
+            "error_code": None,
+            "error_param": None,
+            "detail_present": False,
+        }
+    top_level_keys = sorted(str(key) for key in payload.keys())[:20]
+    error = payload.get("error")
+    error_keys: list[str] = []
+    error_code: str | None = None
+    error_param: str | None = None
+    if isinstance(error, dict):
+        error_keys = sorted(str(key) for key in error.keys())[:20]
+        if isinstance(error.get("code"), str):
+            error_code = str(error["code"])
+        if isinstance(error.get("param"), str):
+            error_param = str(error["param"])
+    return {
+        "body_kind": "object",
+        "top_level_keys": top_level_keys,
+        "error_keys": error_keys,
+        "error_code": error_code,
+        "error_param": error_param,
+        "detail_present": "detail" in payload,
+    }
+
+
+def _request_id_from_headers(headers: Any) -> str | None:
+    for name in ("x-request-id", "openai-request-id", "request-id"):
+        value = headers.get(name) if headers is not None else None
+        if isinstance(value, str) and value:
+            return value
+    return None
+
+
+def _direct_admission_probe(requested_model: str | None) -> dict[str, Any]:
+    credentials = _credentials_with_refresh()
+    access_token = str(credentials["access_token"])
+    model = _model_for_account(access_token, requested_model)
+    body = json.dumps(
+        {
+            "model": model,
+            "input": [
+                {
+                    "role": "user",
+                    "content": "Say exactly: PALWAKF_C7R_DIRECT_PROBE_OK",
+                }
+            ],
+            "store": False,
+            "stream": True,
+        },
+        separators=(",", ":"),
+    ).encode("utf-8")
+    request = urllib.request.Request(
+        RESOURCE + "/responses",
+        data=body,
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+            "Accept": "text/event-stream",
+            "User-Agent": "PalWakf-C7R-Direct-Probe/1.0",
+        },
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=90) as response:
+            request_id = _request_id_from_headers(response.headers)
+            terminal = "stream_ended_without_terminal"
+            response_error_code: str | None = None
+            for raw_line in response:
+                line = raw_line.decode("utf-8", errors="replace").strip()
+                if not line.startswith("data:"):
+                    continue
+                data = line[5:].strip()
+                if not data or data == "[DONE]":
+                    continue
+                try:
+                    event = json.loads(data)
+                except json.JSONDecodeError:
+                    continue
+                if not isinstance(event, dict):
+                    continue
+                event_type = event.get("type")
+                if event_type == "response.completed":
+                    terminal = "response.completed"
+                    break
+                if event_type == "response.failed":
+                    terminal = "response.failed"
+                    response_obj = event.get("response")
+                    error_obj = (
+                        response_obj.get("error")
+                        if isinstance(response_obj, dict)
+                        else None
+                    )
+                    if (
+                        isinstance(error_obj, dict)
+                        and isinstance(error_obj.get("code"), str)
+                    ):
+                        response_error_code = str(error_obj["code"])
+                    break
+            return {
+                "operation": "direct_admission_probe",
+                "state": (
+                    "COMPLETED"
+                    if terminal == "response.completed"
+                    else "STREAM_TERMINATED_WITHOUT_COMPLETION"
+                ),
+                "model": model,
+                "http_status": int(getattr(response, "status", 200)),
+                "request_id": request_id,
+                "body_kind": "event_stream",
+                "top_level_keys": [],
+                "error_keys": [],
+                "error_code": response_error_code,
+                "error_param": None,
+                "detail_present": False,
+                "terminal_event": terminal,
+                "store": False,
+                "stream": True,
+                "tokens_exposed": False,
+                "normal_openai_api_key_used": False,
+                "normal_codex_api_key_used": False,
+            }
+    except urllib.error.HTTPError as exc:
+        raw = exc.read()
+        diagnostic = _safe_direct_error_shape(raw)
+        return {
+            "operation": "direct_admission_probe",
+            "state": "ADMISSION_BLOCKED",
+            "model": model,
+            "http_status": int(exc.code),
+            "request_id": _request_id_from_headers(exc.headers),
+            **diagnostic,
+            "terminal_event": None,
+            "store": False,
+            "stream": True,
+            "tokens_exposed": False,
+            "normal_openai_api_key_used": False,
+            "normal_codex_api_key_used": False,
+        }
+    except Exception as exc:
+        raise C7RPhaseAError(
+            f"DIRECT_ADMISSION_PROBE_FAILED:{type(exc).__name__}"
+        ) from exc
+
+
 def _app_server_command(codex: Path) -> list[str]:
     return [
         str(codex),
@@ -1048,6 +1209,26 @@ def _with_evidence_summary(result: Mapping[str, Any]) -> Mapping[str, Any]:
                 "models": value.get("models", []),
             }
         )
+    elif operation == "direct_admission_probe":
+        safe.update(
+            {
+                "state": value.get("state"),
+                "model": value.get("model"),
+                "http_status": value.get("http_status"),
+                "request_id": value.get("request_id"),
+                "body_kind": value.get("body_kind"),
+                "top_level_keys": value.get("top_level_keys", []),
+                "error_keys": value.get("error_keys", []),
+                "error_code": value.get("error_code"),
+                "error_param": value.get("error_param"),
+                "detail_present": value.get("detail_present"),
+                "terminal_event": value.get("terminal_event"),
+                "store": False,
+                "stream": True,
+                "normal_openai_api_key_used": False,
+                "normal_codex_api_key_used": False,
+            }
+        )
     elif operation == "inference":
         safe.update(
             {
@@ -1074,7 +1255,14 @@ def _with_evidence_summary(result: Mapping[str, Any]) -> Mapping[str, Any]:
 
 def c7r_phase_a(ctx: Any, args: Mapping[str, Any]) -> Mapping[str, Any]:
     operation = str(args.get("operation") or "")
-    allowed = {"preflight", "oauth_prepare", "oauth_status", "model_catalog", "inference"}
+    allowed = {
+        "preflight",
+        "oauth_prepare",
+        "oauth_status",
+        "model_catalog",
+        "direct_admission_probe",
+        "inference",
+    }
     if operation not in allowed:
         raise C7RPhaseAError("C7R_OPERATION_NOT_ADMITTED")
     root = _state_root().resolve()
@@ -1109,6 +1297,11 @@ def c7r_phase_a(ctx: Any, args: Mapping[str, Any]) -> Mapping[str, Any]:
         )
     if operation == "model_catalog":
         return _with_evidence_summary(_model_catalog())
+    if operation == "direct_admission_probe":
+        requested_model = args.get("model")
+        if requested_model is not None and not isinstance(requested_model, str):
+            raise C7RPhaseAError("MODEL_MUST_BE_STRING")
+        return _with_evidence_summary(_direct_admission_probe(requested_model))
     if operation == "inference":
         requested_model = args.get("model")
         if requested_model is not None and not isinstance(requested_model, str):
