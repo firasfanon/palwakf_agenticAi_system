@@ -378,6 +378,7 @@ if ([string]$runtimeIdentityReadback.executor.executor_id -ne $ExecutorId) {
 if ([string]$runtimeIdentityReadback.authority_public_keys_path -ne $TrustStorePath) {
   throw 'C7R_RUNTIME_TRUST_STORE_BINDING_FAILED'
 }
+Set-ServiceEnvironmentEntry 'PALWAKF_CODEX_EXECUTABLE' $CodexExecutable
 
 Start-Service -Name $ServiceName
 (Get-Service -Name $ServiceName).WaitForStatus(
@@ -399,6 +400,9 @@ $preflight = Invoke-SignedTask "C7R-PREFLIGHT-$stamp" 'preflight'
 if ($preflight.Safe.codex_version -ne '0.159.1') { throw 'C7R_CODEX_VERSION_GATE_FAILED' }
 if ($preflight.Safe.agentic_source_head -ne $AgenticExpectedHead.ToLowerInvariant()) {
   throw 'C7R_RUNTIME_HEAD_GATE_FAILED'
+}
+if ($preflight.Safe.binary_sha256_matches_pinned_asset -ne $true) {
+  throw 'C7R_CODEX_BINARY_SHA_GATE_FAILED'
 }
 if ($preflight.Safe.normal_openai_api_key_required -ne $false) {
   throw 'NORMAL_API_KEY_REQUIREMENT_DETECTED'
