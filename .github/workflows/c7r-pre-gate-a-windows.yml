@@ -1,0 +1,70 @@
+name: C7R Pre-Gate A Windows Validation
+
+on:
+  push:
+    branches:
+      - task/AGENTIC-C7R-PRE-GATE-A-PHASE-A-CAPABILITY-V1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  phase-a-windows:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install Agentic runtime
+        shell: pwsh
+        run: python -m pip install -e ".[dev,windows]"
+      - name: Focused C7R tests
+        shell: pwsh
+        run: >-
+          python -m pytest -q
+          backend/tests/test_c7r_phase_a_v1.py
+          backend/tests/test_c7r_trust_rotation_v1.py
+          backend/tests/test_outbound_local_executor_v1.py
+          backend/tests/test_outbound_capabilities_v1.py
+      - name: Windows DPAPI credential smoke
+        shell: pwsh
+        run: |
+          @'
+          import tempfile
+          from pathlib import Path
+          from palwakf_local_agents.windows_protected_secret_v1 import (
+              read_windows_protected_text,
+              write_windows_protected_text,
+          )
+
+          with tempfile.TemporaryDirectory() as tmp:
+              path = Path(tmp) / "credential.dpapi"
+              secret = "PALWAKF_C7R_DPAPI_SMOKE"
+              write_windows_protected_text(str(path), secret)
+              assert read_windows_protected_text(str(path)) == secret
+              raw = path.read_text(encoding="utf-8")
+              assert secret not in raw
+              print("C7R_CREDENTIAL_DPAPI=PASS")
+          '@ | python -
+      - name: Parse bootstrap coordinator
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path "scripts/Bootstrap-PalWakfC7RPreGateA.ps1"),
+            [ref]$tokens,
+            [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Error $_.Message }
+            exit 1
+          }
+          Write-Host "C7R_BOOTSTRAP_WINDOWS_PARSE=PASS"
+      - name: Compile C7R runtime
+        shell: pwsh
+        run: python -m compileall -q backend/src/palwakf_local_agents/c7r_phase_a_v1.py backend/src/palwakf_local_agents/windows_protected_secret_v1.py
