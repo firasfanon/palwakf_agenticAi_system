@@ -357,42 +357,32 @@ def _oauth_prepare() -> dict[str, Any]:
         challenge=challenge,
     )
     paths["auth_url"].write_text(url, encoding="utf-8")
-    command = [
-        str(_python_executable()),
-        "-m",
-        "palwakf_local_agents.c7r_phase_a_v1",
-        "callback",
-        "--port",
-        str(port),
-    ]
-    subprocess.Popen(
-        command,
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        close_fds=True,
-        creationflags=(
-            subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.DETACHED_PROCESS
-            if os.name == "nt"
-            else 0
-        ),
-    )
-    browser_launched = False
-    try:
-        browser_launched = bool(webbrowser.open(url, new=1, autoraise=True))
-    except Exception:
-        browser_launched = False
+    _start_callback_listener(port)
     _safe_write_json(
         paths["status"],
         {
             "state": "OAUTH_PENDING",
             "updated_at": datetime.now(UTC).isoformat(),
             "browser_launch_attempted": True,
-            "browser_launch_reported_success": browser_launched,
+            "browser_launch_reported_success": False,
             "callback_port": port,
             "tokens_exposed": False,
         },
     )
+    browser_launched = False
+    try:
+        browser_launched = bool(webbrowser.open(url, new=1, autoraise=True))
+    except Exception:
+        browser_launched = False
+    current_status = _read_json(paths["status"]) or {}
+    if current_status.get("state") == "OAUTH_PENDING":
+        current_status.update(
+            {
+                "updated_at": datetime.now(UTC).isoformat(),
+                "browser_launch_reported_success": browser_launched,
+            }
+        )
+        _safe_write_json(paths["status"], current_status)
     return {
         "operation": "oauth_prepare",
         "state": "OAUTH_PENDING",
@@ -545,10 +535,59 @@ def _complete_oauth_callback(params: Mapping[str, list[str]]) -> dict[str, Any]:
     return registration
 
 
-def _run_callback_server(port: int) -> None:
+def _run_callback_server(
+    port: int,
+    *,
+    ready: threading.Event | None = None,
+) -> None:
     server = http.server.ThreadingHTTPServer(("127.0.0.1", port), _CallbackHandler)
     server.timeout = 600
+    if ready is not None:
+        ready.set()
     server.handle_request()
+
+
+def _start_callback_listener(port: int) -> threading.Thread:
+    ready = threading.Event()
+    startup_errors: queue.Queue[Exception] = queue.Queue(maxsize=1)
+
+    def serve() -> None:
+        try:
+            _run_callback_server(port, ready=ready)
+        except Exception as exc:
+            try:
+                startup_errors.put_nowait(exc)
+            except queue.Full:
+                pass
+            if ready.is_set():
+                _safe_write_json(
+                    _paths()["status"],
+                    {
+                        "state": "OAUTH_FAILED",
+                        "error": f"OAUTH_CALLBACK_SERVER_FAILED:{type(exc).__name__}",
+                        "updated_at": datetime.now(UTC).isoformat(),
+                        "tokens_exposed": False,
+                    },
+                )
+            ready.set()
+
+    thread = threading.Thread(
+        target=serve,
+        name=f"palwakf-c7r-oauth-callback-{port}",
+        daemon=True,
+    )
+    thread.start()
+    if not ready.wait(timeout=5):
+        raise C7RPhaseAError("OAUTH_CALLBACK_LISTENER_START_TIMEOUT")
+    try:
+        startup_error = startup_errors.get_nowait()
+    except queue.Empty:
+        startup_error = None
+    if startup_error is not None:
+        raise C7RPhaseAError(
+            f"OAUTH_CALLBACK_LISTENER_START_FAILED:{type(startup_error).__name__}"
+        ) from startup_error
+    return thread
 
 
 @contextmanager

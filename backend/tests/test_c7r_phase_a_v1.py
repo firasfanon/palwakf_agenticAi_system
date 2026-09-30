@@ -185,3 +185,105 @@ def test_evidence_summary_has_no_oauth_url_or_token_fields() -> None:
     assert "access_token" not in summary
     assert "refresh_token" not in summary
     assert "id_token" not in summary
+
+
+def test_oauth_prepare_starts_in_process_callback_listener(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    state_root = tmp_path / "c7r"
+    monkeypatch.setattr(c7r, "_state_root", lambda: state_root)
+    monkeypatch.setattr(
+        c7r,
+        "_stable_host_id",
+        lambda: "urn:uuid:11111111-1111-4111-8111-111111111111",
+    )
+    monkeypatch.setattr(c7r, "_protected_read_json", lambda _path: None)
+    monkeypatch.setattr(c7r, "_protected_write_json", lambda _path, _value: None)
+    monkeypatch.setattr(c7r, "_reserve_loopback_port", lambda: 48125)
+    seen: dict[str, int] = {}
+
+    def start_listener(port: int) -> object:
+        seen["port"] = port
+        return object()
+
+    monkeypatch.setattr(c7r, "_start_callback_listener", start_listener)
+
+    def open_browser(*_args, **_kwargs) -> bool:
+        pending_status = json.loads(
+            (state_root / "status.json").read_text(encoding="utf-8")
+        )
+        assert pending_status["state"] == "OAUTH_PENDING"
+        c7r._safe_write_json(
+            state_root / "status.json",
+            {
+                "state": "OAUTH_AUTHENTICATED",
+                "tokens_exposed": False,
+            },
+        )
+        return True
+
+    monkeypatch.setattr(c7r.webbrowser, "open", open_browser)
+
+    result = c7r._oauth_prepare()
+    final_status = json.loads(
+        (state_root / "status.json").read_text(encoding="utf-8")
+    )
+
+    assert seen == {"port": 48125}
+    assert result["state"] == "OAUTH_PENDING"
+    assert result["callback_port"] == 48125
+    assert result["browser_launch_reported_success"] is True
+    assert final_status["state"] == "OAUTH_AUTHENTICATED"
+
+
+def test_callback_listener_reports_ready_in_process(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    seen: dict[str, int] = {}
+
+    def fake_server(port: int, *, ready=None) -> None:
+        seen["port"] = port
+        assert ready is not None
+        ready.set()
+
+    monkeypatch.setattr(c7r, "_run_callback_server", fake_server)
+
+    thread = c7r._start_callback_listener(48126)
+    thread.join(timeout=1)
+
+    assert seen == {"port": 48126}
+    assert not thread.is_alive()
+
+
+def test_callback_listener_start_failure_fails_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fail_server(_port: int, *, ready=None) -> None:
+        raise OSError("bind failed")
+
+    monkeypatch.setattr(c7r, "_run_callback_server", fail_server)
+
+    with pytest.raises(
+        c7r.C7RPhaseAError,
+        match="OAUTH_CALLBACK_LISTENER_START_FAILED:OSError",
+    ):
+        c7r._start_callback_listener(48127)
+
+
+def test_callback_listener_binds_loopback_before_return() -> None:
+    port = c7r._reserve_loopback_port()
+    thread = c7r._start_callback_listener(port)
+
+    with c7r.socket.create_connection(("127.0.0.1", port), timeout=2) as sock:
+        sock.sendall(
+            b"GET /not-auth-callback HTTP/1.1\r\n"
+            b"Host: 127.0.0.1\r\n"
+            b"Connection: close\r\n\r\n"
+        )
+        response = sock.recv(1024)
+
+    thread.join(timeout=2)
+
+    assert b"404" in response
+    assert not thread.is_alive()
