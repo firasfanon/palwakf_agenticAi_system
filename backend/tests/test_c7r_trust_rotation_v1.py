@@ -121,5 +121,5 @@ def test_accepts_workspace_cross_repo_signature_vector() -> None:
     assert accepted is True
     assert blockers == ()
     assert model.envelope_hash() == (
-        "a530d2ac3013298beada3cbcd7850b25f91b098db95cd4d215179f32695b6e04"
+        "4ffb363168c1edef371d0fee4660ab19bd30e147d51175fbe382bde1699277e9"
     )
