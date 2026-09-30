@@ -97,6 +97,12 @@ jobs:
           if ($text -notmatch [regex]::Escape('$ErrorActionPreference = ''Continue''')) {
             throw 'C7R_NATIVE_STDERR_EXITCODE_CLASSIFICATION_MISSING'
           }
+          if ($text -match [regex]::Escape('Set-Content -LiteralPath $temp -Encoding UTF8')) {
+            throw 'C7R_BOOTSTRAP_JSON_UTF8_BOM_WRITER_FORBIDDEN'
+          }
+          if ($text -notmatch [regex]::Escape('[System.Text.UTF8Encoding]::new($false)')) {
+            throw 'C7R_BOOTSTRAP_UTF8_NO_BOM_WRITER_MISSING'
+          }
           @'
           from pathlib import Path
           from palwakf_local_agents.outbound_capabilities_v1 import default_capability_registry_v1
