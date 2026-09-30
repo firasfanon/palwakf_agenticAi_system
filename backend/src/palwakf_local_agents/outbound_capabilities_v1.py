@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Literal, Mapping
 
-from palwakf_local_agents.c7r_phase_a_v1 import c7r_phase_a
+from palwakf_local_agents.c7r_phase_a_v1 import C7RPhaseAError, c7r_phase_a
 
 
 MutationClass = Literal["READ_ONLY", "TEMP_MUTATION", "SOURCE_WRITE", "SERVICE_MUTATION"]
@@ -108,6 +108,16 @@ def _rooted(path: str, allowed_roots: tuple[str, ...]) -> Path:
     if not any(target == root or root in target.parents for root in roots):
         raise CapabilityError("PATH_OUTSIDE_ALLOWED_ROOTS")
     return target
+
+
+def c7r_phase_a_handler(
+    ctx: CapabilityContextV1,
+    args: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    try:
+        return c7r_phase_a(ctx, args)
+    except C7RPhaseAError as exc:
+        raise CapabilityError(str(exc)) from exc
 
 
 def device_hostname(ctx: CapabilityContextV1, args: Mapping[str, Any]) -> Mapping[str, Any]:
@@ -267,7 +277,7 @@ def default_capability_registry_v1() -> CapabilityRegistryV1:
         CapabilityDescriptorV1("git.commit", "SOURCE_WRITE", git_commit, idempotency_class="NON_IDEMPOTENT"),
         CapabilityDescriptorV1("git.push_task_branch", "SOURCE_WRITE", git_push_task_branch, idempotency_class="NON_IDEMPOTENT"),
         CapabilityDescriptorV1("git.remote_sha_readback", "READ_ONLY", git_remote_sha_readback),
-        CapabilityDescriptorV1("c7r.phase_a", "SERVICE_MUTATION", c7r_phase_a, idempotency_class="STATEFUL_GOVERNED"),
+        CapabilityDescriptorV1("c7r.phase_a", "SERVICE_MUTATION", c7r_phase_a_handler, idempotency_class="STATEFUL_GOVERNED"),
     )
     placeholders = tuple(
         CapabilityDescriptorV1(f"legacy.{name}", "READ_ONLY", device_hostname, aliases=(name,), admitted=False)
