@@ -163,8 +163,9 @@ def _authorization_url(
         "code_challenge": challenge,
         "code_challenge_method": "S256",
         "ext_agent_host_id": host_id,
-        "agent_name_hint": AGENT_NAME,
     }
+    if client_id == "dynamic_agent_client":
+        params["agent_name_hint"] = AGENT_NAME
     return AUTHORIZATION_ENDPOINT + "?" + urllib.parse.urlencode(params)
 
 
