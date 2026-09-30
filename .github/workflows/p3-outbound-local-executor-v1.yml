@@ -5,6 +5,7 @@ on:
     branches:
       - task/AGENTIC-P3-OUTBOUND-LOCAL-EXECUTOR-V1
       - task/AGENTIC-CODEX-EXECUTION-PLANE-ADMISSION-V1
+      - task/AGENTIC-C7R-PRE-GATE-A-PHASE-A-CAPABILITY-V1
   workflow_dispatch:
 
 permissions:
