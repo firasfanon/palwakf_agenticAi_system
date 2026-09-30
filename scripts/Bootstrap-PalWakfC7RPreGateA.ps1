@@ -291,6 +291,19 @@ if (-not (Test-Path -LiteralPath $MachinePythonExe -PathType Leaf)) {
 }
 $ghAuth = Invoke-NativeCaptured 'gh' @('auth','status')
 if ($ghAuth.ExitCode -ne 0) { throw 'GH_AUTH_NOT_READY' }
+if (-not (Test-Path -LiteralPath $CodexExecutable -PathType Leaf)) {
+  throw "CODEX_EXECUTABLE_NOT_FOUND:$CodexExecutable"
+}
+$codexVersion = Invoke-NativeCaptured $CodexExecutable @('--version')
+if ($codexVersion.ExitCode -ne 0) { throw 'CODEX_VERSION_READBACK_FAILED' }
+$codexVersionText = ($codexVersion.Output -join $NewLine).Trim()
+if ($codexVersionText -notmatch '0\.159\.1') {
+  throw "CODEX_VERSION_MISMATCH:$codexVersionText"
+}
+$codexHash = (Get-FileHash -LiteralPath $CodexExecutable -Algorithm SHA256).Hash.ToLowerInvariant()
+if ($codexHash -ne $CodexWindowsSha256) {
+  throw "CODEX_BINARY_SHA256_MISMATCH:$codexHash"
+}
 
 New-Item -ItemType Directory -Force -Path $BootstrapRoot | Out-Null
 New-DetachedWorktree $WorkspaceRepo $WorkspaceBranch $WorkspaceExpectedHead $WorkspaceWorktree
