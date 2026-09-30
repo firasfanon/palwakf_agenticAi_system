@@ -162,7 +162,7 @@ class OutboundWorkerV1:
 
 
 def load_worker_config(path: str) -> WorkerConfigV1:
-    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    data = json.loads(Path(path).read_text(encoding="utf-8-sig"))
     return WorkerConfigV1.model_validate(data)
 
 
