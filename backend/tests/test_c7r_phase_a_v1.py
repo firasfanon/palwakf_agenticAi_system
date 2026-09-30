@@ -38,6 +38,21 @@ def test_authorization_url_matches_openai_oss_pkce_contract() -> None:
     assert "chatgpt.tokens.use.direct" in query["scope"][0].split()
 
 
+def test_reauthorization_omits_initial_agent_name_hint() -> None:
+    url = c7r._authorization_url(
+        client_id="oaiapp_existing_client",
+        redirect_uri="http://127.0.0.1:48124/auth/callback",
+        host_id="urn:uuid:11111111-1111-4111-8111-111111111111",
+        state="state-value",
+        nonce="nonce-value",
+        challenge="challenge-value",
+    )
+    query = parse_qs(urlsplit(url).query)
+
+    assert query["client_id"] == ["oaiapp_existing_client"]
+    assert "agent_name_hint" not in query
+
+
 def test_app_server_command_uses_chatgpt_plan_responses_provider() -> None:
     command = c7r._app_server_command(Path("codex.exe"))
     joined = "\n".join(command)
