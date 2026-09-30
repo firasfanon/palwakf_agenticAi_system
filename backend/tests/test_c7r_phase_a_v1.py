@@ -132,7 +132,7 @@ def test_c7r_handler_fails_closed_outside_admitted_operation(tmp_path: Path) -> 
     ctx = SimpleNamespace(
         scope_paths=(str(tmp_path),),
         allowed_roots=(str(tmp_path),),
-        executor_id="DESKTOP-S5A0JSB",
+        executor_id="Futuer-IT",
         repository_id="firasfanon/palwakf_agenticAi_system",
         task_branch="task/AGENTIC-C7R-PRE-GATE-A-PHASE-A-CAPABILITY-V1",
         expected_base_sha="1" * 40,
