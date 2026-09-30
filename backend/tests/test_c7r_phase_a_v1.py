@@ -68,6 +68,16 @@ def test_preflight_returns_redacted_safe_evidence(
     monkeypatch.setattr(c7r, "_state_root", lambda: state_root)
     monkeypatch.setattr(
         c7r,
+        "_runtime_admission",
+        lambda _ctx: {
+            "agentic_source_head": "1" * 40,
+            "agentic_source_branch": "task/AGENTIC-C7R-PRE-GATE-A-PHASE-A-CAPABILITY-V1",
+            "capability_id": "c7r.phase_a",
+            "admitted_at": "2026-09-30T00:00:00+00:00",
+        },
+    )
+    monkeypatch.setattr(
+        c7r,
         "_codex_preflight",
         lambda: {
             "codex_version": "0.159.1",
