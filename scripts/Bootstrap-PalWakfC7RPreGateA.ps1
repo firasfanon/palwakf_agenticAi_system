@@ -8,8 +8,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$WorkspaceBranch = 'task/WORKSPACE-C7R-PRE-GATE-A-AUTHORITY-ISSUER-V1'
-$AgenticBranch = 'task/AGENTIC-C7R-PRE-GATE-A-PHASE-A-CAPABILITY-V1'
+$WorkspaceBranch = 'task/WORKSPACE-C7R-EXECUTOR-ID-FUTUER-IT-V1'
+$AgenticBranch = 'task/AGENTIC-C7R-EXECUTOR-ID-FUTUER-IT-V1'
 $Repository = 'firasfanon/palwakf_agenticAi_system'
 $ExecutorId = 'Futuer-IT'
 $ServiceName = 'PalWakfOutboundLocalExecutorV1'
