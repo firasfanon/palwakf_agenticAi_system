@@ -90,7 +90,7 @@ def _safe_write_json(path: Path, value: Mapping[str, Any]) -> None:
 def _read_json(path: Path) -> dict[str, Any] | None:
     if not path.is_file():
         return None
-    value = json.loads(path.read_text(encoding="utf-8"))
+    value = json.loads(path.read_text(encoding="utf-8-sig"))
     if not isinstance(value, dict):
         raise C7RPhaseAError("JSON_STATE_MUST_BE_OBJECT")
     return value
