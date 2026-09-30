@@ -80,7 +80,7 @@ def test_ack_completed_task_closes_issue_as_completed():
 
 
 def _task_issue(number: int = 91, *, state: str = "open"):
-    body = BEGIN + "\n" + '{"task_id":"t1","executor_id":"DESKTOP-S5A0JSB"}' + "\n" + END
+    body = BEGIN + "\n" + '{"task_id":"t1","executor_id":"Futuer-IT"}' + "\n" + END
     return {
         "number": number,
         "id": number + 1000,
@@ -112,7 +112,7 @@ def test_claim_rechecks_live_issue_state_before_posting_claim():
         raise AssertionError((method, path, body))
 
     transport._request = fake_request  # type: ignore[method-assign]
-    assert transport.claim_task(executor_id="DESKTOP-S5A0JSB") is None
+    assert transport.claim_task(executor_id="Futuer-IT") is None
     assert not any(method == "POST" for method, _, _ in calls)
 
 
@@ -143,5 +143,5 @@ def test_claim_skips_issue_with_terminal_ack_even_if_open_list_is_stale():
         raise AssertionError((method, path, body))
 
     transport._request = fake_request  # type: ignore[method-assign]
-    assert transport.claim_task(executor_id="DESKTOP-S5A0JSB") is None
+    assert transport.claim_task(executor_id="Futuer-IT") is None
     assert not any(method == "POST" for method, _, _ in calls)
