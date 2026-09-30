@@ -313,6 +313,34 @@ if ($preflight.Safe.normal_openai_api_key_required -ne $false) {
   throw 'NORMAL_API_KEY_REQUIREMENT_DETECTED'
 }
 
+if (-not (Test-Path -LiteralPath $RuntimeConfigPath -PathType Leaf)) {
+  throw "RUNTIME_CONFIG_NOT_FOUND:$RuntimeConfigPath"
+}
+$runtimeConfig = Get-Content -LiteralPath $RuntimeConfigPath -Raw | ConvertFrom-Json
+$runtimeConfig.authority_public_keys_b64 = @{}
+$runtimeConfig | Add-Member -NotePropertyName authority_public_keys_path -NotePropertyValue $TrustStorePath -Force
+Write-AtomicJson $RuntimeConfigPath $runtimeConfig
+
+$terminalTrust = @{}
+$terminalTrust[$AuthorityKeyId] = [string]$public.public_key_b64
+Write-AtomicJson $TrustStorePath $terminalTrust
+
+Restart-Service -Name $ServiceName -Force
+(Get-Service -Name $ServiceName).WaitForStatus(
+  [System.ServiceProcess.ServiceControllerStatus]::Running,
+  [TimeSpan]::FromSeconds(30)
+)
+
+$runtimeConfigReadback = Get-Content -LiteralPath $RuntimeConfigPath -Raw | ConvertFrom-Json
+if ($runtimeConfigReadback.authority_public_keys_b64.PSObject.Properties.Count -ne 0) {
+  throw 'LEGACY_EMBEDDED_AUTHORITY_KEYS_NOT_TERMINALIZED'
+}
+$trustReadback = Get-Content -LiteralPath $TrustStorePath -Raw | ConvertFrom-Json
+$trustNames = @($trustReadback.PSObject.Properties.Name)
+if ($trustNames.Count -ne 1 -or $trustNames[0] -ne $AuthorityKeyId) {
+  throw 'DURABLE_AUTHORITY_TRUST_ROOT_READBACK_FAILED'
+}
+
 $oauthPrepare = Invoke-SignedTask "C7R-OAUTH-PREPARE-$stamp" 'oauth_prepare'
 if ($oauthPrepare.Safe.state -ne 'OAUTH_PENDING') { throw 'C7R_OAUTH_PREPARE_GATE_FAILED' }
 
@@ -380,6 +408,7 @@ if ($inference.Safe.normal_codex_api_key_used -ne $false) {
   P3_CLOSED_PASS_PRESERVED = $true
   WORKSPACE_AUTHORITY_ISSUER = 'PASS'
   PUBLIC_TRUST_KEY_ADMISSION = 'PASS'
+  LEGACY_ACCEPTANCE_TRUST_TERMINALIZED = 'PASS'
   C7R_PHASE_A_CAPABILITY = 'PASS'
   C7R_1_AUTHENTICATION_REGISTRATION = 'PASS'
   C7R_2_PROTECTED_CREDENTIAL_MANAGER = 'PASS'
