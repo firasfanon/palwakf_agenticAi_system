@@ -26,8 +26,35 @@ class WorkerConfigV1(BaseModel):
     executor: ExecutorSettingsV1
     transport: GitHubIssueTransportSettingsV1
     authority_public_keys_b64: dict[str, str] = Field(min_length=1)
+    authority_public_keys_path: str | None = (
+        r"C:\ProgramData\PalWakf\outbound_executor_v1\authority-keys.json"
+    )
     poll_seconds: int = Field(default=15, ge=5, le=300)
     heartbeat_seconds: int = Field(default=60, ge=30, le=3600)
+
+    def effective_authority_public_keys(self) -> dict[str, str]:
+        keys = dict(self.authority_public_keys_b64)
+        path = self.authority_public_keys_path
+        if not path:
+            return keys
+        target = Path(path)
+        if not target.is_file():
+            return keys
+        try:
+            extra = json.loads(target.read_text(encoding="utf-8-sig"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise RuntimeError("AUTHORITY_PUBLIC_KEY_STORE_INVALID") from exc
+        if not isinstance(extra, dict) or not all(
+            isinstance(key_id, str) and isinstance(value, str)
+            for key_id, value in extra.items()
+        ):
+            raise RuntimeError("AUTHORITY_PUBLIC_KEY_STORE_INVALID")
+        for key_id, value in extra.items():
+            prior = keys.get(key_id)
+            if prior is not None and prior != value:
+                raise RuntimeError(f"AUTHORITY_PUBLIC_KEY_CONFLICT:{key_id}")
+            keys[key_id] = value
+        return keys
 
 
 class OutboundWorkerV1:
@@ -36,7 +63,9 @@ class OutboundWorkerV1:
         self.transport = GitHubIssueTransportV1(config.transport)
         self.executor = PalWakfOutboundLocalExecutorV1(
             settings=config.executor,
-            authority_verifier=Ed25519AuthorityVerifierV1(config.authority_public_keys_b64),
+            authority_verifier=Ed25519AuthorityVerifierV1(
+                config.effective_authority_public_keys()
+            ),
             registry=default_capability_registry_v1(),
         )
         self._stop = threading.Event()
