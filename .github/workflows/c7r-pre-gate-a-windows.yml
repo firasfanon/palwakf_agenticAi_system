@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - task/AGENTIC-C7R-PRE-GATE-A-PHASE-A-CAPABILITY-V1
+      - task/AGENTIC-C7R-EXECUTOR-ID-FUTUER-IT-V1
   workflow_dispatch:
 
 permissions:
