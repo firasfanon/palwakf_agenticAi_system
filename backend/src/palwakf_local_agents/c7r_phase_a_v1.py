@@ -267,6 +267,12 @@ def _runtime_admission(ctx: Any) -> dict[str, Any]:
 
 
 def _codex_executable() -> Path:
+    explicit = os.environ.get("PALWAKF_CODEX_EXECUTABLE")
+    if explicit:
+        candidate_path = Path(explicit).expanduser()
+        if not candidate_path.is_file():
+            raise C7RPhaseAError("CODEX_EXPLICIT_PATH_INVALID")
+        return candidate_path.resolve()
     candidate = shutil.which("codex")
     if not candidate:
         raise C7RPhaseAError("CODEX_NOT_FOUND")
