@@ -88,6 +88,9 @@ jobs:
           if ($text -notmatch 'C7R_RUNTIME_TRUST_STORE_BINDING_FAILED') {
             throw 'C7R_RUNTIME_TRUST_STORE_READBACK_GATE_MISSING'
           }
+          if ($text -match '\[string\[\]\]\$Args') {
+            throw 'C7R_POWERSHELL_AUTOMATIC_ARGS_PARAMETER_COLLISION'
+          }
           @'
           from pathlib import Path
           from palwakf_local_agents.outbound_capabilities_v1 import default_capability_registry_v1
