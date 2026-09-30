@@ -67,6 +67,31 @@ def test_app_server_command_uses_chatgpt_plan_responses_provider() -> None:
     assert "CODEX_API_KEY" not in joined
 
 
+def test_codex_executable_prefers_explicit_provider_path(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    codex = tmp_path / "codex.exe"
+    codex.write_bytes(b"provider")
+    monkeypatch.setenv("PALWAKF_CODEX_EXECUTABLE", str(codex))
+    monkeypatch.setattr(c7r.shutil, "which", lambda _name: None)
+
+    assert c7r._codex_executable() == codex.resolve()
+
+
+def test_codex_executable_invalid_explicit_provider_path_fails_closed(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setenv(
+        "PALWAKF_CODEX_EXECUTABLE",
+        str(tmp_path / "missing-codex.exe"),
+    )
+
+    with pytest.raises(c7r.C7RPhaseAError, match="CODEX_EXPLICIT_PATH_INVALID"):
+        c7r._codex_executable()
+
+
 def test_registry_admits_only_named_c7r_service_mutation() -> None:
     descriptor = default_capability_registry_v1().resolve("c7r.phase_a")
 
