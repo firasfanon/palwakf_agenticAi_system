@@ -31,10 +31,10 @@ function Assert-Command([string]$Name) {
   }
 }
 
-function Invoke-Git([string]$Repo, [string[]]$Args) {
-  $output = @(& git -C $Repo @Args 2>&1)
+function Invoke-Git([string]$Repo, [string[]]$GitArgs) {
+  $output = @(& git -C $Repo @GitArgs 2>&1)
   if ($LASTEXITCODE -ne 0) {
-    throw "GIT_FAILED:$($Args -join ' '):$($output -join ' ')"
+    throw "GIT_FAILED:$($GitArgs -join ' '):$($output -join ' ')"
   }
   return ($output -join $NewLine).Trim()
 }
@@ -79,12 +79,12 @@ function Write-AtomicJson([string]$Path, [object]$Value) {
   Move-Item -LiteralPath $temp -Destination $Path -Force
 }
 
-function Invoke-AuthorityCli([string[]]$Args) {
+function Invoke-AuthorityCli([string[]]$AuthorityArgs) {
   $old = $env:PYTHONPATH
   try {
     $env:PYTHONPATH = Join-Path $WorkspaceWorktree 'orchestrator\src'
     $script = Join-Path $WorkspaceWorktree 'orchestrator\scripts\c7r_authority_cli.py'
-    $output = @(& $MachinePythonExe $script --key-path $AuthorityKeyPath --key-id $AuthorityKeyId @Args 2>&1)
+    $output = @(& $MachinePythonExe $script --key-path $AuthorityKeyPath --key-id $AuthorityKeyId @AuthorityArgs 2>&1)
     if ($LASTEXITCODE -ne 0) {
       throw "AUTHORITY_CLI_FAILED:$($output -join ' ')"
     }
