@@ -7,7 +7,12 @@ from pathlib import Path
 
 import pytest
 
-from palwakf_local_agents.outbound_contracts_v1 import (\n    Ed25519AuthorityVerifierV1,\n    TaskEnvelopeV1,\n)\nfrom palwakf_local_agents.outbound_worker_v1 import WorkerConfigV1\n
+from palwakf_local_agents.outbound_contracts_v1 import (
+    Ed25519AuthorityVerifierV1,
+    TaskEnvelopeV1,
+)
+from palwakf_local_agents.outbound_worker_v1 import WorkerConfigV1
+
 
 def _config(path: Path | None) -> WorkerConfigV1:
     return WorkerConfigV1.model_validate(
