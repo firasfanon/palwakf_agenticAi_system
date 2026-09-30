@@ -11,7 +11,7 @@ from palwakf_local_agents.outbound_capabilities_v1 import (
 
 def ctx(tmp_path: Path):
     return CapabilityContextV1(
-        executor_id="DESKTOP-S5A0JSB",
+        executor_id="Futuer-IT",
         repository_id="repo",
         allowed_roots=(str(tmp_path),),
         scope_paths=(str(tmp_path),),
