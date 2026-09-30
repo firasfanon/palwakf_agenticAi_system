@@ -91,7 +91,12 @@ function Write-AtomicJson([string]$Path, [object]$Value) {
   $parent = Split-Path -Parent $Path
   New-Item -ItemType Directory -Force -Path $parent | Out-Null
   $temp = "$Path.tmp"
-  $Value | ConvertTo-Json -Depth 20 -Compress | Set-Content -LiteralPath $temp -Encoding UTF8
+  $json = $Value | ConvertTo-Json -Depth 20 -Compress
+  [System.IO.File]::WriteAllText(
+    $temp,
+    $json,
+    [System.Text.UTF8Encoding]::new($false)
+  )
   Move-Item -LiteralPath $temp -Destination $Path -Force
 }
 
