@@ -304,10 +304,14 @@ if (-not ($runtimeConfig.executor.PSObject.Properties.Name -contains 'executor_i
   throw 'RUNTIME_CONFIG_EXECUTOR_ID_MISSING'
 }
 $runtimeConfig.executor.executor_id = $ExecutorId
+$runtimeConfig | Add-Member -NotePropertyName authority_public_keys_path -NotePropertyValue $TrustStorePath -Force
 Write-AtomicJson $RuntimeConfigPath $runtimeConfig
 $runtimeIdentityReadback = Get-Content -LiteralPath $RuntimeConfigPath -Raw | ConvertFrom-Json
 if ([string]$runtimeIdentityReadback.executor.executor_id -ne $ExecutorId) {
   throw 'C7R_RUNTIME_EXECUTOR_ID_MIGRATION_FAILED'
+}
+if ([string]$runtimeIdentityReadback.authority_public_keys_path -ne $TrustStorePath) {
+  throw 'C7R_RUNTIME_TRUST_STORE_BINDING_FAILED'
 }
 
 Start-Service -Name $ServiceName
