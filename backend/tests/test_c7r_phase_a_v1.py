@@ -287,3 +287,50 @@ def test_callback_listener_binds_loopback_before_return() -> None:
 
     assert b"404" in response
     assert not thread.is_alive()
+
+
+def test_safe_turn_error_classification_uses_closed_string_variant() -> None:
+    kind, status = c7r._safe_turn_error_classification(
+        {
+            "error": {
+                "message": "must never be emitted",
+                "codexErrorInfo": "unauthorized",
+            }
+        }
+    )
+
+    assert kind == "unauthorized"
+    assert status is None
+
+
+def test_safe_turn_error_classification_reads_only_structured_http_status() -> None:
+    kind, status = c7r._safe_turn_error_classification(
+        {
+            "error": {
+                "message": "must never be emitted",
+                "additionalDetails": "must never be emitted",
+                "codexErrorInfo": {
+                    "responseStreamConnectionFailed": {
+                        "httpStatusCode": 403,
+                    }
+                },
+            }
+        }
+    )
+
+    assert kind == "responseStreamConnectionFailed"
+    assert status == 403
+
+
+def test_safe_turn_error_classification_fails_closed_without_codex_info() -> None:
+    kind, status = c7r._safe_turn_error_classification(
+        {
+            "error": {
+                "message": "provider-specific secret-looking text",
+                "additionalDetails": "not part of the classifier",
+            }
+        }
+    )
+
+    assert kind == "unclassified"
+    assert status is None

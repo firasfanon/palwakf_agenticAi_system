@@ -777,6 +777,38 @@ class _JsonLineClient:
                 return item
 
 
+def _safe_turn_error_classification(
+    turn: Mapping[str, Any],
+) -> tuple[str, int | None]:
+    error = turn.get("error")
+    if not isinstance(error, Mapping):
+        return "unclassified", None
+    info = error.get("codexErrorInfo")
+    if isinstance(info, str):
+        return info, None
+    if not isinstance(info, Mapping):
+        return "unclassified", None
+    structured_kinds = (
+        "httpConnectionFailed",
+        "responseStreamConnectionFailed",
+        "responseStreamDisconnected",
+        "responseTooManyFailedAttempts",
+        "activeTurnNotSteerable",
+    )
+    for kind in structured_kinds:
+        payload = info.get(kind)
+        if not isinstance(payload, Mapping):
+            continue
+        raw_status = payload.get("httpStatusCode")
+        status_code = (
+            int(raw_status)
+            if isinstance(raw_status, int) and not isinstance(raw_status, bool)
+            else None
+        )
+        return kind, status_code
+    return "unclassified", None
+
+
 def _synthetic_inference(repo_root: str, requested_model: str | None) -> dict[str, Any]:
     preflight = _codex_preflight()
     credentials = _credentials_with_refresh()
@@ -874,12 +906,23 @@ def _synthetic_inference(repo_root: str, requested_model: str | None) -> dict[st
         status = turn.get("status") if isinstance(turn, dict) else None
         if status != "completed":
             detail = json.dumps(completed, ensure_ascii=False)
+            error_kind, http_status = _safe_turn_error_classification(
+                turn if isinstance(turn, Mapping) else {}
+            )
             if (
-                "subscription_sharing_usage_limit_exceeded" in detail
+                error_kind == "usageLimitExceeded"
+                or "subscription_sharing_usage_limit_exceeded" in detail
                 or "subscription_sharing_usage_unavailable" in detail
             ):
                 raise C7RPhaseAError("QUOTA_HOLD")
-            raise C7RPhaseAError(f"TURN_NOT_COMPLETED:{status}")
+            status_suffix = (
+                f":HTTP_{http_status}"
+                if http_status is not None
+                else ":HTTP_NONE"
+            )
+            raise C7RPhaseAError(
+                f"TURN_FAILED_CODE:{error_kind}{status_suffix}"
+            )
         text = "".join(output_parts).strip()
         if SYNTHETIC_EXPECTED not in text:
             raise C7RPhaseAError("SYNTHETIC_RESPONSE_MISMATCH")
