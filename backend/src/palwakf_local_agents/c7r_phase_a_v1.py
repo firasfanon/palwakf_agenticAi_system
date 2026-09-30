@@ -840,6 +840,80 @@ def _synthetic_inference(repo_root: str, requested_model: str | None) -> dict[st
                 process.kill()
 
 
+def _with_evidence_summary(result: Mapping[str, Any]) -> Mapping[str, Any]:
+    value = dict(result)
+    operation = str(value.get("operation") or "unknown")
+    safe: dict[str, Any] = {"operation": operation, "tokens_exposed": False}
+    if operation == "preflight":
+        codex = value.get("codex")
+        oauth = value.get("oauth")
+        if isinstance(codex, Mapping):
+            safe.update(
+                {
+                    "codex_version": codex.get("codex_version"),
+                    "binary_sha256_matches_pinned_asset": codex.get(
+                        "binary_sha256_matches_pinned_asset"
+                    ),
+                    "normal_openai_api_key_required": False,
+                    "normal_codex_api_key_required": False,
+                }
+            )
+        if isinstance(oauth, Mapping):
+            safe.update(
+                {
+                    "credential_present": oauth.get("credential_present"),
+                    "registration_present": oauth.get("registration_present"),
+                }
+            )
+    elif operation == "oauth_prepare":
+        safe.update(
+            {
+                "state": value.get("state"),
+                "browser_launch_attempted": value.get("browser_launch_attempted"),
+                "browser_launch_reported_success": value.get(
+                    "browser_launch_reported_success"
+                ),
+                "manual_terminal_required": False,
+            }
+        )
+    elif operation == "oauth_status":
+        status = value.get("status")
+        credentials = value.get("credentials")
+        if isinstance(status, Mapping):
+            safe["state"] = status.get("state")
+        if isinstance(credentials, Mapping):
+            safe.update(
+                {
+                    "credential_present": credentials.get("credential_present"),
+                    "registration_present": credentials.get("registration_present"),
+                    "scopes": credentials.get("scopes", []),
+                    "access_expires_at": credentials.get("access_expires_at"),
+                }
+            )
+    elif operation == "inference":
+        safe.update(
+            {
+                "state": value.get("state"),
+                "provider": value.get("provider"),
+                "wire_api": value.get("wire_api"),
+                "store": value.get("store"),
+                "stream": value.get("stream"),
+                "websockets": value.get("websockets"),
+                "model": value.get("model"),
+                "synthetic_response": value.get("synthetic_response"),
+                "normal_openai_api_key_used": False,
+                "normal_codex_api_key_used": False,
+            }
+        )
+    value["_evidence_summary"] = json.dumps(
+        safe,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return value
+
+
 def c7r_phase_a(ctx: Any, args: Mapping[str, Any]) -> Mapping[str, Any]:
     operation = str(args.get("operation") or "")
     allowed = {"preflight", "oauth_prepare", "oauth_status", "inference"}
@@ -851,30 +925,34 @@ def c7r_phase_a(ctx: Any, args: Mapping[str, Any]) -> Mapping[str, Any]:
         raise C7RPhaseAError("C7R_STATE_ROOT_NOT_IN_TASK_SCOPE")
 
     if operation == "preflight":
-        return {
-            "operation": "preflight",
-            "state_root": str(root),
-            "codex": _codex_preflight(),
-            "oauth": _credential_status(),
-            "tokens_exposed": False,
-            "manual_terminal_required": False,
-        }
+        return _with_evidence_summary(
+            {
+                "operation": "preflight",
+                "state_root": str(root),
+                "codex": _codex_preflight(),
+                "oauth": _credential_status(),
+                "tokens_exposed": False,
+                "manual_terminal_required": False,
+            }
+        )
     if operation == "oauth_prepare":
-        return _oauth_prepare()
+        return _with_evidence_summary(_oauth_prepare())
     if operation == "oauth_status":
         status = _read_json(_paths()["status"]) or {"state": "NOT_STARTED"}
-        return {
-            "operation": "oauth_status",
-            "status": status,
-            "credentials": _credential_status(),
-            "tokens_exposed": False,
-        }
+        return _with_evidence_summary(
+            {
+                "operation": "oauth_status",
+                "status": status,
+                "credentials": _credential_status(),
+                "tokens_exposed": False,
+            }
+        )
     if operation == "inference":
         requested_model = args.get("model")
         if requested_model is not None and not isinstance(requested_model, str):
             raise C7RPhaseAError("MODEL_MUST_BE_STRING")
         repo_root = str(Path(ctx.allowed_roots[0]).resolve())
-        return _synthetic_inference(repo_root, requested_model)
+        return _with_evidence_summary(_synthetic_inference(repo_root, requested_model))
     raise AssertionError(operation)
 
 
