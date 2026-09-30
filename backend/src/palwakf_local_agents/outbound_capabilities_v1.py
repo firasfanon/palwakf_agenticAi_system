@@ -7,6 +7,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Literal, Mapping
 
+from palwakf_local_agents.c7r_phase_a_v1 import c7r_phase_a
+
 
 MutationClass = Literal["READ_ONLY", "TEMP_MUTATION", "SOURCE_WRITE", "SERVICE_MUTATION"]
 
@@ -265,6 +267,7 @@ def default_capability_registry_v1() -> CapabilityRegistryV1:
         CapabilityDescriptorV1("git.commit", "SOURCE_WRITE", git_commit, idempotency_class="NON_IDEMPOTENT"),
         CapabilityDescriptorV1("git.push_task_branch", "SOURCE_WRITE", git_push_task_branch, idempotency_class="NON_IDEMPOTENT"),
         CapabilityDescriptorV1("git.remote_sha_readback", "READ_ONLY", git_remote_sha_readback),
+        CapabilityDescriptorV1("c7r.phase_a", "SERVICE_MUTATION", c7r_phase_a, idempotency_class="STATEFUL_GOVERNED"),
     )
     placeholders = tuple(
         CapabilityDescriptorV1(f"legacy.{name}", "READ_ONLY", device_hostname, aliases=(name,), admitted=False)
