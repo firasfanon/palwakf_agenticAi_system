@@ -293,6 +293,23 @@ $marker = [ordered]@{
 }
 Write-AtomicJson $RuntimeMarkerPath $marker
 
+if (-not (Test-Path -LiteralPath $RuntimeConfigPath -PathType Leaf)) {
+  throw "RUNTIME_CONFIG_NOT_FOUND:$RuntimeConfigPath"
+}
+$runtimeConfig = Get-Content -LiteralPath $RuntimeConfigPath -Raw | ConvertFrom-Json
+if (-not ($runtimeConfig.PSObject.Properties.Name -contains 'executor')) {
+  throw 'RUNTIME_CONFIG_EXECUTOR_SECTION_MISSING'
+}
+if (-not ($runtimeConfig.executor.PSObject.Properties.Name -contains 'executor_id')) {
+  throw 'RUNTIME_CONFIG_EXECUTOR_ID_MISSING'
+}
+$runtimeConfig.executor.executor_id = $ExecutorId
+Write-AtomicJson $RuntimeConfigPath $runtimeConfig
+$runtimeIdentityReadback = Get-Content -LiteralPath $RuntimeConfigPath -Raw | ConvertFrom-Json
+if ([string]$runtimeIdentityReadback.executor.executor_id -ne $ExecutorId) {
+  throw 'C7R_RUNTIME_EXECUTOR_ID_MIGRATION_FAILED'
+}
+
 Start-Service -Name $ServiceName
 (Get-Service -Name $ServiceName).WaitForStatus(
   [System.ServiceProcess.ServiceControllerStatus]::Running,
