@@ -31,12 +31,28 @@ function Assert-Command([string]$Name) {
   }
 }
 
-function Invoke-Git([string]$Repo, [string[]]$GitArgs) {
-  $output = @(& git -C $Repo @GitArgs 2>&1)
-  if ($LASTEXITCODE -ne 0) {
-    throw "GIT_FAILED:$($GitArgs -join ' '):$($output -join ' ')"
+function Invoke-NativeCaptured([string]$FilePath, [string[]]$CommandArgs) {
+  $prior = $ErrorActionPreference
+  try {
+    $ErrorActionPreference = 'Continue'
+    $output = @(& $FilePath @CommandArgs 2>&1)
+    $exitCode = $LASTEXITCODE
   }
-  return ($output -join $NewLine).Trim()
+  finally {
+    $ErrorActionPreference = $prior
+  }
+  return [pscustomobject]@{
+    ExitCode = $exitCode
+    Output = @($output)
+  }
+}
+
+function Invoke-Git([string]$Repo, [string[]]$GitArgs) {
+  $native = Invoke-NativeCaptured 'git' (@('-C',$Repo) + $GitArgs)
+  if ($native.ExitCode -ne 0) {
+    throw "GIT_FAILED:$($GitArgs -join ' '):$($native.Output -join ' ')"
+  }
+  return ($native.Output -join $NewLine).Trim()
 }
 
 function Get-RemoteHead([string]$Repo, [string]$Branch) {
@@ -84,11 +100,13 @@ function Invoke-AuthorityCli([string[]]$AuthorityArgs) {
   try {
     $env:PYTHONPATH = Join-Path $WorkspaceWorktree 'orchestrator\src'
     $script = Join-Path $WorkspaceWorktree 'orchestrator\scripts\c7r_authority_cli.py'
-    $output = @(& $MachinePythonExe $script --key-path $AuthorityKeyPath --key-id $AuthorityKeyId @AuthorityArgs 2>&1)
-    if ($LASTEXITCODE -ne 0) {
-      throw "AUTHORITY_CLI_FAILED:$($output -join ' ')"
+    $native = Invoke-NativeCaptured $MachinePythonExe (
+      @($script,'--key-path',$AuthorityKeyPath,'--key-id',$AuthorityKeyId) + $AuthorityArgs
+    )
+    if ($native.ExitCode -ne 0) {
+      throw "AUTHORITY_CLI_FAILED:$($native.Output -join ' ')"
     }
-    return ($output -join $NewLine).Trim()
+    return ($native.Output -join $NewLine).Trim()
   }
   finally {
     $env:PYTHONPATH = $old
@@ -181,9 +199,11 @@ function New-SignedTaskFile(
 }
 
 function Publish-Task([string]$Title, [string]$BodyFile) {
-  $url = @(& gh issue create --repo $Repository --title $Title --body-file $BodyFile --label question 2>&1)
-  if ($LASTEXITCODE -ne 0) { throw "GITHUB_ISSUE_CREATE_FAILED:$($url -join ' ')" }
-  $match = [regex]::Match(($url -join $NewLine), '/issues/(\d+)')
+  $native = Invoke-NativeCaptured 'gh' @(
+    'issue','create','--repo',$Repository,'--title',$Title,'--body-file',$BodyFile,'--label','question'
+  )
+  if ($native.ExitCode -ne 0) { throw "GITHUB_ISSUE_CREATE_FAILED:$($native.Output -join ' ')" }
+  $match = [regex]::Match(($native.Output -join $NewLine), '/issues/(\d+)')
   if (-not $match.Success) { throw "GITHUB_ISSUE_NUMBER_NOT_FOUND" }
   return [int]$match.Groups[1].Value
 }
@@ -191,9 +211,11 @@ function Publish-Task([string]$Title, [string]$BodyFile) {
 function Wait-ExecutorResult([int]$IssueNumber, [int]$TimeoutSeconds = 180) {
   $deadline = [DateTimeOffset]::UtcNow.AddSeconds($TimeoutSeconds)
   while([DateTimeOffset]::UtcNow -lt $deadline) {
-    $raw = @(& gh api "repos/$Repository/issues/$IssueNumber/comments?per_page=100" 2>&1)
-    if ($LASTEXITCODE -ne 0) { throw "GITHUB_COMMENTS_READ_FAILED:$IssueNumber" }
-    $comments = (($raw -join $NewLine) | ConvertFrom-Json)
+    $native = Invoke-NativeCaptured 'gh' @(
+      'api',"repos/$Repository/issues/$IssueNumber/comments?per_page=100"
+    )
+    if ($native.ExitCode -ne 0) { throw "GITHUB_COMMENTS_READ_FAILED:$IssueNumber" }
+    $comments = (($native.Output -join $NewLine) | ConvertFrom-Json)
     foreach($comment in $comments) {
       $body = [string]$comment.body
       if ($body.StartsWith('PALWAKF_RESULT_V1')) {
@@ -240,8 +262,8 @@ Assert-Command gh
 if (-not (Test-Path -LiteralPath $MachinePythonExe -PathType Leaf)) {
   throw "MACHINE_PYTHON_NOT_FOUND:$MachinePythonExe"
 }
-& gh auth status *> $null
-if ($LASTEXITCODE -ne 0) { throw 'GH_AUTH_NOT_READY' }
+$ghAuth = Invoke-NativeCaptured 'gh' @('auth','status')
+if ($ghAuth.ExitCode -ne 0) { throw 'GH_AUTH_NOT_READY' }
 
 New-Item -ItemType Directory -Force -Path $BootstrapRoot | Out-Null
 New-DetachedWorktree $WorkspaceRepo $WorkspaceBranch $WorkspaceExpectedHead $WorkspaceWorktree
@@ -256,8 +278,11 @@ if ($service.Status -ne 'Stopped') {
   )
 }
 
-& $MachinePythonExe -m pip install --upgrade "$AgenticWorktree[windows]"
-if ($LASTEXITCODE -ne 0) { throw 'AGENTIC_RUNTIME_PACKAGE_INSTALL_FAILED' }
+$pip = Invoke-NativeCaptured $MachinePythonExe @(
+  '-m','pip','install','--upgrade',"$AgenticWorktree[windows]"
+)
+$pip.Output | ForEach-Object { Write-Output $_ }
+if ($pip.ExitCode -ne 0) { throw 'AGENTIC_RUNTIME_PACKAGE_INSTALL_FAILED' }
 
 $publicJson = Invoke-AuthorityCli @('public')
 $public = $publicJson | ConvertFrom-Json
@@ -320,8 +345,12 @@ Start-Service -Name $ServiceName
   [TimeSpan]::FromSeconds(30)
 )
 
-$registry = @(& $MachinePythonExe -c "from palwakf_local_agents.outbound_capabilities_v1 import default_capability_registry_v1 as r; d=r().resolve('c7r.phase_a'); print(d.capability_id+'|'+d.mutation_class)" 2>&1)
-if ($LASTEXITCODE -ne 0 -or ($registry -join '') -ne 'c7r.phase_a|SERVICE_MUTATION') {
+$registryNative = Invoke-NativeCaptured $MachinePythonExe @(
+  '-c',
+  "from palwakf_local_agents.outbound_capabilities_v1 import default_capability_registry_v1 as r; d=r().resolve('c7r.phase_a'); print(d.capability_id+'|'+d.mutation_class)"
+)
+$registry = @($registryNative.Output)
+if ($registryNative.ExitCode -ne 0 -or ($registry -join '') -ne 'c7r.phase_a|SERVICE_MUTATION') {
   throw "C7R_RUNTIME_CAPABILITY_READBACK_FAILED:$($registry -join ' ')"
 }
 
