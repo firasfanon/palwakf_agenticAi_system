@@ -33,6 +33,26 @@ function Assert-Command([string]$Name) {
   }
 }
 
+function Set-ServiceEnvironmentEntry([string]$Name, [string]$Value) {
+  $serviceKey = "HKLM:\SYSTEM\CurrentControlSet\Services\$ServiceName"
+  $property = Get-ItemProperty -Path $serviceKey -Name Environment -ErrorAction SilentlyContinue
+  $existing = @()
+  if ($null -ne $property -and $null -ne $property.Environment) {
+    $existing = @($property.Environment)
+  }
+  $prefix = "$Name="
+  $filtered = @(
+    $existing | Where-Object {
+      -not ([string]$_).StartsWith(
+        $prefix,
+        [System.StringComparison]::OrdinalIgnoreCase
+      )
+    }
+  )
+  $updated = @($filtered + ($prefix + $Value))
+  New-ItemProperty -Path $serviceKey -Name Environment -PropertyType MultiString -Value $updated -Force | Out-Null
+}
+
 function Invoke-NativeCaptured([string]$FilePath, [string[]]$CommandArgs) {
   $prior = $ErrorActionPreference
   try {
