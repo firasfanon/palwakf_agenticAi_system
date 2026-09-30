@@ -73,6 +73,7 @@ def _paths() -> dict[str, Path]:
         "status": root / "status.json",
         "auth_url": root / "authorization-url.txt",
         "refresh_lock": root / "refresh.lock",
+        "runtime_admission": root / "runtime-admission.json",
     }
 
 
@@ -242,6 +243,26 @@ def _credential_status() -> dict[str, Any]:
             }
         )
     return safe
+
+
+def _runtime_admission(ctx: Any) -> dict[str, Any]:
+    marker = _read_json(_paths()["runtime_admission"])
+    if not marker:
+        raise C7RPhaseAError("C7R_RUNTIME_ADMISSION_MARKER_MISSING")
+    source_head = str(marker.get("agentic_source_head") or "").lower()
+    source_branch = str(marker.get("agentic_source_branch") or "")
+    if source_head != str(ctx.expected_base_sha).lower():
+        raise C7RPhaseAError("C7R_RUNTIME_SOURCE_HEAD_MISMATCH")
+    if source_branch != str(ctx.task_branch):
+        raise C7RPhaseAError("C7R_RUNTIME_SOURCE_BRANCH_MISMATCH")
+    if marker.get("capability_id") != "c7r.phase_a":
+        raise C7RPhaseAError("C7R_RUNTIME_CAPABILITY_MARKER_INVALID")
+    return {
+        "agentic_source_head": source_head,
+        "agentic_source_branch": source_branch,
+        "capability_id": "c7r.phase_a",
+        "admitted_at": marker.get("admitted_at"),
+    }
 
 
 def _codex_executable() -> Path:
@@ -845,8 +866,17 @@ def _with_evidence_summary(result: Mapping[str, Any]) -> Mapping[str, Any]:
     operation = str(value.get("operation") or "unknown")
     safe: dict[str, Any] = {"operation": operation, "tokens_exposed": False}
     if operation == "preflight":
+        runtime = value.get("runtime")
         codex = value.get("codex")
         oauth = value.get("oauth")
+        if isinstance(runtime, Mapping):
+            safe.update(
+                {
+                    "agentic_source_head": runtime.get("agentic_source_head"),
+                    "agentic_source_branch": runtime.get("agentic_source_branch"),
+                    "runtime_capability": runtime.get("capability_id"),
+                }
+            )
         if isinstance(codex, Mapping):
             safe.update(
                 {
@@ -923,12 +953,14 @@ def c7r_phase_a(ctx: Any, args: Mapping[str, Any]) -> Mapping[str, Any]:
     scopes = {Path(item).resolve() for item in ctx.scope_paths}
     if root not in scopes:
         raise C7RPhaseAError("C7R_STATE_ROOT_NOT_IN_TASK_SCOPE")
+    runtime = _runtime_admission(ctx)
 
     if operation == "preflight":
         return _with_evidence_summary(
             {
                 "operation": "preflight",
                 "state_root": str(root),
+                "runtime": runtime,
                 "codex": _codex_preflight(),
                 "oauth": _credential_status(),
                 "tokens_exposed": False,
@@ -951,8 +983,7 @@ def c7r_phase_a(ctx: Any, args: Mapping[str, Any]) -> Mapping[str, Any]:
         requested_model = args.get("model")
         if requested_model is not None and not isinstance(requested_model, str):
             raise C7RPhaseAError("MODEL_MUST_BE_STRING")
-        repo_root = str(Path(ctx.allowed_roots[0]).resolve())
-        return _with_evidence_summary(_synthetic_inference(repo_root, requested_model))
+        return _with_evidence_summary(_synthetic_inference(str(root), requested_model))
     raise AssertionError(operation)
 
 
