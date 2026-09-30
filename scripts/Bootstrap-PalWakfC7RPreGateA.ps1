@@ -19,6 +19,7 @@ $AgenticWorktree = Join-Path $BootstrapRoot 'agentic'
 $AuthorityRoot = 'C:\ProgramData\PalWakf\workspace_authority_v1'
 $AuthorityKeyPath = Join-Path $AuthorityRoot 'secrets\workspace-ed25519.dpapi'
 $TrustStorePath = 'C:\ProgramData\PalWakf\outbound_executor_v1\authority-keys.json'
+$RuntimeConfigPath = 'C:\\ProgramData\\PalWakf\\outbound_executor_v1\\config.json'
 $C7RRoot = 'C:\ProgramData\PalWakf\c7r_phase_a_v1'
 $RuntimeMarkerPath = Join-Path $C7RRoot 'runtime-admission.json'
 $NewLine = [Environment]::NewLine
