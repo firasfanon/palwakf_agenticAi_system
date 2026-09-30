@@ -86,7 +86,7 @@ def test_preflight_returns_redacted_safe_evidence(
         "_runtime_admission",
         lambda _ctx: {
             "agentic_source_head": "1" * 40,
-            "agentic_source_branch": "task/AGENTIC-C7R-PRE-GATE-A-PHASE-A-CAPABILITY-V1",
+            "agentic_source_branch": "task/AGENTIC-C7R-EXECUTOR-ID-FUTUER-IT-V1",
             "capability_id": "c7r.phase_a",
             "admitted_at": "2026-09-30T00:00:00+00:00",
         },
@@ -134,7 +134,7 @@ def test_c7r_handler_fails_closed_outside_admitted_operation(tmp_path: Path) -> 
         allowed_roots=(str(tmp_path),),
         executor_id="Futuer-IT",
         repository_id="firasfanon/palwakf_agenticAi_system",
-        task_branch="task/AGENTIC-C7R-PRE-GATE-A-PHASE-A-CAPABILITY-V1",
+        task_branch="task/AGENTIC-C7R-EXECUTOR-ID-FUTUER-IT-V1",
         expected_base_sha="1" * 40,
         max_output_bytes=131072,
     )
