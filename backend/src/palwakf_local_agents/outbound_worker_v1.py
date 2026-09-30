@@ -36,9 +36,13 @@ class WorkerConfigV1(BaseModel):
         keys = dict(self.authority_public_keys_b64)
         path = self.authority_public_keys_path
         if not path:
+            if not keys:
+                raise RuntimeError("AUTHORITY_PUBLIC_KEY_STORE_EMPTY")
             return keys
         target = Path(path)
         if not target.is_file():
+            if not keys:
+                raise RuntimeError("AUTHORITY_PUBLIC_KEY_STORE_EMPTY")
             return keys
         try:
             extra = json.loads(target.read_text(encoding="utf-8-sig"))
