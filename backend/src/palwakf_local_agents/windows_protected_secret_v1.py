@@ -52,7 +52,7 @@ def write_windows_protected_text(path: str, value: str) -> None:
     except ImportError as exc:
         raise ProtectedSecretError("PYWIN32_REQUIRED_FOR_PROTECTED_SECRET") from exc
     try:
-        _, encrypted = win32crypt.CryptProtectData(
+        encrypted = win32crypt.CryptProtectData(
             value.encode("utf-8"),
             "PalWakf protected secret",
             None,
