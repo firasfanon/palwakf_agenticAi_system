@@ -23,7 +23,7 @@ def _worker_with(transport):
     worker.config = SimpleNamespace(
         heartbeat_seconds=0,
         poll_seconds=5,
-        executor=SimpleNamespace(executor_id="DESKTOP-S5A0JSB"),
+        executor=SimpleNamespace(executor_id="Futuer-IT"),
     )
     worker.transport = transport
     worker.executor = SimpleNamespace()
@@ -53,7 +53,7 @@ def test_worker_survives_claim_poll_transport_failure():
             return None
 
         def claim_task(self, *, executor_id):
-            assert executor_id == "DESKTOP-S5A0JSB"
+            assert executor_id == "Futuer-IT"
             raise TransportError("offline")
 
     worker = _worker_with(Transport())
