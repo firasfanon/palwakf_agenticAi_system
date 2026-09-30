@@ -53,7 +53,7 @@ function New-DetachedWorktree(
   Invoke-Git $Repo @('fetch','--no-tags','origin',"refs/heads/$Branch") | Out-Null
   $remote = Get-RemoteHead $Repo $Branch
   if ($remote -ne $ExpectedHead.ToLowerInvariant()) {
-    throw "REMOTE_HEAD_DRIFT:$Branch:EXPECTED=$ExpectedHead:ACTUAL=$remote"
+    throw "REMOTE_HEAD_DRIFT:${Branch}:EXPECTED=${ExpectedHead}:ACTUAL=${remote}"
   }
   Invoke-Git $Repo @('cat-file','-e',"$ExpectedHead^{commit}") | Out-Null
   if (Test-Path -LiteralPath $Path) {
@@ -225,7 +225,7 @@ function Invoke-SignedTask(
   $issue = Publish-Task "C7R Phase A - $Operation - $TaskId" $signed.Body
   $evidence = Wait-ExecutorResult $issue
   if ($evidence.exit_state -ne 'COMPLETED') {
-    throw "C7R_TASK_NOT_COMPLETED:$Operation:$($evidence.exit_state):$($evidence.blockers -join ',')"
+    throw "C7R_TASK_NOT_COMPLETED:${Operation}:$($evidence.exit_state):$($evidence.blockers -join ',')"
   }
   return [pscustomobject]@{
     Issue=$issue
