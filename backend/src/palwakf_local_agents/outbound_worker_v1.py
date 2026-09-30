@@ -25,7 +25,7 @@ class WorkerConfigV1(BaseModel):
 
     executor: ExecutorSettingsV1
     transport: GitHubIssueTransportSettingsV1
-    authority_public_keys_b64: dict[str, str] = Field(min_length=1)
+    authority_public_keys_b64: dict[str, str] = Field(default_factory=dict)
     authority_public_keys_path: str | None = (
         r"C:\ProgramData\PalWakf\outbound_executor_v1\authority-keys.json"
     )
@@ -54,6 +54,8 @@ class WorkerConfigV1(BaseModel):
             if prior is not None and prior != value:
                 raise RuntimeError(f"AUTHORITY_PUBLIC_KEY_CONFLICT:{key_id}")
             keys[key_id] = value
+        if not keys:
+            raise RuntimeError("AUTHORITY_PUBLIC_KEY_STORE_EMPTY")
         return keys
 
 
