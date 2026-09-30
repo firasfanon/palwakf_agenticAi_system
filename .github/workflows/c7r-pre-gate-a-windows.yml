@@ -65,6 +65,27 @@ jobs:
             exit 1
           }
           Write-Host "C7R_BOOTSTRAP_WINDOWS_PARSE=PASS"
+      - name: Bootstrap contract static gates
+        shell: pwsh
+        run: |
+          $text = Get-Content -LiteralPath "scripts/Bootstrap-PalWakfC7RPreGateA.ps1" -Raw
+          if ($text -notmatch [regex]::Escape('$RuntimeConfigPath =')) {
+            throw 'C7R_RUNTIME_CONFIG_PATH_DEFINITION_MISSING'
+          }
+          @'
+          from pathlib import Path
+          from palwakf_local_agents.outbound_capabilities_v1 import default_capability_registry_v1
+          from palwakf_local_agents.outbound_worker_v1 import load_worker_config
+
+          descriptor = default_capability_registry_v1().resolve("c7r.phase_a")
+          assert descriptor.mutation_class == "SERVICE_MUTATION"
+
+          worker_source = Path(
+              "backend/src/palwakf_local_agents/outbound_worker_v1.py"
+          ).read_text(encoding="utf-8")
+          assert 'read_text(encoding="utf-8-sig")' in worker_source
+          print("C7R_BOOTSTRAP_STATIC_CONTRACTS=PASS")
+          '@ | python -
       - name: Compile C7R runtime
         shell: pwsh
         run: python -m compileall -q backend/src/palwakf_local_agents/c7r_phase_a_v1.py backend/src/palwakf_local_agents/windows_protected_secret_v1.py
