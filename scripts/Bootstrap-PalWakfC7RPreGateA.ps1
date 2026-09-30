@@ -427,7 +427,7 @@ Restart-Service -Name $ServiceName -Force
 )
 
 $runtimeConfigReadback = Get-Content -LiteralPath $RuntimeConfigPath -Raw | ConvertFrom-Json
-if ($runtimeConfigReadback.authority_public_keys_b64.PSObject.Properties.Count -ne 0) {
+if (@($runtimeConfigReadback.authority_public_keys_b64.PSObject.Properties).Count -ne 0) {
   throw 'LEGACY_EMBEDDED_AUTHORITY_KEYS_NOT_TERMINALIZED'
 }
 $trustReadback = Get-Content -LiteralPath $TrustStorePath -Raw | ConvertFrom-Json
