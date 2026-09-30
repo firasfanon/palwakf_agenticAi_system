@@ -3,6 +3,7 @@ param(
   [Parameter(Mandatory=$true)][string]$AgenticRepo,
   [Parameter(Mandatory=$true)][string]$WorkspaceExpectedHead,
   [Parameter(Mandatory=$true)][string]$AgenticExpectedHead,
+  [Parameter(Mandatory=$true)][string]$CodexExecutable,
   [string]$MachinePythonExe = "C:\Program Files\Python311\python.exe",
   [string]$AuthorityKeyId = "workspace-c7r-pre-gate-a-v1"
 )
@@ -24,6 +25,7 @@ $C7RRoot = 'C:\ProgramData\PalWakf\c7r_phase_a_v1'
 $RuntimeMarkerPath = Join-Path $C7RRoot 'runtime-admission.json'
 $NewLine = [Environment]::NewLine
 $Fence = ([string][char]96) * 3
+$CodexWindowsSha256 = '1203922d910426522182b35a52402085d0955101bb585a87bd7c88110d8d68d8'
 
 function Assert-Command([string]$Name) {
   if (-not (Get-Command $Name -ErrorAction SilentlyContinue)) {
