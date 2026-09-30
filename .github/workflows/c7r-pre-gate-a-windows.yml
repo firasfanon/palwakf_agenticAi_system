@@ -115,6 +115,9 @@ jobs:
           if ($text -notmatch 'C7R_CODEX_BINARY_SHA_GATE_FAILED') {
             throw 'C7R_CODEX_BINARY_SHA_GATE_MISSING'
           }
+          if ($text -notmatch [regex]::Escape('@($runtimeConfigReadback.authority_public_keys_b64.PSObject.Properties).Count')) {
+            throw 'C7R_EMPTY_TRUST_COUNT_COLLECTION_GATE_MISSING'
+          }
           @'
           from pathlib import Path
           from palwakf_local_agents.outbound_capabilities_v1 import default_capability_registry_v1
