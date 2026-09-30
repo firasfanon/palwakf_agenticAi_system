@@ -101,8 +101,8 @@ def test_accepts_workspace_cross_repo_signature_vector() -> None:
         "algorithm": "ED25519",
         "key_id": "workspace-c7r-vector-v1",
         "signature_b64": (
-            "52Hhw/BM5qUB1cpZ+x5J2uEqT5ysbvXNihcOJJdw8H5AbSdJdns7Zy/FvxhQ75+G"
-            "705ezzwAHhAYAKFH44fuBA=="
+            "UQbmru3zCrWwnwPKK9XttAOtORK1y2Fm1BkUO7hhj7nfhlHGOV+gZA+PgRL4ISVn"
+            "RmBB9Cr28ouXIK4pRbrWDw=="
         ),
     }
     model = TaskEnvelopeV1.model_validate(envelope)
@@ -121,5 +121,5 @@ def test_accepts_workspace_cross_repo_signature_vector() -> None:
     assert accepted is True
     assert blockers == ()
     assert model.envelope_hash() == (
-        "4ffb363168c1edef371d0fee4660ab19bd30e147d51175fbe382bde1699277e9"
+        "4e9dbae83aad4ffe172bbd7eecac166cb2b65835dba4c77ac31fc60761a9a924"
     )
