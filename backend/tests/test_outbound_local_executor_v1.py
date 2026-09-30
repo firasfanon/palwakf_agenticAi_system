@@ -44,7 +44,7 @@ def envelope(tmp_path: Path, private: Ed25519PrivateKey, capability="mesh_hostna
     )
     unsigned = TaskEnvelopeV1.model_construct(
         contract_version="1.0", task_id="task-outbound-v1", project_id="PALWAKF_AGENTIC_AI_SYSTEM",
-        project_aliases=(), repository_id="firasfanon/palwakf_agenticAi_system", executor_id="DESKTOP-S5A0JSB",
+        project_aliases=(), repository_id="firasfanon/palwakf_agenticAi_system", executor_id="Futuer-IT",
         task_type="READ_ONLY_PROOF", mutation_class=mutation, requested_capability_id=capability,
         arguments=arguments or {}, authority_ref="workspace://authority/1", execution_lease=lease,
         expected_remote_head=BASE, expected_base_sha=BASE, task_branch=BRANCH,
@@ -62,7 +62,7 @@ def envelope(tmp_path: Path, private: Ed25519PrivateKey, capability="mesh_hostna
 
 def executor(tmp_path: Path, public_b64: str):
     settings = ExecutorSettingsV1(
-        executor_id="DESKTOP-S5A0JSB",
+        executor_id="Futuer-IT",
         repository_id="firasfanon/palwakf_agenticAi_system",
         allowed_roots=(str(tmp_path),),
         state_dir=str(tmp_path / "state"),
