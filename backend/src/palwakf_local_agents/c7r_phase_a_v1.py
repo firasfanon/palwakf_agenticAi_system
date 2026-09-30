@@ -673,7 +673,7 @@ def _credentials_with_refresh() -> dict[str, Any]:
         return credentials
 
 
-def _model_for_account(access_token: str, requested: str | None) -> str:
+def _account_model_catalog(access_token: str) -> list[dict[str, str]]:
     request = urllib.request.Request(
         RESOURCE + "/models",
         method="GET",
@@ -693,13 +693,32 @@ def _model_for_account(access_token: str, requested: str | None) -> str:
     models = payload.get("models") if isinstance(payload, dict) else None
     if not isinstance(models, list):
         raise C7RPhaseAError("MODEL_LIST_INVALID")
-    visible = [
-        item for item in models
-        if isinstance(item, dict)
-        and item.get("visibility") == "list"
-        and isinstance(item.get("slug"), str)
-    ]
-    slugs = [str(item["slug"]) for item in visible]
+    visible: list[dict[str, str]] = []
+    for item in models:
+        if (
+            not isinstance(item, dict)
+            or item.get("visibility") != "list"
+            or not isinstance(item.get("slug"), str)
+        ):
+            continue
+        slug = str(item["slug"])
+        display_name = item.get("display_name")
+        visible.append(
+            {
+                "slug": slug,
+                "display_name": (
+                    str(display_name)
+                    if isinstance(display_name, str) and display_name
+                    else slug
+                ),
+            }
+        )
+    return visible
+
+
+def _model_for_account(access_token: str, requested: str | None) -> str:
+    visible = _account_model_catalog(access_token)
+    slugs = [item["slug"] for item in visible]
     if requested:
         if requested not in slugs:
             raise C7RPhaseAError("REQUESTED_MODEL_NOT_IN_ACCOUNT_CATALOG")
@@ -707,6 +726,18 @@ def _model_for_account(access_token: str, requested: str | None) -> str:
     if not slugs:
         raise C7RPhaseAError("NO_VISIBLE_CHATGPT_PLAN_MODEL")
     return slugs[0]
+
+
+def _model_catalog() -> dict[str, Any]:
+    credentials = _credentials_with_refresh()
+    visible = _account_model_catalog(str(credentials["access_token"]))
+    return {
+        "operation": "model_catalog",
+        "state": "COMPLETED",
+        "visible_model_count": len(visible),
+        "models": visible[:50],
+        "tokens_exposed": False,
+    }
 
 
 def _app_server_command(codex: Path) -> list[str]:
@@ -1009,6 +1040,14 @@ def _with_evidence_summary(result: Mapping[str, Any]) -> Mapping[str, Any]:
                     "access_expires_at": credentials.get("access_expires_at"),
                 }
             )
+    elif operation == "model_catalog":
+        safe.update(
+            {
+                "state": value.get("state"),
+                "visible_model_count": value.get("visible_model_count"),
+                "models": value.get("models", []),
+            }
+        )
     elif operation == "inference":
         safe.update(
             {
@@ -1035,7 +1074,7 @@ def _with_evidence_summary(result: Mapping[str, Any]) -> Mapping[str, Any]:
 
 def c7r_phase_a(ctx: Any, args: Mapping[str, Any]) -> Mapping[str, Any]:
     operation = str(args.get("operation") or "")
-    allowed = {"preflight", "oauth_prepare", "oauth_status", "inference"}
+    allowed = {"preflight", "oauth_prepare", "oauth_status", "model_catalog", "inference"}
     if operation not in allowed:
         raise C7RPhaseAError("C7R_OPERATION_NOT_ADMITTED")
     root = _state_root().resolve()
@@ -1068,6 +1107,8 @@ def c7r_phase_a(ctx: Any, args: Mapping[str, Any]) -> Mapping[str, Any]:
                 "tokens_exposed": False,
             }
         )
+    if operation == "model_catalog":
+        return _with_evidence_summary(_model_catalog())
     if operation == "inference":
         requested_model = args.get("model")
         if requested_model is not None and not isinstance(requested_model, str):

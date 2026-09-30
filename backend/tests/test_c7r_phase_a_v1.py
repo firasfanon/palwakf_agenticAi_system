@@ -334,3 +334,89 @@ def test_safe_turn_error_classification_fails_closed_without_codex_info() -> Non
 
     assert kind == "unclassified"
     assert status is None
+
+
+def test_model_catalog_returns_only_safe_visible_models(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        c7r,
+        "_credentials_with_refresh",
+        lambda: {"access_token": "secret-access-token"},
+    )
+
+    def catalog(access_token: str) -> list[dict[str, str]]:
+        assert access_token == "secret-access-token"
+        return [
+            {"slug": "model-a", "display_name": "Model A"},
+            {"slug": "model-b", "display_name": "Model B"},
+        ]
+
+    monkeypatch.setattr(c7r, "_account_model_catalog", catalog)
+
+    result = c7r._model_catalog()
+
+    assert result["state"] == "COMPLETED"
+    assert result["visible_model_count"] == 2
+    assert result["models"][0]["slug"] == "model-a"
+    assert result["tokens_exposed"] is False
+    assert "access_token" not in result
+
+
+def test_model_catalog_evidence_summary_contains_no_credentials() -> None:
+    result = c7r._with_evidence_summary(
+        {
+            "operation": "model_catalog",
+            "state": "COMPLETED",
+            "visible_model_count": 1,
+            "models": [{"slug": "model-a", "display_name": "Model A"}],
+            "tokens_exposed": False,
+        }
+    )
+    summary = json.loads(str(result["_evidence_summary"]))
+
+    assert summary["operation"] == "model_catalog"
+    assert summary["visible_model_count"] == 1
+    assert summary["models"] == [
+        {"slug": "model-a", "display_name": "Model A"}
+    ]
+    assert "access_token" not in summary
+    assert summary["tokens_exposed"] is False
+
+
+def test_c7r_handler_admits_model_catalog(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    state_root = tmp_path / "c7r"
+    monkeypatch.setattr(c7r, "_state_root", lambda: state_root)
+    monkeypatch.setattr(
+        c7r,
+        "_runtime_admission",
+        lambda _ctx: {
+            "agentic_source_head": "1" * 40,
+            "agentic_source_branch": "task/test",
+            "capability_id": "c7r.phase_a",
+        },
+    )
+    monkeypatch.setattr(
+        c7r,
+        "_model_catalog",
+        lambda: {
+            "operation": "model_catalog",
+            "state": "COMPLETED",
+            "visible_model_count": 1,
+            "models": [{"slug": "model-a", "display_name": "Model A"}],
+            "tokens_exposed": False,
+        },
+    )
+    ctx = SimpleNamespace(
+        scope_paths=(str(state_root),),
+        allowed_roots=(str(tmp_path),),
+    )
+
+    result = c7r.c7r_phase_a(ctx, {"operation": "model_catalog"})
+    summary = json.loads(str(result["_evidence_summary"]))
+
+    assert summary["state"] == "COMPLETED"
+    assert summary["models"][0]["slug"] == "model-a"
