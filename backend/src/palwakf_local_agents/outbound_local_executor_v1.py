@@ -186,6 +186,22 @@ class PalWakfOutboundLocalExecutorV1:
             result = dict(descriptor.handler(context, envelope.arguments))
             encoded = json.dumps(result, ensure_ascii=False, sort_keys=True, default=str).encode("utf-8")
             stdout_summary = f"RESULT_SHA256={hashlib.sha256(encoded).hexdigest()};BYTES={len(encoded)}"
+            if descriptor.capability_id == "c7r.phase_a":
+                safe_summary = result.get("_evidence_summary")
+                if not isinstance(safe_summary, str) or not safe_summary or len(safe_summary) > 1600:
+                    raise CapabilityError("C7R_SAFE_EVIDENCE_SUMMARY_REQUIRED")
+                forbidden_markers = (
+                    "access_token",
+                    "refresh_token",
+                    "id_token",
+                    "authorization-url",
+                    "code_verifier",
+                    "signature_b64",
+                )
+                lowered = safe_summary.casefold()
+                if any(marker in lowered for marker in forbidden_markers):
+                    raise CapabilityError("C7R_SAFE_EVIDENCE_SUMMARY_REJECTED")
+                stdout_summary += ";SAFE=" + safe_summary
             exit_state = "COMPLETED"
             verification_state = "HANDLER_RETURNED"
         except Exception as exc:
