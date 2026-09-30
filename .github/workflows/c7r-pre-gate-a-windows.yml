@@ -94,7 +94,7 @@ jobs:
           if ($text -notmatch 'function Invoke-NativeCaptured') {
             throw 'C7R_NATIVE_CAPTURE_HELPER_MISSING'
           }
-          if ($text -notmatch "\$ErrorActionPreference = 'Continue'") {
+          if ($text -notmatch [regex]::Escape('$ErrorActionPreference = ''Continue''')) {
             throw 'C7R_NATIVE_STDERR_EXITCODE_CLASSIFICATION_MISSING'
           }
           @'
