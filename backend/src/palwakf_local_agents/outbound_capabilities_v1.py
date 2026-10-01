@@ -268,12 +268,23 @@ def audit_readback(ctx: CapabilityContextV1, args: Mapping[str, Any]) -> Mapping
 def default_capability_registry_v1(
     *,
     workspace_drive_adapter=None,
+    codex_provider=None,
 ) -> CapabilityRegistryV1:
+    from palwakf_local_agents.codex_provider_v1 import (
+        codex_provider_from_env,
+        extra_codex_capabilities_v1,
+    )
     from palwakf_local_agents.github_capabilities_v1 import (
         extra_github_capabilities_v1,
     )
     from palwakf_local_agents.workspace_drive_capabilities_v1 import (
         extra_workspace_drive_capabilities_v1,
+    )
+
+    effective_codex_provider = (
+        codex_provider
+        if codex_provider is not None
+        else codex_provider_from_env()
     )
 
     implemented = (
@@ -297,5 +308,6 @@ def default_capability_registry_v1(
         implemented
         + extra_github_capabilities_v1()
         + extra_workspace_drive_capabilities_v1(workspace_drive_adapter)
+        + extra_codex_capabilities_v1(effective_codex_provider)
         + placeholders
     )
