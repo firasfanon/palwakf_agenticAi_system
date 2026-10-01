@@ -258,6 +258,10 @@ class CompositeTaskTransportV1:
                 return transport, inner
         raise TransportError("COMPOSITE_TRANSPORT_NOT_FOUND")
 
+    def claim_transport_id(self, claimed: Mapping[str, Any]) -> str:
+        transport, _ = self._route(claimed)
+        return self._id(transport)
+
     def read_envelope(self, claimed: Mapping[str, Any]) -> Mapping[str, Any]:
         transport, inner = self._route(claimed)
         return transport.read_envelope(inner)
