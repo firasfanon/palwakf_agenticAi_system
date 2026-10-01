@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -14,7 +15,12 @@ from palwakf_local_agents.outbound_capabilities_v1 import (
 )
 
 
-def _ctx(root: Path, scope_paths: tuple[str, ...]) -> CapabilityContextV1:
+def _ctx(
+    root: Path,
+    scope_paths: tuple[str, ...],
+    *,
+    state_dir: Path | None = None,
+) -> CapabilityContextV1:
     return CapabilityContextV1(
         executor_id="Futuer-IT",
         repository_id="firasfanon/example",
@@ -23,6 +29,7 @@ def _ctx(root: Path, scope_paths: tuple[str, ...]) -> CapabilityContextV1:
         task_branch="task/SOVEREIGN-CHANNEL-TEST",
         expected_base_sha="1" * 40,
         max_output_bytes=131072,
+        state_dir=str(state_dir) if state_dir is not None else None,
     )
 
 
@@ -159,6 +166,176 @@ def test_patch_outside_scope_fails_closed(tmp_path: Path) -> None:
                 "repo_root": str(repo),
                 "paths": ["README.md"],
                 "unified_diff": patch,
+            },
+        )
+
+
+def _write_proposal_artifact(
+    state_dir: Path,
+    *,
+    before_head: str,
+    changed_files: list[str],
+    patch: str,
+) -> tuple[str, str]:
+    artifact_id = "a" * 32
+    root = state_dir / "capability-results"
+    root.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "schema_id": "palwakf.capability_result.codex_patch.v1",
+        "task_id": "codex-artifact-test",
+        "capability_id": "engineering.codex.patch_proposal",
+        "result": {
+            "provider": "codex-cli",
+            "mode": "READ_ONLY_PATCH_PROPOSAL",
+            "before_head": before_head,
+            "changed_files": changed_files,
+            "unified_diff": patch,
+            "summary": "proposal",
+            "tests": [],
+            "git_mutation_allowed": False,
+        },
+    }
+    data = json.dumps(
+        payload,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    digest = hashlib.sha256(data).hexdigest()
+    (root / f"{artifact_id}.json").write_bytes(data)
+    return f"local-result://{artifact_id}/{digest}", digest
+
+
+def test_executor_applies_verified_codex_proposal_artifact(tmp_path: Path) -> None:
+    repo = tmp_path / "repo-artifact"
+    repo.mkdir()
+    head = _init_repo(repo)
+    state_dir = tmp_path / "state"
+    patch = (
+        "--- a/src/allowed.txt\n"
+        "+++ b/src/allowed.txt\n"
+        "@@ -1 +1 @@\n"
+        "-before\n"
+        "+after-artifact\n"
+    )
+    proposal_ref, proposal_sha = _write_proposal_artifact(
+        state_dir,
+        before_head=head,
+        changed_files=["src/allowed.txt"],
+        patch=patch,
+    )
+    ctx = CapabilityContextV1(
+        executor_id="Futuer-IT",
+        repository_id="firasfanon/example",
+        allowed_roots=(str(repo),),
+        scope_paths=("src",),
+        task_branch="task/SOVEREIGN-CHANNEL-TEST",
+        expected_base_sha=head,
+        max_output_bytes=131072,
+        state_dir=str(state_dir),
+    )
+    result = source_apply_patch_bounded(
+        ctx,
+        {
+            "repo_root": str(repo),
+            "paths": ["src/allowed.txt"],
+            "proposal_ref": proposal_ref,
+            "proposal_sha256": proposal_sha,
+        },
+    )
+    assert (repo / "src" / "allowed.txt").read_text(encoding="utf-8") == "after-artifact\n"
+    assert subprocess.check_output(
+        ["git", "rev-parse", "HEAD"],
+        cwd=repo,
+        text=True,
+    ).strip() == head
+    assert result["git_refs_mutated"] is False
+    assert result["proposal_sha256"] == proposal_sha
+
+
+def test_tampered_codex_proposal_hash_fails_closed(tmp_path: Path) -> None:
+    repo = tmp_path / "repo-tampered"
+    repo.mkdir()
+    head = _init_repo(repo)
+    state_dir = tmp_path / "state-tampered"
+    patch = (
+        "--- a/src/allowed.txt\n"
+        "+++ b/src/allowed.txt\n"
+        "@@ -1 +1 @@\n"
+        "-before\n"
+        "+after\n"
+    )
+    proposal_ref, _ = _write_proposal_artifact(
+        state_dir,
+        before_head=head,
+        changed_files=["src/allowed.txt"],
+        patch=patch,
+    )
+    artifact_id = proposal_ref.split("/")[2]
+    fake = "0" * 64
+    fake_ref = f"local-result://{artifact_id}/{fake}"
+    ctx = CapabilityContextV1(
+        executor_id="Futuer-IT",
+        repository_id="firasfanon/example",
+        allowed_roots=(str(repo),),
+        scope_paths=("src",),
+        task_branch="task/SOVEREIGN-CHANNEL-TEST",
+        expected_base_sha=head,
+        state_dir=str(state_dir),
+    )
+    with pytest.raises(
+        CapabilityError,
+        match="PROPOSAL_ARTIFACT_HASH_MISMATCH",
+    ):
+        source_apply_patch_bounded(
+            ctx,
+            {
+                "repo_root": str(repo),
+                "paths": ["src/allowed.txt"],
+                "proposal_ref": fake_ref,
+                "proposal_sha256": fake,
+            },
+        )
+
+
+def test_codex_proposal_changed_files_must_match_explicit_paths(tmp_path: Path) -> None:
+    repo = tmp_path / "repo-path-mismatch"
+    repo.mkdir()
+    head = _init_repo(repo)
+    state_dir = tmp_path / "state-path-mismatch"
+    patch = (
+        "--- a/src/allowed.txt\n"
+        "+++ b/src/allowed.txt\n"
+        "@@ -1 +1 @@\n"
+        "-before\n"
+        "+after\n"
+    )
+    proposal_ref, proposal_sha = _write_proposal_artifact(
+        state_dir,
+        before_head=head,
+        changed_files=["src/other.txt"],
+        patch=patch,
+    )
+    ctx = CapabilityContextV1(
+        executor_id="Futuer-IT",
+        repository_id="firasfanon/example",
+        allowed_roots=(str(repo),),
+        scope_paths=("src",),
+        task_branch="task/SOVEREIGN-CHANNEL-TEST",
+        expected_base_sha=head,
+        state_dir=str(state_dir),
+    )
+    with pytest.raises(
+        CapabilityError,
+        match="PROPOSAL_CHANGED_FILES_MISMATCH",
+    ):
+        source_apply_patch_bounded(
+            ctx,
+            {
+                "repo_root": str(repo),
+                "paths": ["src/allowed.txt"],
+                "proposal_ref": proposal_ref,
+                "proposal_sha256": proposal_sha,
             },
         )
 

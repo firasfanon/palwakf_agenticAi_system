@@ -1,12 +1,18 @@
 from __future__ import annotations
 
 import base64
+import hashlib
+import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
-from palwakf_local_agents.outbound_capabilities_v1 import default_capability_registry_v1
+from palwakf_local_agents.outbound_capabilities_v1 import (
+    CapabilityDescriptorV1,
+    CapabilityRegistryV1,
+    default_capability_registry_v1,
+)
 from palwakf_local_agents.outbound_contracts_v1 import (
     AuthorityProofV1,
     Ed25519AuthorityVerifierV1,
@@ -94,6 +100,8 @@ def test_signed_hostname_executes_and_emits_zero_manual_evidence(tmp_path):
     assert ev.authority_verdict == "PASS"
     assert ev.manual_terminal_interventions_per_task == 0
     assert ev.arbitrary_shell_exposed is False
+    assert ev.artifact_hashes == ()
+    assert ev.checkpoint_ref is None
 
 
 def test_signature_tamper_is_rejected(tmp_path):
@@ -167,3 +175,66 @@ def test_non_allowlisted_repository_is_rejected(tmp_path):
     )
     assert evidence.exit_state == "REJECTED"
     assert "REPOSITORY_ID_MISMATCH" in evidence.blockers
+
+
+def test_codex_proposal_is_persisted_as_local_hashed_artifact(tmp_path):
+    private, public = keys()
+
+    def proposal_handler(_ctx, _args):
+        return {
+            "provider": "codex-cli",
+            "mode": "READ_ONLY_PATCH_PROPOSAL",
+            "before_head": BASE,
+            "changed_files": ["docs/uat.md"],
+            "unified_diff": "--- /dev/null\n+++ b/docs/uat.md\n@@ -0,0 +1 @@\n+uat\n",
+            "summary": "proposal",
+            "tests": [],
+            "git_mutation_allowed": False,
+        }
+
+    registry = CapabilityRegistryV1(
+        (
+            CapabilityDescriptorV1(
+                "engineering.codex.patch_proposal",
+                "READ_ONLY",
+                proposal_handler,
+            ),
+        )
+    )
+    settings = ExecutorSettingsV1(
+        executor_id="Futuer-IT",
+        repository_id="firasfanon/palwakf_agenticAi_system",
+        allowed_roots=(str(tmp_path),),
+        state_dir=str(tmp_path / "state"),
+    )
+    exe = PalWakfOutboundLocalExecutorV1(
+        settings=settings,
+        authority_verifier=Ed25519AuthorityVerifierV1({"k1": public}),
+        registry=registry,
+    )
+    env = envelope(
+        tmp_path,
+        private,
+        capability="engineering.codex.patch_proposal",
+        mutation="READ_ONLY",
+        idem="idem-codex-artifact-01",
+    )
+    evidence = exe.execute(
+        env,
+        transport_adapter="workspace-drive-remote-intent-v1",
+    )
+
+    assert evidence.exit_state == "COMPLETED"
+    assert len(evidence.artifact_hashes) == 1
+    assert evidence.checkpoint_ref is not None
+    prefix = "local-result://"
+    assert evidence.checkpoint_ref.startswith(prefix)
+    artifact_id, ref_hash = evidence.checkpoint_ref[len(prefix):].split("/")
+    assert ref_hash == evidence.artifact_hashes[0]
+    artifact_path = tmp_path / "state" / "capability-results" / f"{artifact_id}.json"
+    data = artifact_path.read_bytes()
+    assert hashlib.sha256(data).hexdigest() == ref_hash
+    artifact = json.loads(data)
+    assert artifact["capability_id"] == "engineering.codex.patch_proposal"
+    assert artifact["result"]["git_mutation_allowed"] is False
+    assert artifact["result"]["mode"] == "READ_ONLY_PATCH_PROPOSAL"
