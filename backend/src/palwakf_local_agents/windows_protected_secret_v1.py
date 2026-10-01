@@ -42,7 +42,12 @@ def read_windows_protected_text(path: str) -> str:
     return value
 
 
-def write_windows_protected_text(path: str, value: str) -> None:
+def write_windows_protected_text(
+    path: str,
+    value: str,
+    *,
+    machine_scope: bool = False,
+) -> None:
     if os.name != "nt":
         raise ProtectedSecretError("WINDOWS_PROTECTED_SECRET_REQUIRES_WINDOWS")
     if not value:
@@ -52,13 +57,14 @@ def write_windows_protected_text(path: str, value: str) -> None:
     except ImportError as exc:
         raise ProtectedSecretError("PYWIN32_REQUIRED_FOR_PROTECTED_SECRET") from exc
     try:
+        flags = 0x4 if machine_scope else 0
         encrypted = win32crypt.CryptProtectData(
             value.encode("utf-8"),
             "PalWakf protected secret",
             None,
             None,
             None,
-            0,
+            flags,
         )
         encoded = base64.b64encode(encrypted).decode("ascii")
         target = Path(path)

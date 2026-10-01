@@ -26,7 +26,15 @@ def keys():
     return private, base64.b64encode(public_raw).decode()
 
 
-def envelope(tmp_path: Path, private: Ed25519PrivateKey, capability="mesh_hostname", mutation="READ_ONLY", arguments=None, idem="idem-00000001"):
+def envelope(
+    tmp_path: Path,
+    private: Ed25519PrivateKey,
+    capability="mesh_hostname",
+    mutation="READ_ONLY",
+    arguments=None,
+    idem="idem-00000001",
+    repository_id="firasfanon/palwakf_agenticAi_system",
+):
     now = datetime.now(UTC)
     lease = ExecutionLeaseV1(
         lease_id="lease-outbound-v1",
@@ -44,7 +52,7 @@ def envelope(tmp_path: Path, private: Ed25519PrivateKey, capability="mesh_hostna
     )
     unsigned = TaskEnvelopeV1.model_construct(
         contract_version="1.0", task_id="task-outbound-v1", project_id="PALWAKF_AGENTIC_AI_SYSTEM",
-        project_aliases=(), repository_id="firasfanon/palwakf_agenticAi_system", executor_id="Futuer-IT",
+        project_aliases=(), repository_id=repository_id, executor_id="Futuer-IT",
         task_type="READ_ONLY_PROOF", mutation_class=mutation, requested_capability_id=capability,
         arguments=arguments or {}, authority_ref="workspace://authority/1", execution_lease=lease,
         expected_remote_head=BASE, expected_base_sha=BASE, task_branch=BRANCH,
@@ -60,10 +68,15 @@ def envelope(tmp_path: Path, private: Ed25519PrivateKey, capability="mesh_hostna
     return TaskEnvelopeV1.model_validate(data)
 
 
-def executor(tmp_path: Path, public_b64: str):
+def executor(
+    tmp_path: Path,
+    public_b64: str,
+    allowed_repository_ids: tuple[str, ...] = (),
+):
     settings = ExecutorSettingsV1(
         executor_id="Futuer-IT",
         repository_id="firasfanon/palwakf_agenticAi_system",
+        allowed_repository_ids=allowed_repository_ids,
         allowed_roots=(str(tmp_path),),
         state_dir=str(tmp_path / "state"),
     )
@@ -122,3 +135,35 @@ def test_wrong_expected_head_is_rejected_by_authority_verifier(tmp_path):
     ev = executor(tmp_path, public).execute(drifted, transport_adapter="github-issues-v1")
     assert ev.exit_state == "REJECTED"
     assert "EXPECTED_REMOTE_HEAD_DRIFT" in ev.blockers
+
+
+def test_allowlisted_secondary_repository_executes(tmp_path):
+    private, public = keys()
+    repository = "firasfanon/palwakf_mind_assistant"
+    exe = executor(tmp_path, public, allowed_repository_ids=(repository,))
+    env = envelope(
+        tmp_path,
+        private,
+        repository_id=repository,
+        idem="idem-secondary-repo-01",
+    )
+    evidence = exe.execute(env, transport_adapter="workspace-drive-remote-intent-v1")
+    assert evidence.exit_state == "COMPLETED"
+    assert evidence.authority_verdict == "PASS"
+
+
+def test_non_allowlisted_repository_is_rejected(tmp_path):
+    private, public = keys()
+    repository = "firasfanon/not-allowed"
+    env = envelope(
+        tmp_path,
+        private,
+        repository_id=repository,
+        idem="idem-rejected-repo-01",
+    )
+    evidence = executor(tmp_path, public).execute(
+        env,
+        transport_adapter="workspace-drive-remote-intent-v1",
+    )
+    assert evidence.exit_state == "REJECTED"
+    assert "REPOSITORY_ID_MISMATCH" in evidence.blockers

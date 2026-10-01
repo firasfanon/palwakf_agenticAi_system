@@ -3,10 +3,17 @@
     "executor_id": "Futuer-IT",
     "repository_id": "firasfanon/palwakf_agenticAi_system",
     "allowed_roots": [
-      "C:\\Users\\DELL\\StudioProjects\\palwakf_agenticAi_system"
+      "C:\\Users\\DELL\\StudioProjects\\palwakf_agenticAi_system",
+      "C:\\Users\\DELL\\StudioProjects\\palwakf_workspace_manager",
+      "C:\\Users\\DELL\\StudioProjects\\palwakf_mind_assistant",
+      "C:\\Users\\DELL\\StudioProjects\\_palwakf_sovereign_channel_v1"
     ],
     "state_dir": "C:\\Users\\DELL\\StudioProjects\\palwakf_agenticAi_system\\runtime_state\\outbound_executor_v1",
-    "max_output_bytes": 131072
+    "max_output_bytes": 131072,
+    "allowed_repository_ids": [
+      "firasfanon/palwakf_workspace_manager",
+      "firasfanon/palwakf_mind_assistant"
+    ]
   },
   "transport": {
     "repository": "firasfanon/palwakf_agenticAi_system",
@@ -20,5 +27,32 @@
     "REPLACE_WITH_WORKSPACE_AUTHORITY_KEY_ID": "REPLACE_WITH_BASE64_ED25519_PUBLIC_KEY"
   },
   "poll_seconds": 15,
-  "heartbeat_seconds": 60
+  "heartbeat_seconds": 60,
+  "drive_remote_intent": {
+    "rclone_executable": "C:\\Program Files\\WinGet\\Links\\rclone.exe",
+    "remote_name": "palwakf",
+    "client_inboxes": [
+      {
+        "client_id": "chatgpt",
+        "inbox_path": "PalWakf/inbox/chatgpt"
+      },
+      {
+        "client_id": "mind",
+        "inbox_path": "PalWakf/inbox/mind"
+      },
+      {
+        "client_id": "agentic",
+        "inbox_path": "PalWakf/inbox/agentic"
+      }
+    ],
+    "results_path": "PalWakf/RemoteIntent/Results",
+    "archive_path": "PalWakf/RemoteIntent/Archive",
+    "state_dir": "C:\\ProgramData\\PalWakf\\outbound_executor_v1\\drive",
+    "authority_python": "C:\\Program Files\\Python311\\python.exe",
+    "authority_cli_path": "C:\\Users\\DELL\\StudioProjects\\_palwakf_sovereign_channel_v1\\workspace\\orchestrator\\scripts\\c7r_authority_cli.py",
+    "authority_src_path": "C:\\Users\\DELL\\StudioProjects\\_palwakf_sovereign_channel_v1\\workspace\\orchestrator\\src",
+    "authority_key_path": "C:\\ProgramData\\PalWakf\\workspace_authority_v1\\secrets\\workspace-ed25519.dpapi",
+    "authority_key_id": "workspace-sovereign-channel-v1",
+    "rclone_config_protected_path": "C:\\ProgramData\\PalWakf\\workspace_drive_v1\\rclone-config.dpapi"
+  }
 }

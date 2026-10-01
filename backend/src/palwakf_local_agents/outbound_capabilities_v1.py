@@ -265,6 +265,113 @@ def audit_readback(ctx: CapabilityContextV1, args: Mapping[str, Any]) -> Mapping
     return {"line_count": len(lines), "tail": tail, "sha256": digest}
 
 
+def codex_patch_proposal_handler(
+    ctx: CapabilityContextV1,
+    args: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    from palwakf_local_agents.codex_engineering_provider_v1 import (
+        codex_patch_proposal,
+    )
+
+    return codex_patch_proposal(ctx, args)
+
+
+def workspace_drive_read_handler(
+    ctx: CapabilityContextV1,
+    args: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    from palwakf_local_agents.workspace_drive_capabilities_v1 import (
+        workspace_drive_read,
+    )
+
+    return workspace_drive_read(ctx, args)
+
+
+def workspace_drive_write_handler(
+    ctx: CapabilityContextV1,
+    args: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    from palwakf_local_agents.workspace_drive_capabilities_v1 import (
+        workspace_drive_write_bounded,
+    )
+
+    return workspace_drive_write_bounded(ctx, args)
+
+
+def _scope_allows_relative_path(
+    repo: Path,
+    relative: str,
+    scope_paths: tuple[str, ...],
+) -> bool:
+    target = (repo / relative).resolve()
+    for raw in scope_paths:
+        scope = Path(raw)
+        if scope.is_absolute():
+            resolved = scope.resolve()
+        else:
+            resolved = (repo / scope).resolve()
+        if target == resolved or resolved in target.parents:
+            return True
+    return False
+
+
+def source_apply_patch_bounded(
+    ctx: CapabilityContextV1,
+    args: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    repo = _rooted(str(args.get("repo_root", "")), ctx.allowed_roots)
+    patch = str(args.get("unified_diff", ""))
+    paths = args.get("paths")
+    if not patch or len(patch.encode("utf-8")) > ctx.max_output_bytes * 4:
+        raise CapabilityError("PATCH_INVALID_OR_TOO_LARGE")
+    if not isinstance(paths, list) or not paths:
+        raise CapabilityError("PATCH_PATHS_REQUIRED")
+    clean: list[str] = []
+    for item in paths:
+        if not isinstance(item, str) or not item or Path(item).is_absolute():
+            raise CapabilityError("PATCH_PATH_INVALID")
+        if ".." in Path(item).parts or item in {".", "*"}:
+            raise CapabilityError("PATCH_PATH_INVALID")
+        if not _scope_allows_relative_path(repo, item, ctx.scope_paths):
+            raise CapabilityError("PATCH_SCOPE_WIDENING_DENIED")
+        clean.append(item)
+    for header in (
+        line[4:]
+        for line in patch.splitlines()
+        if line.startswith("+++ ") or line.startswith("--- ")
+    ):
+        candidate = header.split("\t", 1)[0]
+        if candidate == "/dev/null":
+            continue
+        if candidate.startswith(("a/", "b/")):
+            candidate = candidate[2:]
+        if candidate not in clean:
+            raise CapabilityError("PATCH_HEADER_PATH_NOT_DECLARED")
+    check = subprocess.run(
+        ["git", "apply", "--check", "--whitespace=error-all", "-"],
+        cwd=str(repo),
+        input=patch.encode("utf-8"),
+        shell=False,
+        capture_output=True,
+        timeout=120,
+        check=False,
+    )
+    if check.returncode != 0:
+        raise CapabilityError("PATCH_CHECK_FAILED")
+    apply_result = subprocess.run(
+        ["git", "apply", "--whitespace=error-all", "-"],
+        cwd=str(repo),
+        input=patch.encode("utf-8"),
+        shell=False,
+        capture_output=True,
+        timeout=120,
+        check=False,
+    )
+    if apply_result.returncode != 0:
+        raise CapabilityError("PATCH_APPLY_FAILED")
+    return {"applied_paths": clean, "git_refs_mutated": False}
+
+
 def default_capability_registry_v1() -> CapabilityRegistryV1:
     implemented = (
         CapabilityDescriptorV1("device.info", "READ_ONLY", device_info, aliases=("mesh_device_info",)),
@@ -277,6 +384,41 @@ def default_capability_registry_v1() -> CapabilityRegistryV1:
         CapabilityDescriptorV1("git.commit", "SOURCE_WRITE", git_commit, idempotency_class="NON_IDEMPOTENT"),
         CapabilityDescriptorV1("git.push_task_branch", "SOURCE_WRITE", git_push_task_branch, idempotency_class="NON_IDEMPOTENT"),
         CapabilityDescriptorV1("git.remote_sha_readback", "READ_ONLY", git_remote_sha_readback),
+        CapabilityDescriptorV1(
+            "engineering.codex.patch_proposal",
+            "READ_ONLY",
+            codex_patch_proposal_handler,
+            idempotency_class="IDEMPOTENT",
+        ),
+        CapabilityDescriptorV1(
+            "source.apply_patch_bounded",
+            "SOURCE_WRITE",
+            source_apply_patch_bounded,
+            idempotency_class="NON_IDEMPOTENT",
+        ),
+        CapabilityDescriptorV1(
+            "workspace_drive.read",
+            "READ_ONLY",
+            workspace_drive_read_handler,
+        ),
+        CapabilityDescriptorV1(
+            "workspace_drive.write_bounded",
+            "SOURCE_WRITE",
+            workspace_drive_write_handler,
+            idempotency_class="NON_IDEMPOTENT",
+        ),
+        CapabilityDescriptorV1(
+            "workspace_drive.write_learning_candidate",
+            "SOURCE_WRITE",
+            workspace_drive_write_handler,
+            idempotency_class="NON_IDEMPOTENT",
+        ),
+        CapabilityDescriptorV1(
+            "workspace_drive.write_memory_candidate",
+            "SOURCE_WRITE",
+            workspace_drive_write_handler,
+            idempotency_class="NON_IDEMPOTENT",
+        ),
         CapabilityDescriptorV1("c7r.phase_a", "SERVICE_MUTATION", c7r_phase_a_handler, idempotency_class="STATEFUL_GOVERNED"),
     )
     placeholders = tuple(

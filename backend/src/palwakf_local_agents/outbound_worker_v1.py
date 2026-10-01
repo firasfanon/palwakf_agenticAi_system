@@ -18,6 +18,10 @@ from palwakf_local_agents.github_issue_transport_v1 import (
 from palwakf_local_agents.outbound_capabilities_v1 import default_capability_registry_v1
 from palwakf_local_agents.outbound_contracts_v1 import Ed25519AuthorityVerifierV1, TaskEnvelopeV1
 from palwakf_local_agents.outbound_local_executor_v1 import ExecutorSettingsV1, PalWakfOutboundLocalExecutorV1
+from palwakf_local_agents.workspace_drive_remote_intent_v1 import (
+    RcloneDriveRemoteIntentSettingsV1,
+    RcloneWorkspaceDriveRemoteIntentTransportV1,
+)
 
 
 class WorkerConfigV1(BaseModel):
@@ -25,6 +29,7 @@ class WorkerConfigV1(BaseModel):
 
     executor: ExecutorSettingsV1
     transport: GitHubIssueTransportSettingsV1
+    drive_remote_intent: RcloneDriveRemoteIntentSettingsV1 | None = None
     authority_public_keys_b64: dict[str, str] = Field(default_factory=dict)
     authority_public_keys_path: str | None = (
         r"C:\ProgramData\PalWakf\outbound_executor_v1\authority-keys.json"
@@ -67,6 +72,11 @@ class OutboundWorkerV1:
     def __init__(self, config: WorkerConfigV1):
         self.config = config
         self.transport = GitHubIssueTransportV1(config.transport)
+        self.drive_transport = (
+            RcloneWorkspaceDriveRemoteIntentTransportV1(config.drive_remote_intent)
+            if config.drive_remote_intent
+            else None
+        )
         self.executor = PalWakfOutboundLocalExecutorV1(
             settings=config.executor,
             authority_verifier=Ed25519AuthorityVerifierV1(
@@ -105,59 +115,77 @@ class OutboundWorkerV1:
             self._record_transport_event("TRANSPORT_RECOVERED")
             self._transport_degraded = False
 
+    def _execute_claimed(self, transport, claimed) -> bool:
+        try:
+            envelope = TaskEnvelopeV1.model_validate(transport.read_envelope(claimed))
+            evidence = self.executor.execute(
+                envelope,
+                transport_adapter=transport.transport_id,
+            )
+        except Exception as exc:
+            try:
+                transport.release_or_fail(
+                    claimed,
+                    reason=f"{type(exc).__name__}:{str(exc)[:300]}",
+                )
+            except TransportError:
+                pass
+            return False
+
+        try:
+            transport.publish_result(claimed, evidence.model_dump(mode="json"))
+            transport.ack_task(claimed, status=evidence.exit_state)
+            self._mark_transport_success()
+            return True
+        except TransportError as exc:
+            self._mark_transport_failure(exc)
+            return False
+
     def run(self) -> None:
         last_heartbeat = 0.0
         while not self._stop.is_set():
             now = time.monotonic()
             if now - last_heartbeat >= self.config.heartbeat_seconds:
                 try:
-                    self.transport.publish_heartbeat({
-                        "executor_id": self.config.executor.executor_id,
-                        "executor_version": "1.0.0-task",
-                        "service_state": "RUNNING",
-                        "last_seen": datetime.now(UTC).isoformat(),
-                        "transport_state": "OUTBOUND_POLLING",
-                    })
+                    self.transport.publish_heartbeat(
+                        {
+                            "executor_id": self.config.executor.executor_id,
+                            "executor_version": "1.0.0-task",
+                            "service_state": "RUNNING",
+                            "last_seen": datetime.now(UTC).isoformat(),
+                            "transport_state": "OUTBOUND_POLLING",
+                        }
+                    )
                     last_heartbeat = now
                     self._mark_transport_success()
                 except TransportError as exc:
                     self._mark_transport_failure(exc)
-                    self._stop.wait(self.config.poll_seconds)
+                    if getattr(self, "drive_transport", None) is None:
+                        self._stop.wait(self.config.poll_seconds)
+                        continue
+
+            did_work = False
+            transports = [self.transport]
+            drive_transport = getattr(self, "drive_transport", None)
+            if drive_transport is not None:
+                transports.append(drive_transport)
+
+            for transport in transports:
+                try:
+                    claimed = transport.claim_task(
+                        executor_id=self.config.executor.executor_id
+                    )
+                    self._mark_transport_success()
+                except TransportError as exc:
+                    self._mark_transport_failure(exc)
                     continue
 
-            try:
-                claimed = self.transport.claim_task(executor_id=self.config.executor.executor_id)
-                self._mark_transport_success()
-            except TransportError as exc:
-                self._mark_transport_failure(exc)
-                self._stop.wait(self.config.poll_seconds)
-                continue
-            if claimed is None:
-                self._stop.wait(self.config.poll_seconds)
-                continue
+                if claimed is None:
+                    continue
+                did_work = True
+                self._execute_claimed(transport, claimed)
 
-            try:
-                envelope = TaskEnvelopeV1.model_validate(self.transport.read_envelope(claimed))
-                evidence = self.executor.execute(envelope, transport_adapter=self.transport.transport_id)
-            except Exception as exc:
-                try:
-                    self.transport.release_or_fail(
-                        claimed,
-                        reason=f"{type(exc).__name__}:{str(exc)[:300]}",
-                    )
-                except TransportError:
-                    pass
-                self._stop.wait(self.config.poll_seconds)
-                continue
-
-            try:
-                self.transport.publish_result(claimed, evidence.model_dump(mode="json"))
-                self.transport.ack_task(claimed, status=evidence.exit_state)
-            except TransportError as exc:
-                self._mark_transport_failure(exc)
-                # Keep the worker alive through transient network loss. The open
-                # issue will be reclaimed after recovery; the local ledger then
-                # returns the existing evidence without re-running the handler.
+            if not did_work:
                 self._stop.wait(self.config.poll_seconds)
 
 

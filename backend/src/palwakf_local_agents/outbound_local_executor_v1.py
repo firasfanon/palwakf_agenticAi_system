@@ -39,8 +39,12 @@ class ExecutorSettingsV1(BaseModel):
 
     executor_id: str
     repository_id: str
+    allowed_repository_ids: tuple[str, ...] = Field(default=(), max_length=64)
     allowed_roots: tuple[str, ...] = Field(min_length=1, max_length=64)
     state_dir: str
+
+    def repository_allowed(self, repository_id: str) -> bool:
+        return repository_id in {self.repository_id, *self.allowed_repository_ids}
     max_output_bytes: int = Field(default=131072, ge=4096, le=1048576)
 
 
@@ -156,7 +160,7 @@ class PalWakfOutboundLocalExecutorV1:
             now = datetime.now(UTC)
             if envelope.executor_id != self.settings.executor_id:
                 blockers.append("EXECUTOR_ID_MISMATCH")
-            if envelope.repository_id != self.settings.repository_id:
+            if not self.settings.repository_allowed(envelope.repository_id):
                 blockers.append("REPOSITORY_ID_MISMATCH")
             allowed, authority_blockers = self.authority_verifier.verify(envelope, now=now)
             blockers.extend(authority_blockers)
@@ -176,7 +180,7 @@ class PalWakfOutboundLocalExecutorV1:
 
             context = CapabilityContextV1(
                 executor_id=self.settings.executor_id,
-                repository_id=self.settings.repository_id,
+                repository_id=envelope.repository_id,
                 allowed_roots=self.settings.allowed_roots,
                 scope_paths=envelope.scope_paths,
                 task_branch=envelope.task_branch,
@@ -208,7 +212,11 @@ class PalWakfOutboundLocalExecutorV1:
             if not blockers:
                 blockers.append(type(exc).__name__)
             stderr_summary = f"{type(exc).__name__}:{str(exc)[:300]}"
-            if authority_verdict == "FAIL":
+            binding_rejections = {
+                "EXECUTOR_ID_MISMATCH",
+                "REPOSITORY_ID_MISMATCH",
+            }
+            if authority_verdict == "FAIL" or binding_rejections.intersection(blockers):
                 exit_state = "REJECTED"
             elif "HEAD_DRIFT" in blockers:
                 exit_state = "DRIFTED"

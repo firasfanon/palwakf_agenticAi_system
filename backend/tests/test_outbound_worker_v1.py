@@ -72,3 +72,54 @@ def test_transport_runtime_audit_records_error_and_recovery(tmp_path):
     assert len(lines) == 2
     assert '"event": "TRANSPORT_ERROR"' in lines[0]
     assert '"event": "TRANSPORT_RECOVERED"' in lines[1]
+
+
+def test_drive_failure_does_not_block_github_poll():
+    class GitHubTransport:
+        transport_id = "github-issues-v1"
+
+        def publish_heartbeat(self, _payload):
+            return None
+
+        def claim_task(self, *, executor_id):
+            assert executor_id == "Futuer-IT"
+            return None
+
+    class DriveTransport:
+        transport_id = "workspace-drive-remote-intent-v1"
+
+        def claim_task(self, *, executor_id):
+            assert executor_id == "Futuer-IT"
+            raise TransportError("drive offline")
+
+    worker = _worker_with(GitHubTransport())
+    worker.drive_transport = DriveTransport()
+    worker.run()
+    assert worker._stop.wait_calls == 1
+
+
+def test_github_heartbeat_failure_still_allows_drive_poll():
+    seen = {"drive": 0}
+
+    class GitHubTransport:
+        transport_id = "github-issues-v1"
+
+        def publish_heartbeat(self, _payload):
+            raise TransportError("github offline")
+
+        def claim_task(self, *, executor_id):
+            assert executor_id == "Futuer-IT"
+            raise TransportError("github offline")
+
+    class DriveTransport:
+        transport_id = "workspace-drive-remote-intent-v1"
+
+        def claim_task(self, *, executor_id):
+            assert executor_id == "Futuer-IT"
+            seen["drive"] += 1
+            return None
+
+    worker = _worker_with(GitHubTransport())
+    worker.drive_transport = DriveTransport()
+    worker.run()
+    assert seen["drive"] == 1
