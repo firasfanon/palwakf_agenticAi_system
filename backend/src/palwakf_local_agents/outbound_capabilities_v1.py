@@ -266,6 +266,10 @@ def audit_readback(ctx: CapabilityContextV1, args: Mapping[str, Any]) -> Mapping
 
 
 def default_capability_registry_v1() -> CapabilityRegistryV1:
+    from palwakf_local_agents.github_capabilities_v1 import (
+        extra_github_capabilities_v1,
+    )
+
     implemented = (
         CapabilityDescriptorV1("device.info", "READ_ONLY", device_info, aliases=("mesh_device_info",)),
         CapabilityDescriptorV1("device.hostname", "READ_ONLY", device_hostname, aliases=("mesh_hostname",)),
@@ -283,4 +287,6 @@ def default_capability_registry_v1() -> CapabilityRegistryV1:
         CapabilityDescriptorV1(f"legacy.{name}", "READ_ONLY", device_hostname, aliases=(name,), admitted=False)
         for name in ("temp_write", "temp_delete", "bounded_powershell", "process_port_readback", "playwright_screenshot_uat")
     )
-    return CapabilityRegistryV1(implemented + placeholders)
+    return CapabilityRegistryV1(
+        implemented + extra_github_capabilities_v1() + placeholders
+    )
