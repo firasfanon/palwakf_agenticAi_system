@@ -20,6 +20,7 @@ class CodexEngineeringSettingsV1(BaseModel):
 
     executable: str
     expected_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    home: str | None = None
     timeout_seconds: int = Field(default=600, ge=30, le=1800)
     max_prompt_chars: int = Field(default=30000, ge=1000, le=100000)
     max_patch_chars: int = Field(default=120000, ge=4096, le=500000)
@@ -31,11 +32,17 @@ Runner = Callable[..., subprocess.CompletedProcess[bytes]]
 def _settings() -> CodexEngineeringSettingsV1:
     executable = os.environ.get("PALWAKF_CODEX_EXECUTABLE", "").strip()
     expected = os.environ.get("PALWAKF_CODEX_SHA256", "").strip().lower()
+    home = (
+        os.environ.get("PALWAKF_CODEX_HOME", "").strip()
+        or os.environ.get("CODEX_HOME", "").strip()
+        or None
+    )
     if not executable or not expected:
         raise CapabilityError("CODEX_PROVIDER_NOT_CONFIGURED")
     return CodexEngineeringSettingsV1(
         executable=executable,
         expected_sha256=expected,
+        home=home,
     )
 
 
@@ -71,6 +78,39 @@ def _git_safe_env(repo: Path) -> dict[str, str]:
     env[f"GIT_CONFIG_KEY_{count}"] = "safe.directory"
     env[f"GIT_CONFIG_VALUE_{count}"] = str(repo)
     env["GIT_CONFIG_COUNT"] = str(count + 1)
+    return env
+
+
+def _resolve_codex_home(
+    settings: CodexEngineeringSettingsV1,
+    executable: Path,
+) -> Path:
+    candidates: list[Path] = []
+    if settings.home:
+        candidates.append(Path(settings.home).expanduser().resolve())
+    else:
+        home_candidate = Path.home() / ".codex"
+        candidates.append(home_candidate.resolve())
+        for parent in executable.parents:
+            if parent.parent.name.casefold() == "users":
+                candidates.append((parent / ".codex").resolve())
+                break
+
+    for candidate in candidates:
+        if candidate.is_dir() and (candidate / "auth.json").is_file():
+            return candidate
+    raise CapabilityError("CODEX_AUTH_HOME_NOT_FOUND")
+
+
+def _codex_env(
+    settings: CodexEngineeringSettingsV1,
+    executable: Path,
+    repo: Path,
+) -> dict[str, str]:
+    env = _git_safe_env(repo)
+    env.pop("OPENAI_API_KEY", None)
+    env.pop("CODEX_API_KEY", None)
+    env["CODEX_HOME"] = str(_resolve_codex_home(settings, executable))
     return env
 
 
@@ -144,7 +184,7 @@ def codex_patch_proposal(
         text=False,
         timeout=settings.timeout_seconds,
         check=False,
-        env=_git_safe_env(repo),
+        env=_codex_env(settings, executable, repo),
     )
     if completed.returncode != 0:
         raise CapabilityError("CODEX_PROVIDER_EXECUTION_FAILED")

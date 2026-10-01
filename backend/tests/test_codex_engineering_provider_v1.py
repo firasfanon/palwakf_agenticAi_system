@@ -37,6 +37,12 @@ def test_codex_provider_invocation_is_read_only(monkeypatch, tmp_path: Path) -> 
     )
     monkeypatch.setattr(mod, "_settings", lambda: settings)
     monkeypatch.setattr(mod, "_repo_from_context", lambda _ctx, _args: repo)
+    resolved_home = tmp_path / ".codex"
+    monkeypatch.setattr(
+        mod,
+        "_resolve_codex_home",
+        lambda _settings, _executable: resolved_home,
+    )
 
     reads = iter(["1" * 40, "task/SOVEREIGN-CHANNEL-TEST", ""])
     monkeypatch.setattr(mod, "_git_read", lambda *_args: next(reads))
@@ -75,6 +81,7 @@ def test_codex_provider_invocation_is_read_only(monkeypatch, tmp_path: Path) -> 
     assert env[f"GIT_CONFIG_KEY_{count - 1}"] == "safe.directory"
     assert env[f"GIT_CONFIG_VALUE_{count - 1}"] == str(repo)
     assert env[f"GIT_CONFIG_VALUE_{count - 1}"] != "*"
+    assert env["CODEX_HOME"] == str(resolved_home)
     assert result["git_mutation_allowed"] is False
     assert result["mode"] == "READ_ONLY_PATCH_PROPOSAL"
 
@@ -154,3 +161,33 @@ def test_patch_outside_scope_fails_closed(tmp_path: Path) -> None:
                 "unified_diff": patch,
             },
         )
+
+
+def test_codex_env_removes_api_key_fallbacks(monkeypatch, tmp_path: Path) -> None:
+    executable = tmp_path / "codex.exe"
+    executable.write_bytes(b"pinned-codex")
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    resolved_home = tmp_path / ".codex"
+    settings = mod.CodexEngineeringSettingsV1(
+        executable=str(executable),
+        expected_sha256=mod.hashlib.sha256(executable.read_bytes()).hexdigest(),
+    )
+    monkeypatch.setattr(
+        mod,
+        "_resolve_codex_home",
+        lambda _settings, _executable: resolved_home,
+    )
+    first = "OPENAI" + "_API_KEY"
+    second = "CODEX" + "_API_KEY"
+    monkeypatch.setenv(first, "must-not-pass")
+    monkeypatch.setenv(second, "must-not-pass")
+
+    env = mod._codex_env(settings, executable, repo)
+
+    assert env["CODEX_HOME"] == str(resolved_home)
+    assert first not in env
+    assert second not in env
+    count = int(env["GIT_CONFIG_COUNT"])
+    assert env[f"GIT_CONFIG_KEY_{count - 1}"] == "safe.directory"
+    assert env[f"GIT_CONFIG_VALUE_{count - 1}"] == str(repo)
