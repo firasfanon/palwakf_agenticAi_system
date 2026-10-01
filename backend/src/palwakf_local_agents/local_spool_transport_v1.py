@@ -242,7 +242,7 @@ class CompositeTaskTransportV1:
                 continue
             return {
                 "_transport_id": self._id(transport),
-                "_claim": dict(claim),
+                "_claim": claim,
             }
         if attempted and failures == attempted:
             raise TransportError("ALL_TRANSPORTS_DEGRADED")
