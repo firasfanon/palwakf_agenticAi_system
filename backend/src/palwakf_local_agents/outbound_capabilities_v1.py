@@ -265,9 +265,15 @@ def audit_readback(ctx: CapabilityContextV1, args: Mapping[str, Any]) -> Mapping
     return {"line_count": len(lines), "tail": tail, "sha256": digest}
 
 
-def default_capability_registry_v1() -> CapabilityRegistryV1:
+def default_capability_registry_v1(
+    *,
+    workspace_drive_adapter=None,
+) -> CapabilityRegistryV1:
     from palwakf_local_agents.github_capabilities_v1 import (
         extra_github_capabilities_v1,
+    )
+    from palwakf_local_agents.workspace_drive_capabilities_v1 import (
+        extra_workspace_drive_capabilities_v1,
     )
 
     implemented = (
@@ -288,5 +294,8 @@ def default_capability_registry_v1() -> CapabilityRegistryV1:
         for name in ("temp_write", "temp_delete", "bounded_powershell", "process_port_readback", "playwright_screenshot_uat")
     )
     return CapabilityRegistryV1(
-        implemented + extra_github_capabilities_v1() + placeholders
+        implemented
+        + extra_github_capabilities_v1()
+        + extra_workspace_drive_capabilities_v1(workspace_drive_adapter)
+        + placeholders
     )
