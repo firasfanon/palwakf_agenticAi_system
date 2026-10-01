@@ -34,15 +34,15 @@
     "client_inboxes": [
       {
         "client_id": "chatgpt",
-        "inbox_path": "PalWakf/inbox/chatgpt"
+        "inbox_path": "PalWakf/RemoteIntent/ChatGPT"
       },
       {
         "client_id": "mind",
-        "inbox_path": "PalWakf/inbox/mind"
+        "inbox_path": "PalWakf/RemoteIntent/Mind"
       },
       {
         "client_id": "agentic",
-        "inbox_path": "PalWakf/inbox/agentic"
+        "inbox_path": "PalWakf/RemoteIntent/Agentic"
       }
     ],
     "results_path": "PalWakf/RemoteIntent/Results",
@@ -51,8 +51,9 @@
     "authority_python": "C:\\Program Files\\Python311\\python.exe",
     "authority_cli_path": "C:\\Users\\DELL\\StudioProjects\\_palwakf_sovereign_channel_v1\\workspace\\orchestrator\\scripts\\c7r_authority_cli.py",
     "authority_src_path": "C:\\Users\\DELL\\StudioProjects\\_palwakf_sovereign_channel_v1\\workspace\\orchestrator\\src",
-    "authority_key_path": "C:\\ProgramData\\PalWakf\\workspace_authority_v1\\secrets\\workspace-ed25519.dpapi",
+    "authority_key_path": "C:\\ProgramData\\PalWakf\\workspace_authority_v1\\secrets\\workspace-sovereign-channel-v1-machine.dpapi",
     "authority_key_id": "workspace-sovereign-channel-v1",
-    "rclone_config_protected_path": "C:\\ProgramData\\PalWakf\\workspace_drive_v1\\rclone-config.dpapi"
+    "rclone_config_protected_path": "C:\\ProgramData\\PalWakf\\workspace_drive_v1\\rclone-config.dpapi",
+    "authority_key_machine_scope": true
   }
 }

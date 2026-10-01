@@ -47,6 +47,7 @@ class RcloneDriveRemoteIntentSettingsV1(BaseModel):
     authority_src_path: str
     authority_key_path: str
     authority_key_id: str
+    authority_key_machine_scope: bool = False
     max_intent_bytes: int = Field(default=262144, ge=1024, le=1048576)
     command_timeout_seconds: int = Field(default=60, ge=5, le=300)
 
@@ -279,12 +280,18 @@ class RcloneWorkspaceDriveRemoteIntentTransportV1:
             self.settings.authority_key_path,
             "--key-id",
             self.settings.authority_key_id,
-            "authorize-intent",
-            "--input",
-            str(input_path),
-            "--output",
-            str(output_path),
         ]
+        if self.settings.authority_key_machine_scope:
+            argv.append("--machine-scope-key")
+        argv.extend(
+            [
+                "authorize-intent",
+                "--input",
+                str(input_path),
+                "--output",
+                str(output_path),
+            ]
+        )
         try:
             completed = subprocess.run(
                 argv,

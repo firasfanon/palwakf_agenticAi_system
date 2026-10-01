@@ -195,3 +195,38 @@ def test_rclone_failure_is_redacted_and_fail_closed(tmp_path):
     ) as exc:
         transport.claim_task(executor_id="Futuer-IT")
     assert "secret-token" not in str(exc.value)
+
+
+def test_machine_scope_authority_flag_is_forwarded(tmp_path, monkeypatch):
+    runner = FakeRclone(
+        listing=[{"Path": "intent.json", "ID": "drive-id-machine"}],
+        intent_text=valid_intent(),
+    )
+    captured = {}
+
+    def fake_run(argv, **kwargs):
+        captured["argv"] = list(argv)
+        output = Path(argv[argv.index("--output") + 1])
+        output.write_text(
+            json.dumps(
+                {
+                    "contract_version": "1.0",
+                    "executor_id": "Futuer-IT",
+                    "task_id": "TASK-001",
+                }
+            ),
+            encoding="utf-8",
+        )
+        return subprocess.CompletedProcess(argv, 0, stdout=b"{}", stderr=b"")
+
+    monkeypatch.setattr(mod.subprocess, "run", fake_run)
+    configured = settings(tmp_path).model_copy(
+        update={"authority_key_machine_scope": True}
+    )
+    transport = RcloneWorkspaceDriveRemoteIntentTransportV1(
+        configured,
+        runner=runner,
+    )
+    claimed = transport.claim_task(executor_id="Futuer-IT")
+    assert claimed is not None
+    assert "--machine-scope-key" in captured["argv"]
