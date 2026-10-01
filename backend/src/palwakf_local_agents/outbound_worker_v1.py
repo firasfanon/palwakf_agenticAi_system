@@ -8,12 +8,17 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from palwakf_local_agents.github_issue_transport_v1 import (
     GitHubIssueTransportSettingsV1,
     GitHubIssueTransportV1,
     TransportError,
+)
+from palwakf_local_agents.local_spool_transport_v1 import (
+    CompositeTaskTransportV1,
+    LocalSpoolTransportSettingsV1,
+    LocalSpoolTransportV1,
 )
 from palwakf_local_agents.outbound_capabilities_v1 import default_capability_registry_v1
 from palwakf_local_agents.outbound_contracts_v1 import Ed25519AuthorityVerifierV1, TaskEnvelopeV1
@@ -24,13 +29,24 @@ class WorkerConfigV1(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
     executor: ExecutorSettingsV1
-    transport: GitHubIssueTransportSettingsV1
+    transport: GitHubIssueTransportSettingsV1 | None = None
+    local_spool: LocalSpoolTransportSettingsV1 | None = None
+    reconnect_min_seconds: int = Field(default=5, ge=1, le=300)
+    reconnect_max_seconds: int = Field(default=300, ge=5, le=3600)
     authority_public_keys_b64: dict[str, str] = Field(default_factory=dict)
     authority_public_keys_path: str | None = (
         r"C:\ProgramData\PalWakf\outbound_executor_v1\authority-keys.json"
     )
     poll_seconds: int = Field(default=15, ge=5, le=300)
     heartbeat_seconds: int = Field(default=60, ge=30, le=3600)
+
+    @model_validator(mode="after")
+    def validate_transport_configuration(self) -> "WorkerConfigV1":
+        if self.transport is None and self.local_spool is None:
+            raise ValueError("AT_LEAST_ONE_TASK_TRANSPORT_REQUIRED")
+        if self.reconnect_max_seconds < self.reconnect_min_seconds:
+            raise ValueError("RECONNECT_MAX_MUST_NOT_BE_BELOW_MIN")
+        return self
 
     def effective_authority_public_keys(self) -> dict[str, str]:
         keys = dict(self.authority_public_keys_b64)
@@ -66,7 +82,16 @@ class WorkerConfigV1(BaseModel):
 class OutboundWorkerV1:
     def __init__(self, config: WorkerConfigV1):
         self.config = config
-        self.transport = GitHubIssueTransportV1(config.transport)
+        transports = []
+        if config.local_spool is not None:
+            transports.append(LocalSpoolTransportV1(config.local_spool))
+        if config.transport is not None:
+            transports.append(GitHubIssueTransportV1(config.transport))
+        self.transport = CompositeTaskTransportV1(
+            tuple(transports),
+            reconnect_min_seconds=config.reconnect_min_seconds,
+            reconnect_max_seconds=config.reconnect_max_seconds,
+        )
         self.executor = PalWakfOutboundLocalExecutorV1(
             settings=config.executor,
             authority_verifier=Ed25519AuthorityVerifierV1(
@@ -138,7 +163,10 @@ class OutboundWorkerV1:
 
             try:
                 envelope = TaskEnvelopeV1.model_validate(self.transport.read_envelope(claimed))
-                evidence = self.executor.execute(envelope, transport_adapter=self.transport.transport_id)
+                evidence = self.executor.execute(
+                    envelope,
+                    transport_adapter=self.transport.claim_transport_id(claimed),
+                )
             except Exception as exc:
                 try:
                     self.transport.release_or_fail(
