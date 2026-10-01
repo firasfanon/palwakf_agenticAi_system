@@ -136,6 +136,17 @@ class EvidenceEnvelopeV1(BaseModel):
     task_id: str
     project_id: str
     envelope_hash: str = Field(pattern=r"^[0-9a-f]{64}$")
+    principal_id: str | None = None
+    repository_id: str | None = None
+    executor_id: str | None = None
+    task_branch: str | None = None
+    expected_remote_head: str | None = Field(
+        default=None,
+        pattern=r"^[0-9a-fA-F]{40}$",
+    )
+    lease_id: str | None = None
+    scope_paths: tuple[str, ...] = ()
+    authority_ref: str | None = None
     authority_verdict: str
     lease_verdict: str
     preflight_verdict: str
