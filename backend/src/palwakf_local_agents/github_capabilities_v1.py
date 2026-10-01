@@ -3,6 +3,8 @@ from __future__ import annotations
 import hashlib
 import re
 import subprocess
+import tempfile
+import os
 from pathlib import Path
 from typing import Any, Mapping, Protocol
 
@@ -29,15 +31,25 @@ def _run(
 ) -> dict[str, Any]:
     if not argv or any(not isinstance(item, str) or "\x00" in item for item in argv):
         raise GitHubCapabilityError("INVALID_ARGV")
+    if argv[0] == "git":
+        argv = ["git", "--literal-pathspecs", "-c", "core.hooksPath=/dev/null", *argv[1:]]
+    env = os.environ.copy()
+    for key in tuple(env):
+        if key.startswith("GIT_"):
+            del env[key]
+    env["GIT_TERMINAL_PROMPT"] = "0"
     completed = subprocess.run(
         argv,
         cwd=str(cwd),
         shell=False,
+        env=env,
         capture_output=True,
         text=False,
         timeout=timeout,
         check=False,
     )
+    if max_bytes < 1:
+        raise GitHubCapabilityError("INVALID_OUTPUT_LIMIT")
     stdout = completed.stdout[:max_bytes]
     stderr = completed.stderr[:max_bytes]
     return {
@@ -85,8 +97,15 @@ def _require_repo_binding(ctx: GitHubCapabilityContext, repo: Path) -> str:
         cwd=repo,
         max_bytes=ctx.max_output_bytes,
     )
-    if remote["exit_code"] != 0:
+    if remote["exit_code"] != 0 or remote["stdout_truncated"]:
         raise GitHubCapabilityError("ORIGIN_READ_FAILED")
+    push = _run(["git", "remote", "get-url", "--push", "--all", "origin"], cwd=repo)
+    fetch = _run(["git", "remote", "get-url", "--all", "origin"], cwd=repo)
+    for result in (remote, push, fetch):
+        urls = result["stdout"].splitlines()
+        if (result["exit_code"] != 0 or result["stdout_truncated"] or len(urls) != 1
+                or (_canonical_repo_from_origin(urls[0]) or "").casefold() != ctx.repository_id.casefold()):
+            raise GitHubCapabilityError("SIGNED_REPOSITORY_ORIGIN_MISMATCH")
     observed = _canonical_repo_from_origin(remote["stdout"])
     if observed is None or observed.casefold() != ctx.repository_id.casefold():
         raise GitHubCapabilityError("SIGNED_REPOSITORY_ORIGIN_MISMATCH")
@@ -123,9 +142,14 @@ def _bounded_path(
     require_write_scope: bool,
 ) -> Path:
     raw = Path(relative_path)
-    if raw.is_absolute() or not relative_path or ".." in raw.parts:
+    if (raw.is_absolute() or raw.drive or not relative_path or ".." in raw.parts
+            or any(part.lower().rstrip(" .") == ".git" for part in raw.parts)
+            or any(c in relative_path for c in "\x00:*?[]\\") or relative_path == ".") :
         raise GitHubCapabilityError("UNSAFE_REPOSITORY_PATH")
-    target = (repo / raw).resolve()
+    lexical = repo / raw
+    if any(part.is_symlink() for part in (lexical, *lexical.parents) if part != repo and repo in part.parents):
+        raise GitHubCapabilityError("SYMLINK_PATH_NOT_ALLOWED")
+    target = lexical.resolve()
     if target != repo and repo not in target.parents:
         raise GitHubCapabilityError("PATH_OUTSIDE_REPOSITORY")
     if require_write_scope:
@@ -141,6 +165,26 @@ def _sha256_or_none(path: Path) -> str | None:
     if not path.is_file():
         return None
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _head(repo: Path) -> str:
+    result = _run(["git", "rev-parse", "--verify", "HEAD"], cwd=repo)
+    if result["exit_code"] or result["stdout_truncated"]:
+        raise GitHubCapabilityError("HEAD_READ_FAILED")
+    return result["stdout"].strip()
+
+
+def _write_guard(ctx: GitHubCapabilityContext, repo: Path, *, exact: bool = True) -> str:
+    if not ctx.task_branch.startswith("task/"):
+        raise GitHubCapabilityError("TASK_BRANCH_MISMATCH")
+    if _current_branch(ctx, repo) != ctx.task_branch:
+        raise GitHubCapabilityError("CURRENT_BRANCH_MISMATCH")
+    if not re.fullmatch(r"[0-9a-fA-F]{40}", ctx.expected_base_sha):
+        raise GitHubCapabilityError("BASE_SHA_INVALID")
+    head = _head(repo)
+    if exact and head.lower() != ctx.expected_base_sha.lower():
+        raise GitHubCapabilityError("HEAD_DRIFT")
+    return head
 
 
 def github_repo_read(
@@ -173,7 +217,7 @@ def github_branch_read(
     repo = _rooted_repo(str(args.get("repo_root", "")), ctx.allowed_roots)
     _require_repo_binding(ctx, repo)
     branch = str(args.get("branch") or ctx.task_branch)
-    if not branch or branch.startswith("-"):
+    if not branch or _run(["git", "check-ref-format", f"refs/heads/{branch}"], cwd=repo)["exit_code"]:
         raise GitHubCapabilityError("BRANCH_INVALID")
     local = _run(
         ["git", "rev-parse", "--verify", f"refs/heads/{branch}"],
@@ -185,7 +229,7 @@ def github_branch_read(
         cwd=repo,
         max_bytes=ctx.max_output_bytes,
     )
-    if remote["exit_code"] != 0:
+    if remote["exit_code"] != 0 or remote["stdout_truncated"]:
         raise GitHubCapabilityError("REMOTE_BRANCH_READ_FAILED")
     remote_line = remote["stdout"].strip()
     remote_sha = remote_line.split()[0] if remote_line else None
@@ -211,9 +255,12 @@ def github_diff_read(
     for item in paths:
         _bounded_path(ctx, repo, item, require_write_scope=False)
         clean_paths.append(item)
-    argv = ["git", "diff", "--no-ext-diff", "--binary", base, head]
+    for revision in (base, head):
+        if not revision or revision.startswith("-"):
+            raise GitHubCapabilityError("DIFF_REVISION_INVALID")
+    argv = ["git", "diff", "--no-ext-diff", "--no-textconv", "--binary", base, head, "--"]
     if clean_paths:
-        argv.extend(["--", *clean_paths])
+        argv.extend(clean_paths)
     result = _run(argv, cwd=repo, max_bytes=ctx.max_output_bytes)
     if result["exit_code"] != 0:
         raise GitHubCapabilityError("GIT_DIFF_READ_FAILED")
@@ -255,8 +302,7 @@ def github_file_write_bounded(
 ) -> Mapping[str, Any]:
     repo = _rooted_repo(str(args.get("repo_root", "")), ctx.allowed_roots)
     _require_repo_binding(ctx, repo)
-    if _current_branch(ctx, repo) != ctx.task_branch:
-        raise GitHubCapabilityError("CURRENT_BRANCH_MISMATCH")
+    _write_guard(ctx, repo)
     relative = str(args.get("path", ""))
     target = _bounded_path(ctx, repo, relative, require_write_scope=True)
     content = args.get("content")
@@ -274,9 +320,17 @@ def github_file_write_bounded(
         if not isinstance(expected, str) or expected.lower() != before:
             raise GitHubCapabilityError("FILE_CONTENT_DRIFT")
     target.parent.mkdir(parents=True, exist_ok=True)
-    tmp = target.with_suffix(target.suffix + ".palwakf.tmp")
-    tmp.write_bytes(encoded)
-    tmp.replace(target)
+    with tempfile.NamedTemporaryFile(dir=target.parent, prefix=".palwakf-", delete=False) as stream:
+        tmp = Path(stream.name)
+        stream.write(encoded)
+    try:
+        _require_repo_binding(ctx, repo)
+        _write_guard(ctx, repo)
+        if _bounded_path(ctx, repo, relative, require_write_scope=True) != target or _sha256_or_none(target) != before:
+            raise GitHubCapabilityError("FILE_CONTENT_DRIFT")
+        tmp.replace(target)
+    finally:
+        tmp.unlink(missing_ok=True)
     after = hashlib.sha256(encoded).hexdigest()
     return {
         "path": relative,
@@ -296,14 +350,12 @@ def github_branch_create(
     base_sha = str(args.get("base_sha", ""))
     if branch != ctx.task_branch or not branch.startswith("task/"):
         raise GitHubCapabilityError("TASK_BRANCH_MISMATCH")
-    if base_sha.lower() != ctx.expected_base_sha.lower():
+    if not re.fullmatch(r"[0-9a-fA-F]{40}", base_sha) or base_sha.lower() != ctx.expected_base_sha.lower():
         raise GitHubCapabilityError("BASE_SHA_MISMATCH")
-    status = _run(
-        ["git", "status", "--porcelain=v1"],
-        cwd=repo,
-        max_bytes=ctx.max_output_bytes,
-    )
-    if status["exit_code"] != 0 or status["stdout"].strip():
+    if _head(repo).lower() != base_sha.lower():
+        raise GitHubCapabilityError("HEAD_DRIFT")
+    status = _run(["git", "status", "--porcelain=v1"], cwd=repo)
+    if status["exit_code"] != 0 or status["stdout_truncated"] or status["stdout"].strip():
         raise GitHubCapabilityError("WORKTREE_NOT_CLEAN")
     result = _run(
         ["git", "switch", "-c", branch, base_sha],
@@ -321,8 +373,7 @@ def github_commit_create(
 ) -> Mapping[str, Any]:
     repo = _rooted_repo(str(args.get("repo_root", "")), ctx.allowed_roots)
     _require_repo_binding(ctx, repo)
-    if _current_branch(ctx, repo) != ctx.task_branch:
-        raise GitHubCapabilityError("CURRENT_BRANCH_MISMATCH")
+    _write_guard(ctx, repo)
     paths = args.get("paths")
     if not isinstance(paths, list) or not paths:
         raise GitHubCapabilityError("COMMIT_PATHS_REQUIRED")
@@ -330,11 +381,16 @@ def github_commit_create(
     for item in paths:
         if not isinstance(item, str) or item in {".", "*"}:
             raise GitHubCapabilityError("UNSAFE_COMMIT_PATH")
-        _bounded_path(ctx, repo, item, require_write_scope=True)
-        clean.append(item)
+        target = _bounded_path(ctx, repo, item, require_write_scope=True)
+        if target.is_dir():
+            raise GitHubCapabilityError("EXACT_FILE_PATH_REQUIRED")
+        clean.append(target.relative_to(repo).as_posix())
     message = str(args.get("message", "")).strip()
     if not message or len(message) > 240:
         raise GitHubCapabilityError("COMMIT_MESSAGE_INVALID")
+    prior = _run(["git", "diff", "--cached", "--name-only", "-z", "--no-renames"], cwd=repo)
+    if prior["exit_code"] or prior["stdout_truncated"] or set(filter(None, prior["stdout"].split("\x00"))) - set(clean):
+        raise GitHubCapabilityError("STAGED_PATH_SET_MISMATCH")
     stage = _run(
         ["git", "add", "--", *clean],
         cwd=repo,
@@ -343,12 +399,12 @@ def github_commit_create(
     if stage["exit_code"] != 0:
         raise GitHubCapabilityError("GIT_STAGE_FAILED")
     staged = _run(
-        ["git", "diff", "--cached", "--name-only"],
+        ["git", "diff", "--cached", "--name-only", "-z", "--no-renames"],
         cwd=repo,
         max_bytes=ctx.max_output_bytes,
     )
-    staged_paths = [item for item in staged["stdout"].splitlines() if item.strip()]
-    if sorted(staged_paths) != sorted(clean):
+    staged_paths = [item for item in staged["stdout"].split("\x00") if item]
+    if staged["exit_code"] or staged["stdout_truncated"] or sorted(staged_paths) != sorted(set(clean)):
         raise GitHubCapabilityError("STAGED_PATH_SET_MISMATCH")
     result = _run(
         ["git", "commit", "-m", message],
@@ -372,6 +428,15 @@ def github_task_branch_push(
         raise GitHubCapabilityError("PUSH_TASK_BRANCH_MISMATCH")
     if _current_branch(ctx, repo) != branch:
         raise GitHubCapabilityError("CURRENT_BRANCH_MISMATCH")
+    head = _write_guard(ctx, repo, exact=False)
+    ancestor = _run(["git", "merge-base", "--is-ancestor", ctx.expected_base_sha, head], cwd=repo)
+    if ancestor["exit_code"]:
+        raise GitHubCapabilityError("HEAD_DRIFT")
+    changed = _run(["git", "diff", "--name-only", "--no-renames", "-z", ctx.expected_base_sha, head, "--"], cwd=repo)
+    if changed["exit_code"] or changed["stdout_truncated"]:
+        raise GitHubCapabilityError("PUSH_PATH_READ_FAILED")
+    for path in filter(None, changed["stdout"].split("\x00")):
+        _bounded_path(ctx, repo, path, require_write_scope=True)
     expected_remote = str(args.get("expected_remote_head", ""))
     if expected_remote.lower() != ctx.expected_base_sha.lower():
         raise GitHubCapabilityError("SIGNED_REMOTE_PRECONDITION_MISMATCH")
@@ -380,14 +445,17 @@ def github_task_branch_push(
         cwd=repo,
         max_bytes=ctx.max_output_bytes,
     )
-    if remote["exit_code"] != 0:
+    if remote["exit_code"] != 0 or remote["stdout_truncated"]:
         raise GitHubCapabilityError("REMOTE_HEAD_READ_FAILED")
     line = remote["stdout"].strip()
     observed = line.split()[0] if line else None
     if observed is not None and observed.lower() != expected_remote.lower():
         raise GitHubCapabilityError("REMOTE_HEAD_DRIFT")
+    _require_repo_binding(ctx, repo)
+    if _write_guard(ctx, repo, exact=False) != head:
+        raise GitHubCapabilityError("HEAD_DRIFT")
     push = _run(
-        ["git", "push", "origin", f"HEAD:refs/heads/{branch}"],
+        ["git", "push", "--no-follow-tags", "origin", f"{head}:refs/heads/{branch}"],
         cwd=repo,
         timeout=180,
         max_bytes=ctx.max_output_bytes,
@@ -402,7 +470,7 @@ def github_task_branch_push(
     )
     verify_line = verify["stdout"].strip()
     remote_after = verify_line.split()[0] if verify_line else None
-    if remote_after != head:
+    if verify["exit_code"] or verify["stdout_truncated"] or remote_after != head or _head(repo) != head:
         raise GitHubCapabilityError("REMOTE_PUSH_READBACK_MISMATCH")
     return {
         "branch": branch,
