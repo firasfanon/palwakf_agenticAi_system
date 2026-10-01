@@ -110,6 +110,10 @@ def _rooted(path: str, allowed_roots: tuple[str, ...]) -> Path:
     return target
 
 
+def _git_argv(repo: Path, *args: str) -> list[str]:
+    return ["git", "-c", f"safe.directory={repo}", *args]
+
+
 def c7r_phase_a_handler(
     ctx: CapabilityContextV1,
     args: Mapping[str, Any],
@@ -161,10 +165,10 @@ def git_readback(ctx: CapabilityContextV1, args: Mapping[str, Any]) -> Mapping[s
     repo = _rooted(str(args.get("repo_root", "")), ctx.allowed_roots)
     if not (repo / ".git").exists():
         raise CapabilityError("NOT_A_GIT_WORKTREE")
-    head = _run(["git", "rev-parse", "HEAD"], cwd=str(repo), max_bytes=ctx.max_output_bytes)
-    branch = _run(["git", "branch", "--show-current"], cwd=str(repo), max_bytes=ctx.max_output_bytes)
-    status = _run(["git", "status", "--porcelain=v1"], cwd=str(repo), max_bytes=ctx.max_output_bytes)
-    remote = _run(["git", "remote", "get-url", "origin"], cwd=str(repo), max_bytes=ctx.max_output_bytes)
+    head = _run(_git_argv(repo, "rev-parse", "HEAD"), cwd=str(repo), max_bytes=ctx.max_output_bytes)
+    branch = _run(_git_argv(repo, "branch", "--show-current"), cwd=str(repo), max_bytes=ctx.max_output_bytes)
+    status = _run(_git_argv(repo, "status", "--porcelain=v1"), cwd=str(repo), max_bytes=ctx.max_output_bytes)
+    remote = _run(_git_argv(repo, "remote", "get-url", "origin"), cwd=str(repo), max_bytes=ctx.max_output_bytes)
     return {
         "head": head["stdout"].strip(),
         "branch": branch["stdout"].strip(),
@@ -182,16 +186,16 @@ def git_create_task_branch(ctx: CapabilityContextV1, args: Mapping[str, Any]) ->
         raise CapabilityError("TASK_BRANCH_MISMATCH")
     if base_sha.lower() != ctx.expected_base_sha.lower():
         raise CapabilityError("BASE_SHA_MISMATCH")
-    status = _run(["git", "status", "--porcelain=v1"], cwd=str(repo), max_bytes=ctx.max_output_bytes)
+    status = _run(_git_argv(repo, "status", "--porcelain=v1"), cwd=str(repo), max_bytes=ctx.max_output_bytes)
     if status["exit_code"] != 0 or status["stdout"].strip():
         raise CapabilityError("WORKTREE_NOT_CLEAN")
-    verify = _run(["git", "cat-file", "-e", f"{base_sha}^{{commit}}"], cwd=str(repo), max_bytes=ctx.max_output_bytes)
+    verify = _run(_git_argv(repo, "cat-file", "-e", f"{base_sha}^{{commit}}"), cwd=str(repo), max_bytes=ctx.max_output_bytes)
     if verify["exit_code"] != 0:
         raise CapabilityError("BASE_COMMIT_NOT_PRESENT")
-    exists = _run(["git", "show-ref", "--verify", "--quiet", f"refs/heads/{branch}"], cwd=str(repo), max_bytes=ctx.max_output_bytes)
+    exists = _run(_git_argv(repo, "show-ref", "--verify", "--quiet", f"refs/heads/{branch}"), cwd=str(repo), max_bytes=ctx.max_output_bytes)
     if exists["exit_code"] == 0:
         raise CapabilityError("TASK_BRANCH_ALREADY_EXISTS")
-    result = _run(["git", "switch", "-c", branch, base_sha], cwd=str(repo), max_bytes=ctx.max_output_bytes)
+    result = _run(_git_argv(repo, "switch", "-c", branch, base_sha), cwd=str(repo), max_bytes=ctx.max_output_bytes)
     if result["exit_code"] != 0:
         raise CapabilityError("TASK_BRANCH_CREATE_FAILED")
     return {"branch": branch, "base_sha": base_sha, "result": result}
@@ -207,7 +211,7 @@ def git_stage_paths(ctx: CapabilityContextV1, args: Mapping[str, Any]) -> Mappin
         if not isinstance(item, str) or item in {".", "*"} or ".." in Path(item).parts:
             raise CapabilityError("UNSAFE_STAGE_PATH")
         clean.append(item)
-    result = _run(["git", "add", "--", *clean], cwd=str(repo), max_bytes=ctx.max_output_bytes)
+    result = _run(_git_argv(repo, "add", "--", *clean), cwd=str(repo), max_bytes=ctx.max_output_bytes)
     if result["exit_code"] != 0:
         raise CapabilityError("GIT_STAGE_FAILED")
     return {"staged_paths": clean, "result": result}
@@ -218,13 +222,13 @@ def git_commit(ctx: CapabilityContextV1, args: Mapping[str, Any]) -> Mapping[str
     message = str(args.get("message", "")).strip()
     if not message or len(message) > 240:
         raise CapabilityError("COMMIT_MESSAGE_INVALID")
-    branch = _run(["git", "branch", "--show-current"], cwd=str(repo), max_bytes=ctx.max_output_bytes)["stdout"].strip()
+    branch = _run(_git_argv(repo, "branch", "--show-current"), cwd=str(repo), max_bytes=ctx.max_output_bytes)["stdout"].strip()
     if branch != ctx.task_branch:
         raise CapabilityError("CURRENT_BRANCH_MISMATCH")
-    result = _run(["git", "commit", "-m", message], cwd=str(repo), max_bytes=ctx.max_output_bytes)
+    result = _run(_git_argv(repo, "commit", "-m", message), cwd=str(repo), max_bytes=ctx.max_output_bytes)
     if result["exit_code"] != 0:
         raise CapabilityError("GIT_COMMIT_FAILED")
-    head = _run(["git", "rev-parse", "HEAD"], cwd=str(repo), max_bytes=ctx.max_output_bytes)["stdout"].strip()
+    head = _run(_git_argv(repo, "rev-parse", "HEAD"), cwd=str(repo), max_bytes=ctx.max_output_bytes)["stdout"].strip()
     return {"commit_sha": head, "result": result}
 
 
@@ -233,10 +237,10 @@ def git_push_task_branch(ctx: CapabilityContextV1, args: Mapping[str, Any]) -> M
     branch = str(args.get("branch", ""))
     if branch != ctx.task_branch or not branch.startswith("task/"):
         raise CapabilityError("PUSH_TASK_BRANCH_MISMATCH")
-    current = _run(["git", "branch", "--show-current"], cwd=str(repo), max_bytes=ctx.max_output_bytes)["stdout"].strip()
+    current = _run(_git_argv(repo, "branch", "--show-current"), cwd=str(repo), max_bytes=ctx.max_output_bytes)["stdout"].strip()
     if current != branch:
         raise CapabilityError("CURRENT_BRANCH_MISMATCH")
-    result = _run(["git", "push", "origin", f"HEAD:refs/heads/{branch}"], cwd=str(repo), max_bytes=ctx.max_output_bytes)
+    result = _run(_git_argv(repo, "push", "origin", f"HEAD:refs/heads/{branch}"), cwd=str(repo), max_bytes=ctx.max_output_bytes)
     if result["exit_code"] != 0:
         raise CapabilityError("GIT_PUSH_FAILED")
     return {"branch": branch, "force": False, "result": result}
@@ -247,7 +251,7 @@ def git_remote_sha_readback(ctx: CapabilityContextV1, args: Mapping[str, Any]) -
     branch = str(args.get("branch", ""))
     if not branch.startswith("task/"):
         raise CapabilityError("REMOTE_READBACK_TASK_BRANCH_REQUIRED")
-    result = _run(["git", "ls-remote", "--heads", "origin", f"refs/heads/{branch}"], cwd=str(repo), max_bytes=ctx.max_output_bytes)
+    result = _run(_git_argv(repo, "ls-remote", "--heads", "origin", f"refs/heads/{branch}"), cwd=str(repo), max_bytes=ctx.max_output_bytes)
     if result["exit_code"] != 0:
         raise CapabilityError("REMOTE_SHA_READBACK_FAILED")
     line = result["stdout"].strip()
@@ -348,7 +352,7 @@ def source_apply_patch_bounded(
         if candidate not in clean:
             raise CapabilityError("PATCH_HEADER_PATH_NOT_DECLARED")
     check = subprocess.run(
-        ["git", "apply", "--check", "--whitespace=error-all", "-"],
+        _git_argv(repo, "apply", "--check", "--whitespace=error-all", "-"),
         cwd=str(repo),
         input=patch.encode("utf-8"),
         shell=False,
@@ -359,7 +363,7 @@ def source_apply_patch_bounded(
     if check.returncode != 0:
         raise CapabilityError("PATCH_CHECK_FAILED")
     apply_result = subprocess.run(
-        ["git", "apply", "--whitespace=error-all", "-"],
+        _git_argv(repo, "apply", "--whitespace=error-all", "-"),
         cwd=str(repo),
         input=patch.encode("utf-8"),
         shell=False,

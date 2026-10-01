@@ -68,6 +68,13 @@ def test_codex_provider_invocation_is_read_only(monkeypatch, tmp_path: Path) -> 
     assert "--sandbox" in argv
     assert argv[argv.index("--sandbox") + 1] == "read-only"
     assert "--ephemeral" in argv
+    kwargs = captured["kwargs"]
+    assert isinstance(kwargs, dict)
+    env = kwargs["env"]
+    count = int(env["GIT_CONFIG_COUNT"])
+    assert env[f"GIT_CONFIG_KEY_{count - 1}"] == "safe.directory"
+    assert env[f"GIT_CONFIG_VALUE_{count - 1}"] == str(repo)
+    assert env[f"GIT_CONFIG_VALUE_{count - 1}"] != "*"
     assert result["git_mutation_allowed"] is False
     assert result["mode"] == "READ_ONLY_PATCH_PROPOSAL"
 

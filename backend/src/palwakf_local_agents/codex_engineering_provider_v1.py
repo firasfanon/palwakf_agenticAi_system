@@ -62,6 +62,18 @@ def _repo_from_context(
     return repo
 
 
+def _git_safe_env(repo: Path) -> dict[str, str]:
+    env = os.environ.copy()
+    try:
+        count = int(env.get("GIT_CONFIG_COUNT", "0") or "0")
+    except ValueError as exc:
+        raise CapabilityError("GIT_CONFIG_COUNT_INVALID") from exc
+    env[f"GIT_CONFIG_KEY_{count}"] = "safe.directory"
+    env[f"GIT_CONFIG_VALUE_{count}"] = str(repo)
+    env["GIT_CONFIG_COUNT"] = str(count + 1)
+    return env
+
+
 def _git_read(
     repo: Path,
     *args: str,
@@ -74,6 +86,7 @@ def _git_read(
         text=True,
         timeout=30,
         check=False,
+        env=_git_safe_env(repo),
     )
     if completed.returncode != 0:
         raise CapabilityError("CODEX_PROVIDER_GIT_READBACK_FAILED")
@@ -131,6 +144,7 @@ def codex_patch_proposal(
         text=False,
         timeout=settings.timeout_seconds,
         check=False,
+        env=_git_safe_env(repo),
     )
     if completed.returncode != 0:
         raise CapabilityError("CODEX_PROVIDER_EXECUTION_FAILED")

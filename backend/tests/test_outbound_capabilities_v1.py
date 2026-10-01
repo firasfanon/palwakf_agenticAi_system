@@ -5,6 +5,7 @@ import pytest
 from palwakf_local_agents.outbound_capabilities_v1 import (
     CapabilityContextV1,
     CapabilityError,
+    _git_argv,
     default_capability_registry_v1,
 )
 
@@ -39,3 +40,10 @@ def test_git_stage_rejects_add_dot(tmp_path):
     subprocess.run(["git","init"], cwd=repo, check=True, capture_output=True)
     with pytest.raises(CapabilityError, match="UNSAFE_STAGE_PATH"):
         default_capability_registry_v1().resolve("git.stage_paths").handler(ctx(tmp_path), {"repo_root":str(repo),"paths":["."]})
+
+
+def test_git_safe_directory_is_scoped_to_exact_repo(tmp_path):
+    repo = (tmp_path / "repo").resolve()
+    argv = _git_argv(repo, "status", "--porcelain=v1")
+    assert argv[:3] == ["git", "-c", f"safe.directory={repo}"]
+    assert "safe.directory=*" not in argv
