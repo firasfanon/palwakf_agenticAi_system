@@ -53,6 +53,12 @@ class FakeRclone:
             return subprocess.CompletedProcess(
                 argv, 0, stdout=json.dumps(self.listing).encode(), stderr=b""
             )
+        if verb == "cat":
+            if args[0].startswith("palwakf:") and self.intent_text is not None:
+                return subprocess.CompletedProcess(
+                    argv, 0, stdout=self.intent_text.encode("utf-8"), stderr=b""
+                )
+            return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
         if verb == "copyto":
             source, target = args[0], args[1]
             if source.startswith("palwakf:") and self.intent_text is not None:
@@ -104,6 +110,30 @@ def test_malformed_json_fails_closed(tmp_path):
     transport = RcloneWorkspaceDriveRemoteIntentTransportV1(settings(tmp_path))
     with pytest.raises(DriveRemoteIntentError, match="REMOTE_INTENT_JSON_INVALID"):
         transport._parse_remote_intent("{not-json", "chatgpt")
+
+
+def test_oversized_intent_is_rejected_without_writing_target(tmp_path):
+    configured = settings(tmp_path).model_copy(update={"max_intent_bytes": 1024})
+    runner = FakeRclone(intent_text="x" * (configured.max_intent_bytes + 1))
+    transport = RcloneWorkspaceDriveRemoteIntentTransportV1(
+        configured, runner=runner
+    )
+    target = tmp_path / "remote-intent.json"
+
+    with pytest.raises(DriveRemoteIntentError, match="^REMOTE_INTENT_TOO_LARGE$"):
+        transport._copy_intent_to_local(
+            configured.client_inboxes[0], {"Path": "intent.json"}, target
+        )
+
+    assert not target.exists()
+    assert len(runner.calls) == 1
+    call = runner.calls[0]
+    assert call[call.index("--config") + 2 :] == [
+        "cat",
+        "palwakf:RemoteIntent/ChatGPT/intent.json",
+        "--count",
+        str(configured.max_intent_bytes + 1),
+    ]
 
 
 def test_signer_failure_fails_closed(tmp_path, monkeypatch):
@@ -174,9 +204,8 @@ def test_result_publication_and_archive_use_fixed_rclone_verbs(tmp_path, monkeyp
     for call in runner.calls:
         idx = call.index("--config") + 2
         verbs.append(call[idx])
-    assert set(verbs) <= {"lsjson", "copyto", "moveto"}
-    assert "copyto" in verbs
-    assert "moveto" in verbs
+    assert set(verbs) <= {"lsjson", "cat", "copyto", "moveto"}
+    assert verbs == ["lsjson", "cat", "copyto", "moveto"]
     assert all("--config" in call for call in runner.calls)
 
 

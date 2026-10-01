@@ -123,3 +123,22 @@ def test_github_heartbeat_failure_still_allows_drive_poll():
     worker.drive_transport = DriveTransport()
     worker.run()
     assert seen["drive"] == 1
+
+
+def test_drive_only_worker_does_not_require_github_transport():
+    seen = {"drive": 0}
+
+    class DriveTransport:
+        transport_id = "workspace-drive-remote-intent-v1"
+
+        def claim_task(self, *, executor_id):
+            assert executor_id == "Futuer-IT"
+            seen["drive"] += 1
+            return None
+
+    worker = _worker_with(None)
+    worker.drive_transport = DriveTransport()
+    worker.run()
+
+    assert seen["drive"] == 1
+    assert worker._transport_degraded is False

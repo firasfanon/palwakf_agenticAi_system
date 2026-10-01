@@ -141,7 +141,7 @@ class RcloneWorkspaceDriveRemoteIntentTransportV1:
         return f"{self.settings.remote_name}:{normalized}"
 
     def _run_rclone(self, args: list[str]) -> subprocess.CompletedProcess[bytes]:
-        allowed = {"lsjson", "copyto", "moveto"}
+        allowed = {"lsjson", "cat", "copyto", "moveto"}
         if not args or args[0] not in allowed:
             raise DriveRemoteIntentError("RCLONE_VERB_NOT_ALLOWED")
 
@@ -222,20 +222,18 @@ class RcloneWorkspaceDriveRemoteIntentTransportV1:
         item: Mapping[str, Any],
         target: Path,
     ) -> str:
+        del target
         name = self._safe_item_name(item.get("Path") or item.get("Name"))
         source = self._remote(f"{inbox.inbox_path.rstrip('/')}/{name}")
-        self._run_rclone(
+        result = self._run_rclone(
             [
-                "copyto",
+                "cat",
                 source,
-                str(target),
-                "--drive-export-formats",
-                "txt",
-                "--max-size",
-                str(self.settings.max_intent_bytes),
+                "--count",
+                str(self.settings.max_intent_bytes + 1),
             ]
         )
-        data = target.read_bytes()
+        data = result.stdout
         if len(data) > self.settings.max_intent_bytes:
             raise DriveRemoteIntentError("REMOTE_INTENT_TOO_LARGE")
         try:

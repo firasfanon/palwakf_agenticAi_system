@@ -28,7 +28,7 @@ class WorkerConfigV1(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
     executor: ExecutorSettingsV1
-    transport: GitHubIssueTransportSettingsV1
+    transport: GitHubIssueTransportSettingsV1 | None = None
     drive_remote_intent: RcloneDriveRemoteIntentSettingsV1 | None = None
     authority_public_keys_b64: dict[str, str] = Field(default_factory=dict)
     authority_public_keys_path: str | None = (
@@ -71,7 +71,11 @@ class WorkerConfigV1(BaseModel):
 class OutboundWorkerV1:
     def __init__(self, config: WorkerConfigV1):
         self.config = config
-        self.transport = GitHubIssueTransportV1(config.transport)
+        self.transport = (
+            GitHubIssueTransportV1(config.transport)
+            if config.transport is not None
+            else None
+        )
         self.drive_transport = (
             RcloneWorkspaceDriveRemoteIntentTransportV1(config.drive_remote_intent)
             if config.drive_remote_intent
@@ -145,7 +149,10 @@ class OutboundWorkerV1:
         last_heartbeat = 0.0
         while not self._stop.is_set():
             now = time.monotonic()
-            if now - last_heartbeat >= self.config.heartbeat_seconds:
+            if (
+                self.transport is not None
+                and now - last_heartbeat >= self.config.heartbeat_seconds
+            ):
                 try:
                     self.transport.publish_heartbeat(
                         {
@@ -165,7 +172,9 @@ class OutboundWorkerV1:
                         continue
 
             did_work = False
-            transports = [self.transport]
+            transports = []
+            if self.transport is not None:
+                transports.append(self.transport)
             drive_transport = getattr(self, "drive_transport", None)
             if drive_transport is not None:
                 transports.append(drive_transport)
