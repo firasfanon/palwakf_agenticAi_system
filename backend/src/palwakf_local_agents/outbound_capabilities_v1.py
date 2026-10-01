@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import platform
+import re
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -39,6 +41,7 @@ class CapabilityContextV1:
     task_branch: str
     expected_base_sha: str
     max_output_bytes: int = 131072
+    state_dir: str | None = None
 
 
 @dataclass(frozen=True)
@@ -319,12 +322,92 @@ def _scope_allows_relative_path(
     return False
 
 
+_LOCAL_RESULT_REF_RE = re.compile(
+    r"^local-result://([0-9a-f]{32})/([0-9a-f]{64})$"
+)
+
+
+def _load_codex_proposal_artifact(
+    ctx: CapabilityContextV1,
+    args: Mapping[str, Any],
+) -> tuple[str, list[str] | None, str | None, str | None]:
+    raw_patch = args.get("unified_diff")
+    proposal_ref = args.get("proposal_ref")
+    proposal_sha256 = args.get("proposal_sha256")
+
+    has_raw = isinstance(raw_patch, str) and bool(raw_patch)
+    has_ref = isinstance(proposal_ref, str) and bool(proposal_ref)
+    if has_raw == has_ref:
+        raise CapabilityError("EXACTLY_ONE_PATCH_SOURCE_REQUIRED")
+
+    if has_raw:
+        if proposal_sha256 is not None:
+            raise CapabilityError("RAW_PATCH_MUST_NOT_HAVE_PROPOSAL_HASH")
+        return str(raw_patch), None, None, None
+
+    if not isinstance(proposal_sha256, str):
+        raise CapabilityError("PROPOSAL_SHA256_REQUIRED")
+    proposal_sha256 = proposal_sha256.lower()
+    match = _LOCAL_RESULT_REF_RE.fullmatch(str(proposal_ref))
+    if match is None:
+        raise CapabilityError("PROPOSAL_REF_INVALID")
+    artifact_id, ref_digest = match.groups()
+    if proposal_sha256 != ref_digest:
+        raise CapabilityError("PROPOSAL_REF_HASH_MISMATCH")
+    if ctx.state_dir is None:
+        raise CapabilityError("CAPABILITY_STATE_DIR_REQUIRED")
+
+    root = (Path(ctx.state_dir).resolve() / "capability-results").resolve()
+    artifact_path = (root / f"{artifact_id}.json").resolve()
+    if artifact_path.parent != root or not artifact_path.is_file():
+        raise CapabilityError("PROPOSAL_ARTIFACT_NOT_FOUND")
+    data = artifact_path.read_bytes()
+    if len(data) > ctx.max_output_bytes * 4:
+        raise CapabilityError("PROPOSAL_ARTIFACT_TOO_LARGE")
+    actual = hashlib.sha256(data).hexdigest()
+    if actual != proposal_sha256:
+        raise CapabilityError("PROPOSAL_ARTIFACT_HASH_MISMATCH")
+    try:
+        artifact = json.loads(data.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise CapabilityError("PROPOSAL_ARTIFACT_INVALID") from exc
+    if not isinstance(artifact, dict):
+        raise CapabilityError("PROPOSAL_ARTIFACT_INVALID")
+    if artifact.get("capability_id") != "engineering.codex.patch_proposal":
+        raise CapabilityError("PROPOSAL_ARTIFACT_CAPABILITY_MISMATCH")
+    result = artifact.get("result")
+    if not isinstance(result, dict):
+        raise CapabilityError("PROPOSAL_ARTIFACT_RESULT_INVALID")
+    if result.get("mode") != "READ_ONLY_PATCH_PROPOSAL":
+        raise CapabilityError("PROPOSAL_MODE_INVALID")
+    if result.get("git_mutation_allowed") is not False:
+        raise CapabilityError("PROPOSAL_GIT_MUTATION_POLICY_INVALID")
+    before_head = str(result.get("before_head") or "")
+    if before_head.lower() != ctx.expected_base_sha.lower():
+        raise CapabilityError("PROPOSAL_BASE_HEAD_MISMATCH")
+    changed_files = result.get("changed_files")
+    if (
+        not isinstance(changed_files, list)
+        or not changed_files
+        or not all(isinstance(item, str) and item for item in changed_files)
+        or len(changed_files) != len(set(changed_files))
+    ):
+        raise CapabilityError("PROPOSAL_CHANGED_FILES_INVALID")
+    patch = result.get("unified_diff")
+    if not isinstance(patch, str) or not patch:
+        raise CapabilityError("PROPOSAL_PATCH_INVALID")
+    return patch, list(changed_files), str(proposal_ref), proposal_sha256
+
+
 def source_apply_patch_bounded(
     ctx: CapabilityContextV1,
     args: Mapping[str, Any],
 ) -> Mapping[str, Any]:
     repo = _rooted(str(args.get("repo_root", "")), ctx.allowed_roots)
-    patch = str(args.get("unified_diff", ""))
+    patch, proposal_files, proposal_ref, proposal_sha256 = _load_codex_proposal_artifact(
+        ctx,
+        args,
+    )
     paths = args.get("paths")
     if not patch or len(patch.encode("utf-8")) > ctx.max_output_bytes * 4:
         raise CapabilityError("PATCH_INVALID_OR_TOO_LARGE")
@@ -339,6 +422,10 @@ def source_apply_patch_bounded(
         if not _scope_allows_relative_path(repo, item, ctx.scope_paths):
             raise CapabilityError("PATCH_SCOPE_WIDENING_DENIED")
         clean.append(item)
+    if len(clean) != len(set(clean)):
+        raise CapabilityError("PATCH_PATHS_MUST_BE_UNIQUE")
+    if proposal_files is not None and set(clean) != set(proposal_files):
+        raise CapabilityError("PROPOSAL_CHANGED_FILES_MISMATCH")
     for header in (
         line[4:]
         for line in patch.splitlines()
@@ -373,7 +460,14 @@ def source_apply_patch_bounded(
     )
     if apply_result.returncode != 0:
         raise CapabilityError("PATCH_APPLY_FAILED")
-    return {"applied_paths": clean, "git_refs_mutated": False}
+    result: dict[str, Any] = {
+        "applied_paths": clean,
+        "git_refs_mutated": False,
+    }
+    if proposal_ref is not None and proposal_sha256 is not None:
+        result["proposal_ref"] = proposal_ref
+        result["proposal_sha256"] = proposal_sha256
+    return result
 
 
 def default_capability_registry_v1() -> CapabilityRegistryV1:

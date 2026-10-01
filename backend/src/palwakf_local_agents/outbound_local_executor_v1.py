@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sqlite3
 import time
 from datetime import UTC, datetime
@@ -136,6 +137,38 @@ class PalWakfOutboundLocalExecutorV1:
         with self.audit_path.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(safe, ensure_ascii=False, sort_keys=True, default=str) + "\n")
 
+    def _persist_codex_proposal_artifact(
+        self,
+        *,
+        task_id: str,
+        capability_id: str,
+        result: Mapping[str, Any],
+    ) -> tuple[str, str]:
+        artifact_root = Path(self.settings.state_dir) / "capability-results"
+        artifact_root.mkdir(parents=True, exist_ok=True)
+        artifact_id = hashlib.sha256(task_id.encode("utf-8")).hexdigest()[:32]
+        artifact_path = artifact_root / f"{artifact_id}.json"
+        payload = {
+            "schema_id": "palwakf.capability_result.codex_patch.v1",
+            "task_id": task_id,
+            "capability_id": capability_id,
+            "result": dict(result),
+        }
+        encoded = json.dumps(
+            payload,
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+            default=str,
+        ).encode("utf-8")
+        if len(encoded) > self.settings.max_output_bytes * 4:
+            raise CapabilityError("CODEX_PROPOSAL_ARTIFACT_TOO_LARGE")
+        digest = hashlib.sha256(encoded).hexdigest()
+        temp = artifact_path.with_suffix(".tmp")
+        temp.write_bytes(encoded)
+        os.replace(temp, artifact_path)
+        return digest, f"local-result://{artifact_id}/{digest}"
+
     def execute(self, envelope: TaskEnvelopeV1, *, transport_adapter: str) -> EvidenceEnvelopeV1:
         started = datetime.now(UTC)
         started_clock = time.monotonic()
@@ -145,6 +178,8 @@ class PalWakfOutboundLocalExecutorV1:
         after_anchor: str | None = None
         stdout_summary: str | None = None
         stderr_summary: str | None = None
+        artifact_hashes: tuple[str, ...] = ()
+        checkpoint_ref: str | None = None
         exit_state = "FAILED"
         verification_state = "NOT_RUN"
         authority_verdict = "NOT_VERIFIED"
@@ -186,10 +221,18 @@ class PalWakfOutboundLocalExecutorV1:
                 task_branch=envelope.task_branch,
                 expected_base_sha=envelope.expected_base_sha,
                 max_output_bytes=self.settings.max_output_bytes,
+                state_dir=self.settings.state_dir,
             )
             result = dict(descriptor.handler(context, envelope.arguments))
             encoded = json.dumps(result, ensure_ascii=False, sort_keys=True, default=str).encode("utf-8")
             stdout_summary = f"RESULT_SHA256={hashlib.sha256(encoded).hexdigest()};BYTES={len(encoded)}"
+            if descriptor.capability_id == "engineering.codex.patch_proposal":
+                artifact_sha256, checkpoint_ref = self._persist_codex_proposal_artifact(
+                    task_id=envelope.task_id,
+                    capability_id=descriptor.capability_id,
+                    result=result,
+                )
+                artifact_hashes = (artifact_sha256,)
             if descriptor.capability_id == "c7r.phase_a":
                 safe_summary = result.get("_evidence_summary")
                 if not isinstance(safe_summary, str) or not safe_summary or len(safe_summary) > 1600:
@@ -244,8 +287,10 @@ class PalWakfOutboundLocalExecutorV1:
             attempt_count=attempt_count,
             exit_state=exit_state,
             verification_state=verification_state,
+            artifact_hashes=artifact_hashes,
             stdout_hash_or_summary=stdout_summary,
             stderr_hash_or_summary=stderr_summary,
+            checkpoint_ref=checkpoint_ref,
             blockers=tuple(dict.fromkeys(blockers)),
             policy_invariants=POLICY_INVARIANTS,
         )
