@@ -8,7 +8,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Mapping
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from palwakf_local_agents.outbound_capabilities_v1 import (
     CapabilityContextV1,
@@ -38,10 +38,26 @@ class ExecutorSettingsV1(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
     executor_id: str
-    repository_id: str
+    repository_id: str | None = None
+    repository_ids: tuple[str, ...] = Field(default=(), max_length=64)
     allowed_roots: tuple[str, ...] = Field(min_length=1, max_length=64)
     state_dir: str
     max_output_bytes: int = Field(default=131072, ge=4096, le=1048576)
+
+    @model_validator(mode="after")
+    def validate_repository_allowlist(self) -> "ExecutorSettingsV1":
+        repositories = self.effective_repository_ids()
+        if not repositories:
+            raise ValueError("EXECUTOR_REPOSITORY_ALLOWLIST_REQUIRED")
+        if len(set(repositories)) != len(repositories):
+            raise ValueError("EXECUTOR_REPOSITORY_ALLOWLIST_MUST_BE_UNIQUE")
+        return self
+
+    def effective_repository_ids(self) -> tuple[str, ...]:
+        values = list(self.repository_ids)
+        if self.repository_id and self.repository_id not in values:
+            values.append(self.repository_id)
+        return tuple(values)
 
 
 class LocalTaskLedgerV1:
@@ -156,7 +172,7 @@ class PalWakfOutboundLocalExecutorV1:
             now = datetime.now(UTC)
             if envelope.executor_id != self.settings.executor_id:
                 blockers.append("EXECUTOR_ID_MISMATCH")
-            if envelope.repository_id != self.settings.repository_id:
+            if envelope.repository_id not in self.settings.effective_repository_ids():
                 blockers.append("REPOSITORY_ID_MISMATCH")
             allowed, authority_blockers = self.authority_verifier.verify(envelope, now=now)
             blockers.extend(authority_blockers)
@@ -176,7 +192,7 @@ class PalWakfOutboundLocalExecutorV1:
 
             context = CapabilityContextV1(
                 executor_id=self.settings.executor_id,
-                repository_id=self.settings.repository_id,
+                repository_id=envelope.repository_id,
                 allowed_roots=self.settings.allowed_roots,
                 scope_paths=envelope.scope_paths,
                 task_branch=envelope.task_branch,
