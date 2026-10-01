@@ -233,10 +233,26 @@ class PalWakfOutboundLocalExecutorV1:
             else:
                 exit_state = "FAILED"
         finished = datetime.now(UTC)
+        principal_id = next(
+            (
+                alias.split(":", 1)[1]
+                for alias in envelope.project_aliases
+                if alias.startswith("principal:") and ":" in alias
+            ),
+            None,
+        )
         evidence = EvidenceEnvelopeV1(
             task_id=envelope.task_id,
             project_id=envelope.project_id,
             envelope_hash=envelope.envelope_hash(),
+            principal_id=principal_id,
+            repository_id=envelope.repository_id,
+            executor_id=envelope.executor_id,
+            task_branch=envelope.task_branch,
+            expected_remote_head=envelope.expected_remote_head,
+            lease_id=envelope.execution_lease.lease_id,
+            scope_paths=envelope.scope_paths,
+            authority_ref=envelope.authority_ref,
             authority_verdict=authority_verdict,
             lease_verdict=lease_verdict,
             preflight_verdict=preflight_verdict,
