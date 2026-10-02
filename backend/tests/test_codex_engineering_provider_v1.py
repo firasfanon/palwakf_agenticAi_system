@@ -1,4 +1,5 @@
 from __future__ import annotations
+# SOVEREIGN_CODEX_READ_ONLY_UAT_V1
 
 import hashlib
 import json
