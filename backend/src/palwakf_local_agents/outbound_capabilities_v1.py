@@ -2,14 +2,20 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import platform
 import re
 import subprocess
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Literal, Mapping
 
 from palwakf_local_agents.c7r_phase_a_v1 import C7RPhaseAError, c7r_phase_a
+from palwakf_local_agents.windows_protected_secret_v1 import (
+    ProtectedSecretError,
+    read_windows_protected_text,
+)
 
 
 MutationClass = Literal["READ_ONLY", "TEMP_MUTATION", "SOURCE_WRITE", "SERVICE_MUTATION"]
@@ -80,7 +86,14 @@ class CapabilityRegistryV1:
         return tuple(self._by_id.values())
 
 
-def _run(argv: list[str], *, cwd: str, timeout: int = 120, max_bytes: int = 131072) -> dict[str, Any]:
+def _run(
+    argv: list[str],
+    *,
+    cwd: str,
+    timeout: int = 120,
+    max_bytes: int = 131072,
+    env: Mapping[str, str] | None = None,
+) -> dict[str, Any]:
     if not argv or any(not isinstance(x, str) or "\x00" in x for x in argv):
         raise CapabilityError("INVALID_ARGV")
     completed = subprocess.run(
@@ -91,6 +104,7 @@ def _run(argv: list[str], *, cwd: str, timeout: int = 120, max_bytes: int = 1310
         text=False,
         timeout=timeout,
         check=False,
+        env=env,
     )
     stdout = completed.stdout[:max_bytes]
     stderr = completed.stderr[:max_bytes]
@@ -228,7 +242,20 @@ def git_commit(ctx: CapabilityContextV1, args: Mapping[str, Any]) -> Mapping[str
     branch = _run(_git_argv(repo, "branch", "--show-current"), cwd=str(repo), max_bytes=ctx.max_output_bytes)["stdout"].strip()
     if branch != ctx.task_branch:
         raise CapabilityError("CURRENT_BRANCH_MISMATCH")
-    result = _run(_git_argv(repo, "commit", "-m", message), cwd=str(repo), max_bytes=ctx.max_output_bytes)
+    result = _run(
+        _git_argv(
+            repo,
+            "-c",
+            "user.name=PalWakf Local Executor",
+            "-c",
+            "user.email=palwakf-local-executor@localhost",
+            "commit",
+            "-m",
+            message,
+        ),
+        cwd=str(repo),
+        max_bytes=ctx.max_output_bytes,
+    )
     if result["exit_code"] != 0:
         raise CapabilityError("GIT_COMMIT_FAILED")
     head = _run(_git_argv(repo, "rev-parse", "HEAD"), cwd=str(repo), max_bytes=ctx.max_output_bytes)["stdout"].strip()
@@ -243,10 +270,51 @@ def git_push_task_branch(ctx: CapabilityContextV1, args: Mapping[str, Any]) -> M
     current = _run(_git_argv(repo, "branch", "--show-current"), cwd=str(repo), max_bytes=ctx.max_output_bytes)["stdout"].strip()
     if current != branch:
         raise CapabilityError("CURRENT_BRANCH_MISMATCH")
-    result = _run(_git_argv(repo, "push", "origin", f"HEAD:refs/heads/{branch}"), cwd=str(repo), max_bytes=ctx.max_output_bytes)
+    if ctx.state_dir is None:
+        raise CapabilityError("CAPABILITY_STATE_DIR_REQUIRED")
+
+    secret_path = Path(ctx.state_dir).resolve().parent / "secrets" / "github_token.dpapi"
+    try:
+        token = read_windows_protected_text(str(secret_path))
+    except ProtectedSecretError as exc:
+        raise CapabilityError("GIT_PUSH_PROTECTED_TOKEN_UNAVAILABLE") from exc
+
+    state_root = Path(ctx.state_dir).resolve()
+    state_root.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="palwakf-git-askpass-", dir=state_root) as temp_dir:
+        askpass = Path(temp_dir) / "askpass.cmd"
+        askpass.write_text(
+            '@echo off\r\n'
+            'echo %~1 | findstr /I "Username" >nul\r\n'
+            'if %errorlevel%==0 (echo x-access-token) else (echo %PALWAKF_GIT_TOKEN%)\r\n',
+            encoding="utf-8",
+        )
+        env = os.environ.copy()
+        env["GIT_TERMINAL_PROMPT"] = "0"
+        env["GCM_INTERACTIVE"] = "Never"
+        env["GIT_ASKPASS"] = str(askpass)
+        env["PALWAKF_GIT_TOKEN"] = token
+        result = _run(
+            _git_argv(
+                repo,
+                "-c",
+                "credential.helper=",
+                "push",
+                "origin",
+                f"HEAD:refs/heads/{branch}",
+            ),
+            cwd=str(repo),
+            max_bytes=ctx.max_output_bytes,
+            env=env,
+        )
     if result["exit_code"] != 0:
         raise CapabilityError("GIT_PUSH_FAILED")
-    return {"branch": branch, "force": False, "result": result}
+    return {
+        "branch": branch,
+        "force": False,
+        "auth_mode": "PROTECTED_TOKEN_ASKPASS_NONINTERACTIVE",
+        "result": result,
+    }
 
 
 def git_remote_sha_readback(ctx: CapabilityContextV1, args: Mapping[str, Any]) -> Mapping[str, Any]:

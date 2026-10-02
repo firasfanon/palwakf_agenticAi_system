@@ -115,22 +115,20 @@ def workspace_drive_read(
     max_bytes = int(args.get("max_bytes", min(65536, ctx.max_output_bytes)))
     if max_bytes < 1 or max_bytes > ctx.max_output_bytes:
         raise CapabilityError("WORKSPACE_DRIVE_MAX_BYTES_INVALID")
-    with tempfile.TemporaryDirectory(prefix="palwakf-drive-read-") as temp_dir:
-        local = Path(temp_dir) / "payload"
-        result = _rclone(
-            executable,
-            config,
-            protected,
-            ["copyto",
-                f"{remote}:{path}",
-                str(local),
-                "--max-size",
-                str(max_bytes),
-            ]
-        )
-        if result.returncode != 0 or not local.is_file():
-            raise CapabilityError("WORKSPACE_DRIVE_READ_FAILED")
-        data = local.read_bytes()
+    result = _rclone(
+        executable,
+        config,
+        protected,
+        [
+            "cat",
+            f"{remote}:{path}",
+            "--count",
+            str(max_bytes + 1),
+        ],
+    )
+    if result.returncode != 0:
+        raise CapabilityError("WORKSPACE_DRIVE_READ_FAILED")
+    data = result.stdout
     if len(data) > max_bytes:
         raise CapabilityError("WORKSPACE_DRIVE_READ_TOO_LARGE")
     return {

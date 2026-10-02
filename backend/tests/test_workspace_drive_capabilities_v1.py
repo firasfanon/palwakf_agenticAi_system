@@ -98,12 +98,9 @@ def test_update_checks_sha_then_writes(monkeypatch, tmp_path: Path) -> None:
         calls.append(list(argv))
         if "lsjson" in argv:
             return subprocess.CompletedProcess(argv, 0, stdout=b"{}", stderr=b"")
+        if "cat" in argv:
+            return subprocess.CompletedProcess(argv, 0, stdout=old, stderr=b"")
         if "copyto" in argv:
-            source_index = argv.index("copyto") + 1
-            source = argv[source_index]
-            target = argv[source_index + 1]
-            if source.startswith("palwakf:"):
-                Path(target).write_bytes(old)
             return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
         raise AssertionError(argv)
 
@@ -121,7 +118,8 @@ def test_update_checks_sha_then_writes(monkeypatch, tmp_path: Path) -> None:
     assert result["revision_precondition_enforced"] is True
     assert result["sha256"] == hashlib.sha256(b'{"v":2}').hexdigest()
     assert any("lsjson" in call for call in calls)
-    assert sum("copyto" in call for call in calls) == 2
+    assert sum("cat" in call for call in calls) == 1
+    assert sum("copyto" in call for call in calls) == 1
 
 
 def test_update_rejects_stale_sha(monkeypatch) -> None:
@@ -131,11 +129,9 @@ def test_update_rejects_stale_sha(monkeypatch) -> None:
     def fake_rclone(_exe, _config, _protected, argv, **_kwargs):
         if "lsjson" in argv:
             return subprocess.CompletedProcess(argv, 0, stdout=b"{}", stderr=b"")
+        if "cat" in argv:
+            return subprocess.CompletedProcess(argv, 0, stdout=old, stderr=b"")
         if "copyto" in argv:
-            idx = argv.index("copyto") + 1
-            source, target = argv[idx], argv[idx + 1]
-            if source.startswith("palwakf:"):
-                Path(target).write_bytes(old)
             return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
         raise AssertionError(argv)
 
