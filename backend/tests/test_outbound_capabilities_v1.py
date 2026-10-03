@@ -1,6 +1,7 @@
 from pathlib import Path
 import subprocess
 import pytest
+import palwakf_local_agents.outbound_capabilities_v1 as outbound_caps
 
 from palwakf_local_agents.outbound_capabilities_v1 import (
     CapabilityContextV1,
@@ -147,3 +148,146 @@ def test_git_push_uses_protected_noninteractive_auth(tmp_path, monkeypatch):
     assert result["auth_mode"] == "PROTECTED_TOKEN_ASKPASS_NONINTERACTIVE"
     assert result["force"] is False
     assert push_env is not None
+def test_run_custom_env_timeout_kills_windows_process_tree(tmp_path, monkeypatch):
+    calls = []
+
+    class FakeProcess:
+        pid = 4321
+        returncode = 1
+
+        def __init__(self):
+            self.communicate_calls = 0
+
+        def communicate(self, timeout=None):
+            self.communicate_calls += 1
+            if self.communicate_calls == 1:
+                raise subprocess.TimeoutExpired(cmd="git", timeout=timeout)
+            return b"", b""
+
+        def kill(self):
+            calls.append(("kill",))
+
+    process = FakeProcess()
+
+    def fake_popen(*args, **kwargs):
+        calls.append(("popen", args, kwargs))
+        return process
+
+    def fake_run(argv, **kwargs):
+        calls.append(("run", list(argv), kwargs))
+        return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
+
+    monkeypatch.setattr(outbound_caps.platform, "system", lambda: "Windows")
+    monkeypatch.setattr(outbound_caps.subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(outbound_caps.subprocess, "run", fake_run)
+
+    with pytest.raises(CapabilityError, match="SUBPROCESS_TIMEOUT"):
+        outbound_caps._run(
+            ["git", "push"],
+            cwd=str(tmp_path),
+            timeout=1,
+            env={"TEST_ENV": "1"},
+        )
+
+    taskkill_calls = [
+        item for item in calls
+        if item[0] == "run" and item[1][:2] == ["taskkill", "/PID"]
+    ]
+    assert taskkill_calls
+    assert taskkill_calls[0][1] == ["taskkill", "/PID", "4321", "/T", "/F"]
+    assert process.communicate_calls == 2
+
+
+def test_git_push_redacts_protected_token_from_result(tmp_path, monkeypatch):
+    repo = tmp_path / "r"
+    repo.mkdir()
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    context = CapabilityContextV1(
+        executor_id="Futuer-IT",
+        repository_id="repo",
+        allowed_roots=(str(tmp_path),),
+        scope_paths=(str(repo),),
+        task_branch="task/AGENTIC-P3-OUTBOUND-LOCAL-EXECUTOR-V1",
+        expected_base_sha="b" * 40,
+        state_dir=str(state_dir),
+    )
+    secret = "sensitive-test-token"
+    seen = {}
+
+    def fake_run(argv, *, cwd, timeout=120, max_bytes=131072, env=None):
+        if "branch" in argv:
+            return {
+                "exit_code": 0,
+                "stdout": context.task_branch + "\n",
+                "stderr": "",
+                "stdout_truncated": False,
+                "stderr_truncated": False,
+            }
+        seen["argv"] = list(argv)
+        return {
+            "exit_code": 0,
+            "stdout": f"remote output {secret}",
+            "stderr": f"diagnostic {secret}",
+            "stdout_truncated": False,
+            "stderr_truncated": False,
+        }
+
+    monkeypatch.setattr(outbound_caps, "_run", fake_run)
+    monkeypatch.setattr(
+        outbound_caps,
+        "read_windows_protected_text",
+        lambda _path: secret,
+    )
+    result = default_capability_registry_v1().resolve(
+        "git.push_task_branch"
+    ).handler(
+        context,
+        {"repo_root": str(repo), "branch": context.task_branch},
+    )
+    assert secret not in seen["argv"]
+    assert secret not in result["result"]["stdout"]
+    assert secret not in result["result"]["stderr"]
+    assert result["result"]["stdout"] == "remote output [REDACTED]"
+    assert result["result"]["stderr"] == "diagnostic [REDACTED]"
+
+
+def test_git_push_rejects_empty_protected_token(tmp_path, monkeypatch):
+    repo = tmp_path / "r"
+    repo.mkdir()
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    context = CapabilityContextV1(
+        executor_id="Futuer-IT",
+        repository_id="repo",
+        allowed_roots=(str(tmp_path),),
+        scope_paths=(str(repo),),
+        task_branch="task/AGENTIC-P3-OUTBOUND-LOCAL-EXECUTOR-V1",
+        expected_base_sha="b" * 40,
+        state_dir=str(state_dir),
+    )
+
+    def fake_run(argv, *, cwd, timeout=120, max_bytes=131072, env=None):
+        if "branch" in argv:
+            return {
+                "exit_code": 0,
+                "stdout": context.task_branch + "\n",
+                "stderr": "",
+                "stdout_truncated": False,
+                "stderr_truncated": False,
+            }
+        raise AssertionError("push must not run with an empty protected token")
+
+    monkeypatch.setattr(outbound_caps, "_run", fake_run)
+    monkeypatch.setattr(
+        outbound_caps,
+        "read_windows_protected_text",
+        lambda _path: "   ",
+    )
+    with pytest.raises(CapabilityError, match="GIT_PUSH_PROTECTED_TOKEN_EMPTY"):
+        default_capability_registry_v1().resolve(
+            "git.push_task_branch"
+        ).handler(
+            context,
+            {"repo_root": str(repo), "branch": context.task_branch},
+        )

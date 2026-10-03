@@ -96,24 +96,63 @@ def _run(
 ) -> dict[str, Any]:
     if not argv or any(not isinstance(x, str) or "\x00" in x for x in argv):
         raise CapabilityError("INVALID_ARGV")
-    completed = subprocess.run(
+    if env is None:
+        completed = subprocess.run(
+            argv,
+            cwd=cwd,
+            shell=False,
+            capture_output=True,
+            text=False,
+            timeout=timeout,
+            check=False,
+        )
+        return {
+            "exit_code": completed.returncode,
+            "stdout": completed.stdout[:max_bytes].decode("utf-8", errors="replace"),
+            "stderr": completed.stderr[:max_bytes].decode("utf-8", errors="replace"),
+            "stdout_truncated": len(completed.stdout) > max_bytes,
+            "stderr_truncated": len(completed.stderr) > max_bytes,
+        }
+
+    creationflags = (
+        getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0)
+        if platform.system() == "Windows"
+        else 0
+    )
+    process = subprocess.Popen(
         argv,
         cwd=cwd,
         shell=False,
-        capture_output=True,
-        text=False,
-        timeout=timeout,
-        check=False,
-        env=env,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        env=dict(env),
+        creationflags=creationflags,
     )
-    stdout = completed.stdout[:max_bytes]
-    stderr = completed.stderr[:max_bytes]
+    try:
+        stdout, stderr = process.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        if platform.system() == "Windows":
+            subprocess.run(
+                ["taskkill", "/PID", str(process.pid), "/T", "/F"],
+                shell=False,
+                capture_output=True,
+                check=False,
+                timeout=30,
+            )
+        else:
+            process.kill()
+        process.communicate(timeout=30)
+        raise CapabilityError("SUBPROCESS_TIMEOUT") from exc
+
+    stdout = stdout or b""
+    stderr = stderr or b""
     return {
-        "exit_code": completed.returncode,
-        "stdout": stdout.decode("utf-8", errors="replace"),
-        "stderr": stderr.decode("utf-8", errors="replace"),
-        "stdout_truncated": len(completed.stdout) > max_bytes,
-        "stderr_truncated": len(completed.stderr) > max_bytes,
+        "exit_code": int(process.returncode),
+        "stdout": stdout[:max_bytes].decode("utf-8", errors="replace"),
+        "stderr": stderr[:max_bytes].decode("utf-8", errors="replace"),
+        "stdout_truncated": len(stdout) > max_bytes,
+        "stderr_truncated": len(stderr) > max_bytes,
     }
 
 
@@ -275,9 +314,11 @@ def git_push_task_branch(ctx: CapabilityContextV1, args: Mapping[str, Any]) -> M
 
     secret_path = Path(ctx.state_dir).resolve().parent / "secrets" / "github_token.dpapi"
     try:
-        token = read_windows_protected_text(str(secret_path))
+        token = read_windows_protected_text(str(secret_path)).strip()
     except ProtectedSecretError as exc:
         raise CapabilityError("GIT_PUSH_PROTECTED_TOKEN_UNAVAILABLE") from exc
+    if not token:
+        raise CapabilityError("GIT_PUSH_PROTECTED_TOKEN_EMPTY")
 
     state_root = Path(ctx.state_dir).resolve()
     state_root.mkdir(parents=True, exist_ok=True)
@@ -292,21 +333,31 @@ def git_push_task_branch(ctx: CapabilityContextV1, args: Mapping[str, Any]) -> M
         env = os.environ.copy()
         env["GIT_TERMINAL_PROMPT"] = "0"
         env["GCM_INTERACTIVE"] = "Never"
+        env["GIT_ASKPASS_REQUIRE"] = "force"
         env["GIT_ASKPASS"] = str(askpass)
         env["PALWAKF_GIT_TOKEN"] = token
-        result = _run(
-            _git_argv(
-                repo,
-                "-c",
-                "credential.helper=",
-                "push",
-                "origin",
-                f"HEAD:refs/heads/{branch}",
-            ),
-            cwd=str(repo),
-            max_bytes=ctx.max_output_bytes,
-            env=env,
-        )
+        try:
+            result = _run(
+                _git_argv(
+                    repo,
+                    "-c",
+                    "credential.helper=",
+                    "-c",
+                    "credential.interactive=never",
+                    "push",
+                    "origin",
+                    f"HEAD:refs/heads/{branch}",
+                ),
+                cwd=str(repo),
+                max_bytes=ctx.max_output_bytes,
+                env=env,
+            )
+        except CapabilityError as exc:
+            if str(exc) == "SUBPROCESS_TIMEOUT":
+                raise CapabilityError("GIT_PUSH_TIMEOUT") from exc
+            raise
+    result["stdout"] = result["stdout"].replace(token, "[REDACTED]")
+    result["stderr"] = result["stderr"].replace(token, "[REDACTED]")
     if result["exit_code"] != 0:
         raise CapabilityError("GIT_PUSH_FAILED")
     return {
