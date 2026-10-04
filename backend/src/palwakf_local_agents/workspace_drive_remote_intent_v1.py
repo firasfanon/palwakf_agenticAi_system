@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import tempfile
 from pathlib import Path
@@ -112,8 +113,23 @@ class RcloneWorkspaceDriveRemoteIntentTransportV1:
         self._runner = runner or _subprocess_runner
         self._state_dir = Path(settings.state_dir)
         self._state_dir.mkdir(parents=True, exist_ok=True)
+        self._rclone_temp_root = self._state_dir / "rclone-secret-temp"
+        self._recover_rclone_temp_residue()
+        self._rclone_temp_root.mkdir(parents=True, exist_ok=True)
         self._processed_path = self._state_dir / "drive-intent-processed.json"
         self._processed = self._load_processed()
+
+    def _recover_rclone_temp_residue(self) -> None:
+        candidates = list(self._state_dir.glob("palwakf-rclone-config-*"))
+        if self._rclone_temp_root.is_dir():
+            candidates.extend(self._rclone_temp_root.glob("palwakf-rclone-config-*"))
+        for candidate in candidates:
+            if not candidate.is_dir():
+                raise DriveRemoteIntentError("RCLONE_TEMP_RESIDUE_INVALID")
+            try:
+                shutil.rmtree(candidate)
+            except OSError as exc:
+                raise DriveRemoteIntentError("RCLONE_TEMP_RESIDUE_CLEANUP_FAILED") from exc
 
     def _load_processed(self) -> set[str]:
         if not self._processed_path.is_file():
@@ -170,7 +186,7 @@ class RcloneWorkspaceDriveRemoteIntentTransportV1:
                 raise DriveRemoteIntentError("RCLONE_PROTECTED_CONFIG_UNAVAILABLE") from exc
             with tempfile.TemporaryDirectory(
                 prefix="palwakf-rclone-config-",
-                dir=self._state_dir,
+                dir=self._rclone_temp_root,
             ) as temp_dir:
                 config_file = Path(temp_dir) / "rclone.conf"
                 config_file.write_text(config_text, encoding="utf-8")

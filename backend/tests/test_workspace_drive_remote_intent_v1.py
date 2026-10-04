@@ -98,6 +98,36 @@ def install_successful_authority(monkeypatch, executor_id: str = "Futuer-IT"):
     monkeypatch.setattr(mod.subprocess, "run", fake_run)
 
 
+
+def test_startup_recovers_stale_rclone_temp_residue(tmp_path):
+    configured = settings(tmp_path)
+    state_dir = Path(configured.state_dir)
+    stale = state_dir / "palwakf-rclone-config-stale"
+    stale.mkdir(parents=True)
+    (stale / "rclone.conf").write_text("secret-placeholder", encoding="utf-8")
+
+    RcloneWorkspaceDriveRemoteIntentTransportV1(configured)
+
+    assert not stale.exists()
+    assert (state_dir / "rclone-secret-temp").is_dir()
+
+
+def test_startup_fails_closed_when_rclone_residue_cleanup_fails(tmp_path, monkeypatch):
+    configured = settings(tmp_path)
+    state_dir = Path(configured.state_dir)
+    stale = state_dir / "palwakf-rclone-config-stale"
+    stale.mkdir(parents=True)
+    (stale / "rclone.conf").write_text("secret-placeholder", encoding="utf-8")
+
+    def rejected(_path):
+        raise PermissionError("denied")
+
+    monkeypatch.setattr(mod.shutil, "rmtree", rejected)
+    with pytest.raises(
+        DriveRemoteIntentError, match="RCLONE_TEMP_RESIDUE_CLEANUP_FAILED"
+    ):
+        RcloneWorkspaceDriveRemoteIntentTransportV1(configured)
+
 def test_folder_bound_identity_rejects_payload_impersonation(tmp_path):
     transport = RcloneWorkspaceDriveRemoteIntentTransportV1(settings(tmp_path))
     with pytest.raises(
