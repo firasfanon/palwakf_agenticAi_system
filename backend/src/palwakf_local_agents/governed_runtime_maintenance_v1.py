@@ -56,6 +56,25 @@ def _canonical_under(path: Path, root: Path) -> bool:
     return target == base or base in target.parents
 
 
+def _canonical_under_any(path: Path, roots: tuple[str, ...]) -> bool:
+    target = path.resolve()
+    for raw in roots:
+        root = Path(raw).expanduser().resolve()
+        if target == root or root in target.parents:
+            return True
+    return False
+
+
+def _scope_covers(path: Path, repo_root: Path, scopes: tuple[str, ...]) -> bool:
+    target = path.resolve()
+    for raw in scopes:
+        scope = Path(raw)
+        resolved = scope.expanduser().resolve() if scope.is_absolute() else (repo_root / scope).resolve()
+        if target == resolved or resolved in target.parents:
+            return True
+    return False
+
+
 def _run_fixed(argv: list[str], *, timeout: int = 60) -> subprocess.CompletedProcess[bytes]:
     try:
         return subprocess.run(
@@ -176,17 +195,34 @@ def prepare_plan(
     expected_source_sha256: Any,
     expected_runtime_sha256: Any,
     expected_head: str,
+    allowed_roots: tuple[str, ...],
+    scope_paths: tuple[str, ...],
 ) -> Mapping[str, Any]:
     root = Path(repo_root).resolve()
+    if not _canonical_under_any(root, allowed_roots):
+        raise RuntimeMaintenanceError("MAINTENANCE_REPO_OUTSIDE_ALLOWED_ROOTS")
     if not (root / ".git").exists():
         raise RuntimeMaintenanceError("MAINTENANCE_REPO_INVALID")
     source = (root / SOURCE_RELATIVE).resolve()
     if not _canonical_under(source, root):
         raise RuntimeMaintenanceError("MAINTENANCE_SOURCE_OUTSIDE_REPO")
+    if not _scope_covers(source, root, scope_paths):
+        raise RuntimeMaintenanceError("MAINTENANCE_SOURCE_SCOPE_DENIED")
     source_sha = _validate_sha(expected_source_sha256, "MAINTENANCE_SOURCE_SHA_INVALID")
     runtime_sha = _validate_sha(expected_runtime_sha256, "MAINTENANCE_RUNTIME_SHA_INVALID")
 
-    head = _run_fixed(["git", "-C", str(root), "rev-parse", "HEAD"], timeout=30)
+    head = _run_fixed(
+        [
+            "git",
+            "-c",
+            f"safe.directory={root}",
+            "-C",
+            str(root),
+            "rev-parse",
+            "HEAD",
+        ],
+        timeout=30,
+    )
     if head.returncode != 0:
         raise RuntimeMaintenanceError("MAINTENANCE_GIT_HEAD_READ_FAILED")
     observed_head = head.stdout.decode("ascii", errors="replace").strip().lower()
@@ -377,6 +413,8 @@ def runtime_maintenance_capability(ctx: Any, args: Mapping[str, Any]) -> Mapping
             expected_source_sha256=args.get("expected_source_sha256"),
             expected_runtime_sha256=args.get("expected_runtime_sha256"),
             expected_head=str(ctx.expected_base_sha),
+            allowed_roots=tuple(ctx.allowed_roots),
+            scope_paths=tuple(ctx.scope_paths),
         )
     if operation == "launch":
         return launch_helper(repo_root=repo_root, plan_path=str(args.get("plan_path") or ""))
