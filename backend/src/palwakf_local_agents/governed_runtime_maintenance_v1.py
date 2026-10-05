@@ -50,6 +50,18 @@ def _validate_sha(value: Any, code: str) -> str:
     return text
 
 
+def _trusted_python_interpreter() -> Path:
+    if os.name != "nt":
+        raise RuntimeMaintenanceError("MAINTENANCE_PYTHON_INTERPRETER_PLATFORM_UNSUPPORTED")
+    base = Path(sys.base_prefix).resolve()
+    interpreter = (base / "python.exe").resolve()
+    if interpreter.parent != base or interpreter.name.lower() != "python.exe":
+        raise RuntimeMaintenanceError("MAINTENANCE_PYTHON_INTERPRETER_PATH_INVALID")
+    if not interpreter.is_file():
+        raise RuntimeMaintenanceError("MAINTENANCE_PYTHON_INTERPRETER_NOT_FOUND")
+    return interpreter
+
+
 def _canonical_under(path: Path, root: Path) -> bool:
     target = path.resolve()
     base = root.resolve()
@@ -169,6 +181,8 @@ class MaintenancePlan:
     expected_runtime_sha256: str
     backup_path: str
     receipt_path: str
+    python_interpreter_path: str
+    python_interpreter_sha256: str
     issued_at: str
     expires_at: str
 
@@ -183,6 +197,8 @@ class MaintenancePlan:
             "expected_runtime_sha256": self.expected_runtime_sha256,
             "backup_path": self.backup_path,
             "receipt_path": self.receipt_path,
+            "python_interpreter_path": self.python_interpreter_path,
+            "python_interpreter_sha256": self.python_interpreter_sha256,
             "issued_at": self.issued_at,
             "expires_at": self.expires_at,
         }
@@ -235,12 +251,15 @@ def prepare_plan(
     if _service_state() != "RUNNING":
         raise RuntimeMaintenanceError("MAINTENANCE_SERVICE_NOT_RUNNING")
 
+    interpreter = _trusted_python_interpreter()
+    interpreter_sha = _sha256(interpreter)
+
     state = Path(state_dir).resolve()
     state.mkdir(parents=True, exist_ok=True)
     plans = state / "runtime-maintenance"
     plans.mkdir(parents=True, exist_ok=True)
     plan_id = hashlib.sha256(
-        f"{observed_head}:{source_sha}:{runtime_sha}".encode("ascii")
+        f"{observed_head}:{source_sha}:{runtime_sha}:{interpreter_sha}".encode("ascii")
     ).hexdigest()[:24]
     backup = plans / f"{plan_id}.pre.py"
     receipt = plans / f"{plan_id}.receipt.json"
@@ -258,6 +277,8 @@ def prepare_plan(
         expected_runtime_sha256=runtime_sha,
         backup_path=str(backup),
         receipt_path=str(receipt),
+        python_interpreter_path=str(interpreter),
+        python_interpreter_sha256=interpreter_sha,
         issued_at=now.isoformat(),
         expires_at=(now + timedelta(minutes=5)).isoformat(),
     )
@@ -271,6 +292,8 @@ def prepare_plan(
         "source_sha256": source_sha,
         "runtime_pre_sha256": runtime_sha,
         "backup_sha256": _sha256(backup),
+        "python_interpreter_path": str(interpreter),
+        "python_interpreter_sha256": interpreter_sha,
         "service_state": "RUNNING",
     }
 
@@ -288,6 +311,16 @@ def execute_plan_file(plan_path: str) -> Mapping[str, Any]:
     target = Path(str(raw["target_path"])).resolve()
     backup = Path(str(raw["backup_path"])).resolve()
     receipt = Path(str(raw["receipt_path"])).resolve()
+    interpreter = Path(str(raw["python_interpreter_path"])).resolve()
+    expected_interpreter = _trusted_python_interpreter()
+    if interpreter != expected_interpreter:
+        raise RuntimeMaintenanceError("MAINTENANCE_PYTHON_INTERPRETER_NOT_ALLOWLISTED")
+    interpreter_sha = _validate_sha(
+        raw.get("python_interpreter_sha256"),
+        "MAINTENANCE_PYTHON_INTERPRETER_SHA_INVALID",
+    )
+    if _sha256(interpreter) != interpreter_sha:
+        raise RuntimeMaintenanceError("MAINTENANCE_PYTHON_INTERPRETER_HASH_MISMATCH")
     if target != TARGET_MODULE.resolve():
         raise RuntimeMaintenanceError("MAINTENANCE_TARGET_NOT_ALLOWLISTED")
     if not _canonical_under(source, Path.cwd()):
@@ -356,6 +389,22 @@ def launch_helper(*, repo_root: str, plan_path: str) -> Mapping[str, Any]:
     plan = Path(plan_path).resolve()
     if not _canonical_under(plan, Path(r"C:\ProgramData\PalWakf\outbound_executor_v1\state")):
         raise RuntimeMaintenanceError("MAINTENANCE_PLAN_PATH_NOT_ALLOWLISTED")
+    raw = json.loads(plan.read_text(encoding="utf-8"))
+    if raw.get("schema_id") != PLAN_SCHEMA or raw.get("service_name") != SERVICE_NAME:
+        raise RuntimeMaintenanceError("MAINTENANCE_PLAN_INVALID")
+    expires = datetime.fromisoformat(str(raw["expires_at"]))
+    if datetime.now(UTC) > expires:
+        raise RuntimeMaintenanceError("MAINTENANCE_PLAN_EXPIRED")
+    interpreter = Path(str(raw["python_interpreter_path"])).resolve()
+    expected_interpreter = _trusted_python_interpreter()
+    if interpreter != expected_interpreter:
+        raise RuntimeMaintenanceError("MAINTENANCE_PYTHON_INTERPRETER_NOT_ALLOWLISTED")
+    interpreter_sha = _validate_sha(
+        raw.get("python_interpreter_sha256"),
+        "MAINTENANCE_PYTHON_INTERPRETER_SHA_INVALID",
+    )
+    if _sha256(interpreter) != interpreter_sha:
+        raise RuntimeMaintenanceError("MAINTENANCE_PYTHON_INTERPRETER_HASH_MISMATCH")
     flags = 0
     if os.name == "nt":
         flags = (
@@ -364,7 +413,8 @@ def launch_helper(*, repo_root: str, plan_path: str) -> Mapping[str, Any]:
         )
     process = subprocess.Popen(
         [
-            sys.executable,
+            str(interpreter),
+            "-I",
             "-m",
             "palwakf_local_agents.governed_runtime_maintenance_v1",
             "--execute-plan",

@@ -39,6 +39,11 @@ def _configure_tmp(monkeypatch, tmp_path: Path):
     monkeypatch.setattr(mod, "DRIVE_ROOT", drive)
     monkeypatch.setattr(mod, "SECRET_TEMP_ROOT", drive / "rclone-secret-temp")
     monkeypatch.setattr(mod, "_service_state", lambda: "RUNNING")
+    python_home = tmp_path / "python-home"
+    python_home.mkdir()
+    interpreter = python_home / "python.exe"
+    interpreter.write_bytes(b"trusted-python")
+    monkeypatch.setattr(mod.sys, "base_prefix", str(python_home))
 
     head = "a" * 40
 
@@ -134,6 +139,8 @@ def test_execute_rejects_tampered_target_path(tmp_path, monkeypatch):
                 "expected_runtime_sha256": mod._sha256(target),
                 "backup_path": str(target),
                 "receipt_path": str(tmp_path / "receipt.json"),
+                "python_interpreter_path": str((tmp_path / "python-home" / "python.exe").resolve()),
+                "python_interpreter_sha256": mod._sha256(tmp_path / "python-home" / "python.exe"),
                 "expires_at": "2099-01-01T00:00:00+00:00",
             }
         ),
@@ -257,3 +264,108 @@ def test_runtime_handler_passes_context_boundaries(tmp_path, monkeypatch):
         },
     )
     assert result["source_sha256"] == mod._sha256(source)
+
+def test_prepare_binds_verified_python_interpreter_identity(tmp_path, monkeypatch):
+    repo, source, target, _drive, head = _configure_tmp(monkeypatch, tmp_path)
+    result = mod.prepare_plan(
+        repo_root=str(repo),
+        state_dir=str(tmp_path / "state"),
+        expected_source_sha256=mod._sha256(source),
+        expected_runtime_sha256=mod._sha256(target),
+        expected_head=head,
+        allowed_roots=(str(tmp_path),),
+        scope_paths=(str(source),),
+    )
+    interpreter = (tmp_path / "python-home" / "python.exe").resolve()
+    assert result["python_interpreter_path"] == str(interpreter)
+    assert result["python_interpreter_sha256"] == mod._sha256(interpreter)
+    plan = json.loads(Path(result["plan_path"]).read_text(encoding="utf-8"))
+    assert plan["python_interpreter_path"] == str(interpreter)
+    assert plan["python_interpreter_sha256"] == mod._sha256(interpreter)
+
+
+def test_launch_uses_verified_interpreter_and_isolated_mode(tmp_path, monkeypatch):
+    repo, source, target, _drive, head = _configure_tmp(monkeypatch, tmp_path)
+    prepared = mod.prepare_plan(
+        repo_root=str(repo),
+        state_dir=str(tmp_path / "state"),
+        expected_source_sha256=mod._sha256(source),
+        expected_runtime_sha256=mod._sha256(target),
+        expected_head=head,
+        allowed_roots=(str(tmp_path),),
+        scope_paths=(str(source),),
+    )
+    monkeypatch.setattr(mod, "_canonical_under", lambda *_args: True)
+    seen = {}
+
+    class DummyProcess:
+        pid = 4321
+
+    def popen(argv, **kwargs):
+        seen["argv"] = list(argv)
+        seen["kwargs"] = dict(kwargs)
+        return DummyProcess()
+
+    monkeypatch.setattr(mod.subprocess, "Popen", popen)
+    result = mod.launch_helper(repo_root=str(repo), plan_path=prepared["plan_path"])
+    interpreter = str((tmp_path / "python-home" / "python.exe").resolve())
+    assert seen["argv"][:4] == [
+        interpreter,
+        "-I",
+        "-m",
+        "palwakf_local_agents.governed_runtime_maintenance_v1",
+    ]
+    assert seen["kwargs"]["shell"] is False
+    assert result["helper_pid"] == 4321
+
+
+def test_launch_rejects_tampered_interpreter_path(tmp_path, monkeypatch):
+    repo, source, target, _drive, head = _configure_tmp(monkeypatch, tmp_path)
+    prepared = mod.prepare_plan(
+        repo_root=str(repo),
+        state_dir=str(tmp_path / "state"),
+        expected_source_sha256=mod._sha256(source),
+        expected_runtime_sha256=mod._sha256(target),
+        expected_head=head,
+        allowed_roots=(str(tmp_path),),
+        scope_paths=(str(source),),
+    )
+    plan_path = Path(prepared["plan_path"])
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
+    other = tmp_path / "other-python.exe"
+    other.write_bytes(b"other")
+    plan["python_interpreter_path"] = str(other.resolve())
+    plan["python_interpreter_sha256"] = mod._sha256(other)
+    plan_path.write_text(json.dumps(plan), encoding="utf-8")
+    monkeypatch.setattr(mod, "_canonical_under", lambda *_args: True)
+    with pytest.raises(mod.RuntimeMaintenanceError, match="PYTHON_INTERPRETER_NOT_ALLOWLISTED"):
+        mod.launch_helper(repo_root=str(repo), plan_path=str(plan_path))
+
+
+def test_launch_rejects_interpreter_hash_drift(tmp_path, monkeypatch):
+    repo, source, target, _drive, head = _configure_tmp(monkeypatch, tmp_path)
+    prepared = mod.prepare_plan(
+        repo_root=str(repo),
+        state_dir=str(tmp_path / "state"),
+        expected_source_sha256=mod._sha256(source),
+        expected_runtime_sha256=mod._sha256(target),
+        expected_head=head,
+        allowed_roots=(str(tmp_path),),
+        scope_paths=(str(source),),
+    )
+    interpreter = tmp_path / "python-home" / "python.exe"
+    interpreter.write_bytes(b"tampered")
+    monkeypatch.setattr(mod, "_canonical_under", lambda *_args: True)
+    with pytest.raises(mod.RuntimeMaintenanceError, match="PYTHON_INTERPRETER_HASH_MISMATCH"):
+        mod.launch_helper(repo_root=str(repo), plan_path=prepared["plan_path"])
+
+
+def test_caller_cannot_supply_python_interpreter_path(tmp_path):
+    with pytest.raises(mod.RuntimeMaintenanceError, match="ARGUMENT_NOT_ALLOWED"):
+        mod.runtime_maintenance_capability(
+            _ctx(tmp_path),
+            {
+                "operation": "status",
+                "python_interpreter_path": r"C:\Other\python.exe",
+            },
+        )
