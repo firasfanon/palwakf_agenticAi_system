@@ -3,9 +3,9 @@ import { Icon, type IconName } from "./Icon";
 import type { ReadState } from "../api/types";
 
 export function StateGate<T>({ state, children, label = "بيانات تشغيلية" }: { state: ReadState<T>; children: (data: T) => ReactNode; label?: string }) {
-  if (state.kind === "loading") return <section className="inline-state loading"><span className="pulse-dot"/> جارٍ قراءة {label} ضمن العقد المسموح…</section>;
-  if (state.kind === "denied") return <section className="inline-state denied"><Icon name="lock"/><div><strong>البيانات غير معروضة</strong><span>الوصول مرفوض ({state.status})؛ لا تتجاوز الواجهة هذا الحد.</span></div></section>;
-  if (state.kind === "error") return <section className="inline-state error"><Icon name="pulse"/><div><strong>تعذر جلب {label}</strong><span>{state.detail}</span></div></section>;
+  if (state.kind === "loading") return <section className="inline-state loading" role="status" aria-live="polite"><span className="pulse-dot"/> جارٍ قراءة {label} ضمن العقد المسموح…</section>;
+  if (state.kind === "denied") return <section className="inline-state denied" role="status" aria-live="polite"><Icon name="lock"/><div><strong>البيانات غير معروضة</strong><span>الوصول مرفوض ({state.status})؛ لا تتجاوز الواجهة هذا الحد.</span></div></section>;
+  if (state.kind === "error") return <section className="inline-state error" role="alert"><Icon name="pulse"/><div><strong>تعذر جلب {label}</strong><span>{state.detail}</span></div></section>;
   return <>{children(state.data)}</>;
 }
 

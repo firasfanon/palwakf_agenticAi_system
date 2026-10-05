@@ -1,42 +1,33 @@
-import { useState, type ReactNode } from "react";
-import { Icon, type IconName } from "./Icon";
+import { useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
+import { Icon } from "./Icon";
+import {
+  NAVIGATION_ROUTES,
+  normalizeAgentPath,
+  resolveAgentRoute,
+  type AgentRouteDefinition,
+} from "../routes";
 
-export interface NavigationItem {
-  href: string;
-  label: string;
-  description: string;
-  icon: IconName;
-  section: "operational" | "governance";
+function isActive(route: AgentRouteDefinition): boolean {
+  const current = resolveAgentRoute(location.pathname);
+  return current?.id === route.id;
 }
 
-export const navigation: NavigationItem[] = [
-  { href: "/agent-console/", label: "مركز العمل", description: "ابدأ من هنا", icon: "home", section: "operational" },
-  { href: "/agent-console/goal-planner", label: "هدف جديد", description: "حوّل الهدف إلى خطة", icon: "task", section: "operational" },
-  { href: "/agent-console/tasks", label: "المهام والخطط", description: "مسودات ومراجعة", icon: "task", section: "operational" },
-  { href: "/agent-console/tools", label: "المساعدون والأدوات", description: "اختر المساعد", icon: "tool", section: "operational" },
-  { href: "/agent-console/projects", label: "قراءة المشروع", description: "خريطة وفهم", icon: "project", section: "operational" },
-  { href: "/agent-console/domain-capabilities", label: "مجالات التخصص", description: "وكلاء وتقنيات", icon: "agent", section: "operational" },
-  { href: "/agent-console/engineering-skills", label: "المهارات الهندسية", description: "Skills workflows", icon: "tool", section: "operational" },
-  { href: "/agent-console/reviews", label: "المراجعات", description: "قرارات بشرية", icon: "review", section: "operational" },
-  { href: "/agent-console/workspaces", label: "مساحة العمل", description: "السياق الحالي", icon: "workspace", section: "operational" },
-  { href: "/agent-console/charter", label: "الميثاق", description: "الحقيقة والحدود", icon: "shield", section: "governance" },
-  { href: "/agent-console/state-manager", label: "حالة المشروع", description: "State Model", icon: "project", section: "governance" },
-  { href: "/agent-console/diagnostics", label: "التشخيص", description: "Health checks", icon: "pulse", section: "governance" },
-  { href: "/agent-console/pilot-control", label: "Pilot Control", description: "مقفل الآن", icon: "lock", section: "governance" },
-  { href: "/agent-console/evidence", label: "الأدلة", description: "سجلات وتوريث", icon: "evidence", section: "governance" },
-];
-
-function isActive(href: string): boolean {
-  const current = location.pathname.replace(/\/$/, "") || "/agent-console";
-  const target = href.replace(/\/$/, "") || "/agent-console";
-  return current === target;
-}
-
-function NavigationSection({ title, items, onNavigate }: { title: string; items: NavigationItem[]; onNavigate?: () => void }) {
+function NavigationSection({ title, items, onNavigate }: {
+  title: string;
+  items: readonly AgentRouteDefinition[];
+  onNavigate?: () => void;
+}) {
+  if (items.length === 0) return null;
   return <div className="nav-section">
     <div className="sidebar-label">{title}</div>
     <nav className="primary-nav" aria-label={title}>
-      {items.map((item) => <a key={item.href} href={item.href} onClick={onNavigate} className={isActive(item.href) ? "active" : ""}>
+      {items.map((item) => <a
+        key={item.id}
+        href={item.path === "/agent-console" ? "/agent-console/" : item.path}
+        onClick={onNavigate}
+        className={isActive(item) ? "active" : ""}
+        aria-current={isActive(item) ? "page" : undefined}
+      >
         <span className="nav-icon"><Icon name={item.icon} size={18}/></span>
         <span className="nav-copy"><strong>{item.label}</strong><small>{item.description}</small></span>
       </a>)}
@@ -44,39 +35,109 @@ function NavigationSection({ title, items, onNavigate }: { title: string; items:
   </div>;
 }
 
-function Navigation({ onNavigate }: { onNavigate?: () => void }) {
-  const operational = navigation.filter((item) => item.section === "operational");
-  const governance = navigation.filter((item) => item.section === "governance");
+function Navigation({ onNavigate, searchInputRef }: { onNavigate?: () => void; searchInputRef?: RefObject<HTMLInputElement> }) {
+  const [query, setQuery] = useState("");
+  const normalizedQuery = query.trim().toLocaleLowerCase("ar");
+  const filtered = useMemo(() => NAVIGATION_ROUTES.filter((item) => {
+    if (!normalizedQuery) return true;
+    return [item.label, item.description, item.eyebrow, item.id]
+      .join(" ")
+      .toLocaleLowerCase("ar")
+      .includes(normalizedQuery);
+  }), [normalizedQuery]);
+  const operational = filtered.filter((item) => item.section === "operational");
+  const governance = filtered.filter((item) => item.section === "governance");
+
   return <>
+    <div className="nav-search">
+      <label htmlFor="agent-route-search">انتقل بسرعة</label>
+      <input
+        id="agent-route-search"
+        ref={searchInputRef}
+        type="search"
+        value={query}
+        onChange={(event) => setQuery(event.currentTarget.value)}
+        placeholder="ابحث عن صفحة…"
+        autoComplete="off"
+      />
+    </div>
     <NavigationSection title="التشغيل اليومي" items={operational} onNavigate={onNavigate}/>
     <NavigationSection title="تفاصيل الحوكمة والتشخيص" items={governance} onNavigate={onNavigate}/>
+    {filtered.length === 0 && <p className="nav-empty" role="status">لا توجد صفحة مطابقة.</p>}
   </>;
 }
 
 export function Layout({ title, eyebrow, children }: { title: string; eyebrow: string; children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const route = resolveAgentRoute(location.pathname);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const frame = requestAnimationFrame(() => searchInputRef.current?.focus());
+    return () => cancelAnimationFrame(frame);
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    document.title = `${title} · PalWakf Agentic`;
+  }, [title]);
+
+  const closeMobileNav = () => {
+    setMobileOpen(false);
+    requestAnimationFrame(() => menuButtonRef.current?.focus());
+  };
+
   return <div className="app-shell">
-    <aside className={mobileOpen ? "sidebar sidebar-open" : "sidebar"} aria-label="لوحة التنقل">
+    <a className="skip-link" href="#main-content">تجاوز التنقل إلى المحتوى</a>
+    <aside
+      id="primary-sidebar"
+      className={mobileOpen ? "sidebar sidebar-open" : "sidebar"}
+      aria-label="لوحة التنقل"
+      onKeyDown={(event) => {
+        if (mobileOpen && event.key === "Escape") {
+          event.preventDefault();
+          closeMobileNav();
+        }
+      }}
+    >
       <div className="brand-row">
         <a className="brand" href="/agent-console/" aria-label="مركز عمل المساعدين المحليين">
           <span className="brand-mark"><span>PW</span><i>AI</i></span>
           <span><strong>المساعدون المحليون</strong><small>منصة تشغيل هندسية محلية</small></span>
         </a>
-        <button className="mobile-close" type="button" onClick={() => setMobileOpen(false)} aria-label="إغلاق التنقل"><Icon name="close"/></button>
+        <button className="mobile-close" type="button" onClick={closeMobileNav} aria-label="إغلاق التنقل"><Icon name="close"/></button>
       </div>
-      <Navigation onNavigate={() => setMobileOpen(false)} />
+      <Navigation onNavigate={() => setMobileOpen(false)} searchInputRef={searchInputRef} />
       <section className="governance-card ux-help-card" aria-label="مبدأ التشغيل الحالي">
         <div className="governance-title"><Icon name="task" size={18}/><strong>طريقة العمل</strong></div>
-        <p>ابدأ بهدف واضح، حوّله إلى خطة، اختر مساعدًا، ثم راجع المسودة. التفاصيل الحاكمة موجودة في الصفحات الفرعية عند الحاجة.</p>
-        <ul><li>تشغيل يومي مبسط</li><li>مراجعة بشرية قبل أي انتقال</li><li>التنفيذ مؤجل ومحكوم</li></ul>
+        <p>ابدأ بالقرار الذي تريد الوصول إليه، ثم اكشف التفاصيل الحاكمة عند الحاجة. كل انتقال حساس يبقى خلف بوابته.</p>
+        <ul><li>تشغيل يومي مبسط</li><li>مراجعة بشرية قبل الانتقال</li><li>تنفيذ محكوم وقابل للتدقيق</li></ul>
       </section>
-      <p className="sidebar-footnote">Operational UX Polish R2 + Domain Matrix + Skills Intake V1</p>
+      <p className="sidebar-footnote">P4 UI/UX Designer V4 · semantic design system</p>
     </aside>
-    {mobileOpen && <button className="drawer-backdrop" type="button" aria-label="إغلاق التنقل" onClick={() => setMobileOpen(false)} />}
-    <main className="content">
+    {mobileOpen && <button className="drawer-backdrop" type="button" aria-label="إغلاق التنقل" onClick={closeMobileNav} />}
+    <main id="main-content" className="content" tabIndex={-1}>
       <header className="topbar">
-        <button className="menu-button" type="button" onClick={() => setMobileOpen(true)} aria-label="فتح التنقل"><Icon name="menu"/></button>
-        <div className="page-heading"><p>{eyebrow}</p><h1>{title}</h1></div>
+        <button
+          ref={menuButtonRef}
+          className="menu-button"
+          type="button"
+          onClick={() => setMobileOpen(true)}
+          aria-label="فتح التنقل"
+          aria-expanded={mobileOpen}
+          aria-controls="primary-sidebar"
+        ><Icon name="menu"/></button>
+        <div className="page-heading">
+          <p>{eyebrow}</p>
+          <h1>{title}</h1>
+          <div className="route-context" aria-label="مسار الصفحة">
+            <a href="/agent-console/">مركز العمل</a>
+            <span aria-hidden="true">/</span>
+            <b>{route?.label ?? "مسار غير مسجل"}</b>
+            {route && <span>{route.section === "operational" ? "تشغيل" : "حوكمة"}</span>}
+          </div>
+        </div>
         <div className="read-only-badge operational-badge"><Icon name="shield" size={16}/><span>تشغيل آمن</span></div>
       </header>
       {children}

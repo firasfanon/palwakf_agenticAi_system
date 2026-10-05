@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5174 --strictPort",
     "check": "tsc --noEmit",
-    "build": "npm run check && vite build",
-    "preview": "vite preview --host 127.0.0.1 --port 5175 --strictPort"
+    "build": "npm run check && npm run check:routes && npm run check:p4 && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 5175 --strictPort",
+    "check:p4": "node src/validate-p4.mjs",
+    "check:routes": "node src/check-routes.mjs"
   },
   "dependencies": {
     "react": "18.3.1",
