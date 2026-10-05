@@ -113,13 +113,56 @@ def _service_state() -> str:
     return "TRANSITIONAL"
 
 
-def _wait_service(expected: str, *, timeout_seconds: int = 30) -> None:
+def _service_start_name() -> str:
+    result = _run_fixed(["sc.exe", "qc", SERVICE_NAME], timeout=30)
+    if result.returncode != 0:
+        raise RuntimeMaintenanceError("MAINTENANCE_SERVICE_CONFIG_QUERY_FAILED")
+    text = result.stdout.decode("utf-8", errors="replace")
+    for line in text.splitlines():
+        if "SERVICE_START_NAME" in line and ":" in line:
+            return line.split(":", 1)[1].strip()
+    raise RuntimeMaintenanceError("MAINTENANCE_SERVICE_IDENTITY_READ_FAILED")
+
+
+def _wait_service(expected: str, *, timeout_seconds: int = 90) -> list[str]:
+    observed: list[str] = []
     deadline = time.monotonic() + timeout_seconds
     while time.monotonic() < deadline:
-        if _service_state() == expected:
-            return
+        state = _service_state()
+        if not observed or observed[-1] != state:
+            observed.append(state)
+        if state == expected:
+            return observed
         time.sleep(0.5)
-    raise RuntimeMaintenanceError(f"MAINTENANCE_SERVICE_{expected}_TIMEOUT")
+    if expected == "STOPPED":
+        raise RuntimeMaintenanceError("MAINTENANCE_SERVICE_STOP_TIMEOUT")
+    if expected == "RUNNING":
+        raise RuntimeMaintenanceError("MAINTENANCE_SERVICE_START_TIMEOUT")
+    raise RuntimeMaintenanceError("MAINTENANCE_SERVICE_STATE_TIMEOUT")
+
+
+def _recover_service_running(*, timeout_seconds: int = 90) -> tuple[str, int | None, list[str]]:
+    observed: list[str] = []
+    deadline = time.monotonic() + timeout_seconds
+    start_returncode: int | None = None
+    start_attempted = False
+    while time.monotonic() < deadline:
+        try:
+            state = _service_state()
+        except RuntimeMaintenanceError:
+            state = "QUERY_FAILED"
+        if not observed or observed[-1] != state:
+            observed.append(state)
+        if state == "RUNNING":
+            return ("PASS" if start_attempted else "NOT_NEEDED", start_returncode, observed)
+        if state == "STOPPED" and not start_attempted:
+            start = _run_fixed(["sc.exe", "start", SERVICE_NAME], timeout=30)
+            start_returncode = int(start.returncode)
+            start_attempted = True
+            if start.returncode not in {0, 1056}:
+                return ("FAIL", start_returncode, observed)
+        time.sleep(0.5)
+    return ("FAIL", start_returncode, observed)
 
 
 def _set_secret_temp_acl() -> str:
@@ -250,6 +293,8 @@ def prepare_plan(
         raise RuntimeMaintenanceError("MAINTENANCE_RUNTIME_HASH_MISMATCH")
     if _service_state() != "RUNNING":
         raise RuntimeMaintenanceError("MAINTENANCE_SERVICE_NOT_RUNNING")
+    if _service_start_name().lower() not in {"localsystem", "local system"}:
+        raise RuntimeMaintenanceError("MAINTENANCE_SERVICE_IDENTITY_MISMATCH")
 
     interpreter = _trusted_python_interpreter()
     interpreter_sha = _sha256(interpreter)
@@ -324,7 +369,6 @@ def execute_plan_file(plan_path: str) -> Mapping[str, Any]:
     if target != TARGET_MODULE.resolve():
         raise RuntimeMaintenanceError("MAINTENANCE_TARGET_NOT_ALLOWLISTED")
     if not _canonical_under(source, Path.cwd()):
-        # The helper is launched with cwd=repo_root.
         raise RuntimeMaintenanceError("MAINTENANCE_SOURCE_NOT_ALLOWLISTED")
 
     source_sha = _validate_sha(raw.get("expected_source_sha256"), "MAINTENANCE_SOURCE_SHA_INVALID")
@@ -336,48 +380,157 @@ def execute_plan_file(plan_path: str) -> Mapping[str, Any]:
     if _sha256(backup) != runtime_sha:
         raise RuntimeMaintenanceError("MAINTENANCE_BACKUP_HASH_MISMATCH")
 
+    service_state_before = _service_state()
+    if service_state_before != "RUNNING":
+        raise RuntimeMaintenanceError("MAINTENANCE_SERVICE_NOT_RUNNING")
+    if _service_start_name().lower() not in {"localsystem", "local system"}:
+        raise RuntimeMaintenanceError("MAINTENANCE_SERVICE_IDENTITY_MISMATCH")
+
+    failure_stage = "PRE_MUTATION_VALIDATION"
+    stop_returncode: int | None = None
+    start_returncode: int | None = None
+    stop_states: list[str] = [service_state_before]
+    start_states: list[str] = []
+    service_recovery = "NOT_NEEDED"
+    recovery_start_returncode: int | None = None
+    recovery_states: list[str] = []
+    runtime_rollback = "NOT_NEEDED"
     cleaned = 0
+    acl_hash = ""
+    result: dict[str, Any]
+
     try:
+        failure_stage = "STOP_SERVICE"
+        stop = _run_fixed(["sc.exe", "stop", SERVICE_NAME], timeout=30)
+        stop_returncode = int(stop.returncode)
+        if stop.returncode not in {0, 1062}:
+            raise RuntimeMaintenanceError("MAINTENANCE_SERVICE_STOP_FAILED")
+
+        failure_stage = "WAIT_STOPPED"
+        stop_states = _wait_service("STOPPED", timeout_seconds=90)
+
+        failure_stage = "POST_STOP_REVALIDATION"
+        if _sha256(source) != source_sha:
+            raise RuntimeMaintenanceError("MAINTENANCE_SOURCE_HASH_MISMATCH")
+        if _sha256(target) != runtime_sha:
+            raise RuntimeMaintenanceError("MAINTENANCE_RUNTIME_HASH_MISMATCH")
+        if _sha256(backup) != runtime_sha:
+            raise RuntimeMaintenanceError("MAINTENANCE_BACKUP_HASH_MISMATCH")
+        if _sha256(interpreter) != interpreter_sha:
+            raise RuntimeMaintenanceError("MAINTENANCE_PYTHON_INTERPRETER_HASH_MISMATCH")
+
+        failure_stage = "PROMOTE_RUNTIME"
         shutil.copy2(source, target)
         if _sha256(target) != source_sha:
             raise RuntimeMaintenanceError("MAINTENANCE_RUNTIME_POST_HASH_MISMATCH")
-        _set_secret_temp_acl()
+
+        failure_stage = "HARDEN_SECRET_TEMP_ACL"
+        acl_hash = _set_secret_temp_acl()
+
+        failure_stage = "CLEAN_STALE_RESIDUE"
         cleaned = _cleanup_stale_residue()
-        stop = _run_fixed(["sc.exe", "stop", SERVICE_NAME], timeout=30)
-        if stop.returncode not in {0, 1062}:
-            raise RuntimeMaintenanceError("MAINTENANCE_SERVICE_STOP_FAILED")
-        _wait_service("STOPPED", timeout_seconds=30)
+        if _classify_residue():
+            raise RuntimeMaintenanceError("MAINTENANCE_RESIDUE_CLEANUP_INCOMPLETE")
+
+        failure_stage = "START_SERVICE"
         start = _run_fixed(["sc.exe", "start", SERVICE_NAME], timeout=30)
+        start_returncode = int(start.returncode)
         if start.returncode not in {0, 1056}:
             raise RuntimeMaintenanceError("MAINTENANCE_SERVICE_START_FAILED")
-        _wait_service("RUNNING", timeout_seconds=30)
+
+        failure_stage = "WAIT_RUNNING"
+        start_states = _wait_service("RUNNING", timeout_seconds=90)
+
+        failure_stage = "FINAL_READBACK"
+        if _service_start_name().lower() not in {"localsystem", "local system"}:
+            raise RuntimeMaintenanceError("MAINTENANCE_SERVICE_IDENTITY_MISMATCH")
+        if _service_state() != "RUNNING":
+            raise RuntimeMaintenanceError("MAINTENANCE_SERVICE_START_TIMEOUT")
+        if _sha256(target) != source_sha:
+            raise RuntimeMaintenanceError("MAINTENANCE_RUNTIME_POST_HASH_MISMATCH")
+        remaining = len(_classify_residue())
+        if remaining:
+            raise RuntimeMaintenanceError("MAINTENANCE_RESIDUE_CLEANUP_INCOMPLETE")
+
         result = {
             "schema_id": RECEIPT_SCHEMA,
             "plan_id": str(raw["plan_id"]),
             "status": "PASS",
+            "failure_stage": None,
+            "error_code": None,
+            "exception_type": None,
             "runtime_post_sha256": _sha256(target),
             "stale_residue_removed": cleaned,
-            "stale_residue_remaining": len(_classify_residue()),
-            "service_state": _service_state(),
-            "secret_temp_acl_readback_sha256": _set_secret_temp_acl(),
+            "stale_residue_remaining": remaining,
+            "secret_temp_acl_readback_sha256": acl_hash,
+            "service_state_before": service_state_before,
+            "service_state_at_failure": None,
+            "service_state_after_recovery": "RUNNING",
+            "service_state": "RUNNING",
+            "service_identity": _service_start_name(),
+            "stop_returncode": stop_returncode,
+            "start_returncode": start_returncode,
+            "stop_states": stop_states,
+            "start_states": start_states,
+            "runtime_rollback": runtime_rollback,
+            "service_recovery": service_recovery,
             "secret_values_read": False,
         }
     except Exception as exc:
-        rollback = "NOT_NEEDED"
+        try:
+            service_state_at_failure = _service_state()
+        except Exception:
+            service_state_at_failure = "QUERY_FAILED"
+
         try:
             if target.is_file() and _sha256(target) != runtime_sha:
                 shutil.copy2(backup, target)
-                rollback = "PASS" if _sha256(target) == runtime_sha else "FAIL"
+                runtime_rollback = "PASS" if _sha256(target) == runtime_sha else "FAIL"
         except Exception:
-            rollback = "FAIL"
+            runtime_rollback = "FAIL"
+
+        try:
+            service_recovery, recovery_start_returncode, recovery_states = _recover_service_running(
+                timeout_seconds=90
+            )
+        except Exception:
+            service_recovery = "FAIL"
+            recovery_start_returncode = None
+            recovery_states = ["RECOVERY_EXCEPTION"]
+
+        try:
+            service_state_after_recovery = _service_state()
+        except Exception:
+            service_state_after_recovery = "QUERY_FAILED"
+
+        if isinstance(exc, RuntimeMaintenanceError):
+            error_code = str(exc)
+        else:
+            error_code = "MAINTENANCE_UNEXPECTED_FAILURE"
+
+        final_status = "FAIL" if service_recovery in {"PASS", "NOT_NEEDED"} and service_state_after_recovery == "RUNNING" else "FAIL_RECOVERY_FAILED"
         result = {
             "schema_id": RECEIPT_SCHEMA,
             "plan_id": str(raw.get("plan_id") or ""),
-            "status": "FAIL",
-            "error": type(exc).__name__,
-            "rollback": rollback,
+            "status": final_status,
+            "failure_stage": failure_stage,
+            "error_code": error_code,
+            "exception_type": type(exc).__name__,
+            "service_state_before": service_state_before,
+            "service_state_at_failure": service_state_at_failure,
+            "service_state_after_recovery": service_state_after_recovery,
+            "stop_returncode": stop_returncode,
+            "start_returncode": start_returncode,
+            "recovery_start_returncode": recovery_start_returncode,
+            "stop_states": stop_states,
+            "start_states": start_states,
+            "recovery_states": recovery_states,
+            "runtime_rollback": runtime_rollback,
+            "service_recovery": service_recovery,
+            "stale_residue_removed": cleaned,
             "secret_values_read": False,
         }
+
     temp = receipt.with_suffix(".tmp")
     temp.write_text(json.dumps(result, sort_keys=True, indent=2), encoding="utf-8")
     os.replace(temp, receipt)

@@ -1,4 +1,3 @@
-
 import json
 import subprocess
 from pathlib import Path
@@ -39,6 +38,7 @@ def _configure_tmp(monkeypatch, tmp_path: Path):
     monkeypatch.setattr(mod, "DRIVE_ROOT", drive)
     monkeypatch.setattr(mod, "SECRET_TEMP_ROOT", drive / "rclone-secret-temp")
     monkeypatch.setattr(mod, "_service_state", lambda: "RUNNING")
+    monkeypatch.setattr(mod, "_service_start_name", lambda: "LocalSystem")
     python_home = tmp_path / "python-home"
     python_home.mkdir()
     interpreter = python_home / "python.exe"
@@ -368,4 +368,209 @@ def test_caller_cannot_supply_python_interpreter_path(tmp_path):
                 "operation": "status",
                 "python_interpreter_path": r"C:\Other\python.exe",
             },
+        )
+
+
+def _prepared_plan_for_execute(tmp_path, monkeypatch):
+    repo, source, target, drive, head = _configure_tmp(monkeypatch, tmp_path)
+    prepared = mod.prepare_plan(
+        repo_root=str(repo),
+        state_dir=str(tmp_path / "state"),
+        expected_source_sha256=mod._sha256(source),
+        expected_runtime_sha256=mod._sha256(target),
+        expected_head=head,
+        allowed_roots=(str(tmp_path),),
+        scope_paths=(str(source),),
+    )
+    monkeypatch.chdir(repo)
+    return repo, source, target, drive, Path(prepared["plan_path"]), Path(prepared["receipt_path"])
+
+
+def test_execute_stop_first_success_and_running_at_exit(tmp_path, monkeypatch):
+    _repo, source, target, drive, plan, receipt = _prepared_plan_for_execute(tmp_path, monkeypatch)
+    states = iter(["RUNNING", "STOP_PENDING", "STOPPED", "RUNNING", "RUNNING"])
+    monkeypatch.setattr(mod, "_service_state", lambda: next(states, "RUNNING"))
+    monkeypatch.setattr(mod, "_service_start_name", lambda: "LocalSystem")
+    calls = []
+
+    def fixed(argv, *, timeout=60):
+        del timeout
+        calls.append(list(argv))
+        if argv[:2] == ["sc.exe", "stop"]:
+            return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
+        if argv[:2] == ["sc.exe", "start"]:
+            return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
+        if argv and argv[0] == "icacls.exe":
+            return subprocess.CompletedProcess(argv, 0, stdout=b"SYSTEM:(F) Administrators:(F)", stderr=b"")
+        return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
+
+    monkeypatch.setattr(mod, "_run_fixed", fixed)
+    stale = drive / "palwakf-rclone-config-stale"
+    stale.mkdir()
+    (stale / "rclone.conf").write_text("placeholder", encoding="utf-8")
+    result = mod.execute_plan_file(str(plan))
+    assert result["status"] == "PASS"
+    assert result["service_state"] == "RUNNING"
+    assert result["stale_residue_removed"] == 1
+    assert not stale.exists()
+    assert target.read_text(encoding="utf-8") == source.read_text(encoding="utf-8")
+    assert receipt.is_file()
+    stop_index = next(i for i, argv in enumerate(calls) if argv[:2] == ["sc.exe", "stop"])
+    start_index = next(i for i, argv in enumerate(calls) if argv[:2] == ["sc.exe", "start"])
+    assert stop_index < start_index
+
+
+def test_stop_timeout_makes_no_runtime_or_residue_mutation_and_recovers(tmp_path, monkeypatch):
+    _repo, _source, target, drive, plan, _receipt = _prepared_plan_for_execute(tmp_path, monkeypatch)
+    runtime_before = mod._sha256(target)
+    stale = drive / "palwakf-rclone-config-stale"
+    stale.mkdir()
+    (stale / "rclone.conf").write_text("placeholder", encoding="utf-8")
+    monkeypatch.setattr(mod, "_service_state", lambda: "RUNNING")
+    monkeypatch.setattr(mod, "_service_start_name", lambda: "LocalSystem")
+
+    def wait_service(expected, *, timeout_seconds=90):
+        del timeout_seconds
+        if expected == "STOPPED":
+            raise mod.RuntimeMaintenanceError("MAINTENANCE_SERVICE_STOP_TIMEOUT")
+        return ["RUNNING"]
+
+    monkeypatch.setattr(mod, "_wait_service", wait_service)
+
+    def fixed(argv, *, timeout=60):
+        del timeout
+        if argv[:2] == ["sc.exe", "stop"]:
+            return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
+        return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
+
+    monkeypatch.setattr(mod, "_run_fixed", fixed)
+    result = mod.execute_plan_file(str(plan))
+    assert result["status"] == "FAIL"
+    assert result["error_code"] == "MAINTENANCE_SERVICE_STOP_TIMEOUT"
+    assert result["service_recovery"] == "NOT_NEEDED"
+    assert result["service_state_after_recovery"] == "RUNNING"
+    assert mod._sha256(target) == runtime_before
+    assert stale.exists()
+
+
+@pytest.mark.parametrize(
+    ("failing_stage", "expected_code"),
+    [
+        ("POST_STOP_REVALIDATION", "MAINTENANCE_SOURCE_HASH_MISMATCH"),
+        ("PROMOTE_RUNTIME", "MAINTENANCE_RUNTIME_POST_HASH_MISMATCH"),
+        ("HARDEN_SECRET_TEMP_ACL", "MAINTENANCE_ACL_ENFORCEMENT_FAILED"),
+        ("CLEAN_STALE_RESIDUE", "MAINTENANCE_RESIDUE_CLEANUP_INCOMPLETE"),
+    ],
+)
+def test_failure_after_stop_rolls_back_and_recovers_service(
+    tmp_path, monkeypatch, failing_stage, expected_code
+):
+    _repo, source, target, _drive, plan, _receipt = _prepared_plan_for_execute(tmp_path, monkeypatch)
+    runtime_before = mod._sha256(target)
+    states = iter(["RUNNING", "STOPPED", "STOPPED", "RUNNING"])
+    monkeypatch.setattr(mod, "_service_state", lambda: next(states, "RUNNING"))
+    monkeypatch.setattr(mod, "_service_start_name", lambda: "LocalSystem")
+
+    def fixed(argv, *, timeout=60):
+        del timeout
+        if argv[:2] == ["sc.exe", "stop"]:
+            return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
+        if argv[:2] == ["sc.exe", "start"]:
+            return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
+        if argv and argv[0] == "icacls.exe":
+            if failing_stage == "HARDEN_SECRET_TEMP_ACL":
+                return subprocess.CompletedProcess(argv, 5, stdout=b"", stderr=b"")
+            return subprocess.CompletedProcess(argv, 0, stdout=b"SYSTEM:(F) Administrators:(F)", stderr=b"")
+        return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
+
+    monkeypatch.setattr(mod, "_run_fixed", fixed)
+    original_sha = mod._sha256
+
+    if failing_stage == "POST_STOP_REVALIDATION":
+        calls = {"source": 0}
+
+        def drift_sha(path):
+            if Path(path).resolve() == source.resolve():
+                calls["source"] += 1
+                if calls["source"] >= 2:
+                    return "0" * 64
+            return original_sha(path)
+        monkeypatch.setattr(mod, "_sha256", drift_sha)
+    elif failing_stage == "PROMOTE_RUNTIME":
+        def bad_post_hash(path):
+            value = original_sha(path)
+            if Path(path).resolve() == target.resolve() and value == original_sha(source):
+                return "0" * 64
+            return value
+        monkeypatch.setattr(mod, "_sha256", bad_post_hash)
+    elif failing_stage == "CLEAN_STALE_RESIDUE":
+        monkeypatch.setattr(
+            mod,
+            "_cleanup_stale_residue",
+            lambda: (_ for _ in ()).throw(mod.RuntimeMaintenanceError("MAINTENANCE_RESIDUE_CLEANUP_INCOMPLETE")),
+        )
+
+    result = mod.execute_plan_file(str(plan))
+    assert result["status"] in {"FAIL", "FAIL_RECOVERY_FAILED"}
+    assert result["error_code"] == expected_code
+    assert result["service_state_after_recovery"] == "RUNNING"
+    if failing_stage != "PROMOTE_RUNTIME":
+        assert mod._sha256(target) == runtime_before or result["runtime_rollback"] in {"PASS", "NOT_NEEDED"}
+
+
+def test_start_failure_rolls_back_and_records_recovery(tmp_path, monkeypatch):
+    _repo, source, target, _drive, plan, _receipt = _prepared_plan_for_execute(tmp_path, monkeypatch)
+    runtime_before = mod._sha256(target)
+    states = iter(["RUNNING", "STOPPED", "STOPPED", "STOPPED", "RUNNING", "RUNNING"])
+    monkeypatch.setattr(mod, "_service_state", lambda: next(states, "RUNNING"))
+    monkeypatch.setattr(mod, "_service_start_name", lambda: "LocalSystem")
+    starts = {"count": 0}
+
+    def fixed(argv, *, timeout=60):
+        del timeout
+        if argv[:2] == ["sc.exe", "stop"]:
+            return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
+        if argv[:2] == ["sc.exe", "start"]:
+            starts["count"] += 1
+            code = 5 if starts["count"] == 1 else 0
+            return subprocess.CompletedProcess(argv, code, stdout=b"", stderr=b"")
+        if argv and argv[0] == "icacls.exe":
+            return subprocess.CompletedProcess(argv, 0, stdout=b"SYSTEM:(F) Administrators:(F)", stderr=b"")
+        return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
+
+    monkeypatch.setattr(mod, "_run_fixed", fixed)
+    result = mod.execute_plan_file(str(plan))
+    assert result["status"] == "FAIL"
+    assert result["error_code"] == "MAINTENANCE_SERVICE_START_FAILED"
+    assert result["service_recovery"] == "PASS"
+    assert result["service_state_after_recovery"] == "RUNNING"
+    assert mod._sha256(target) == runtime_before
+
+
+def test_recovery_failure_is_explicit(tmp_path, monkeypatch):
+    _repo, _source, _target, _drive, plan, _receipt = _prepared_plan_for_execute(tmp_path, monkeypatch)
+    states = iter(["RUNNING", "STOPPED", "STOPPED", "STOPPED", "STOPPED"])
+    monkeypatch.setattr(mod, "_service_state", lambda: next(states, "STOPPED"))
+    monkeypatch.setattr(mod, "_service_start_name", lambda: "LocalSystem")
+    monkeypatch.setattr(mod, "_set_secret_temp_acl", lambda: (_ for _ in ()).throw(mod.RuntimeMaintenanceError("MAINTENANCE_ACL_ENFORCEMENT_FAILED")))
+
+    def fixed(argv, *, timeout=60):
+        del timeout
+        if argv[:2] == ["sc.exe", "stop"]:
+            return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
+        if argv[:2] == ["sc.exe", "start"]:
+            return subprocess.CompletedProcess(argv, 5, stdout=b"", stderr=b"")
+        return subprocess.CompletedProcess(argv, 0, stdout=b"", stderr=b"")
+
+    monkeypatch.setattr(mod, "_run_fixed", fixed)
+    result = mod.execute_plan_file(str(plan))
+    assert result["status"] == "FAIL_RECOVERY_FAILED"
+    assert result["service_recovery"] == "FAIL"
+
+
+def test_service_name_is_not_caller_supplied(tmp_path):
+    with pytest.raises(mod.RuntimeMaintenanceError, match="ARGUMENT_NOT_ALLOWED"):
+        mod.runtime_maintenance_capability(
+            _ctx(tmp_path),
+            {"operation": "status", "service_name": "OtherService"},
         )
