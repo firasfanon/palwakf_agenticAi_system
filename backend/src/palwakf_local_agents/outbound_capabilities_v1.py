@@ -12,6 +12,10 @@ from pathlib import Path
 from typing import Any, Callable, Literal, Mapping
 
 from palwakf_local_agents.c7r_phase_a_v1 import C7RPhaseAError, c7r_phase_a
+from palwakf_local_agents.governed_runtime_maintenance_v1 import (
+    RuntimeMaintenanceError,
+    runtime_maintenance_capability,
+)
 from palwakf_local_agents.windows_protected_secret_v1 import (
     ProtectedSecretError,
     read_windows_protected_text,
@@ -177,6 +181,16 @@ def c7r_phase_a_handler(
     try:
         return c7r_phase_a(ctx, args)
     except C7RPhaseAError as exc:
+        raise CapabilityError(str(exc)) from exc
+
+
+def runtime_maintenance_handler(
+    ctx: CapabilityContextV1,
+    args: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    try:
+        return runtime_maintenance_capability(ctx, args)
+    except RuntimeMaintenanceError as exc:
         raise CapabilityError(str(exc)) from exc
 
 
@@ -637,6 +651,12 @@ def default_capability_registry_v1() -> CapabilityRegistryV1:
             idempotency_class="NON_IDEMPOTENT",
         ),
         CapabilityDescriptorV1("c7r.phase_a", "SERVICE_MUTATION", c7r_phase_a_handler, idempotency_class="STATEFUL_GOVERNED"),
+        CapabilityDescriptorV1(
+            "runtime.maintenance.promote_bounded_v1",
+            "SERVICE_MUTATION",
+            runtime_maintenance_handler,
+            idempotency_class="STATEFUL_GOVERNED",
+        ),
     )
     placeholders = tuple(
         CapabilityDescriptorV1(f"legacy.{name}", "READ_ONLY", device_hostname, aliases=(name,), admitted=False)
