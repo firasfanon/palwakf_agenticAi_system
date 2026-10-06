@@ -242,4 +242,3 @@ export function ProjectStateManager() {
     </section>
   </Layout>;
 }
-

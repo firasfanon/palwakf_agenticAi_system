@@ -279,4 +279,3 @@ export function SpecializedAgentCatalogPage() {
     <OperationalGovernanceLinks compact />
   </Layout>;
 }
-
